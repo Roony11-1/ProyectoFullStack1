@@ -1,0 +1,17 @@
+# Maven build directory
+/target/
+
+# Gradle build directory
+/build/
+
+# Eclipse IDE project files
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA project files
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
