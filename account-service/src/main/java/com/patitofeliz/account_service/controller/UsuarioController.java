@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +51,14 @@ public class UsuarioController
         Usuario usuarioNuevo = usuarioService.registrar(usuario);
         
         return ResponseEntity.ok(usuarioNuevo);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable("id") int id, @RequestBody Usuario usuario)
+    {
+        Usuario actualizado = usuarioService.actualizar(id, usuario);
+
+        return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")

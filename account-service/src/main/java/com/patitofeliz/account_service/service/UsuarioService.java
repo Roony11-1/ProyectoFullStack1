@@ -1,6 +1,8 @@
 package com.patitofeliz.account_service.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,23 +26,41 @@ public class UsuarioService
         return usuarioRepository.findById(id).orElse(null);
     }
 
+    public Usuario findByEmail(String email) 
+    {
+        return usuarioRepository.findByEmail(email).orElse(null);
+    }
+
     public Usuario registrar(Usuario usuario)
     {
-        Usuario nuevo = usuarioRepository.save(usuario);
-
-        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent())
+        if (findByEmail(usuario.getEmail()) != null)
             throw new IllegalArgumentException("Ya existe un usuario con ese email");
 
+        Usuario nuevo = usuarioRepository.save(usuario);
+
         return nuevo;
+    }
+
+    public Usuario actualizar(int id, Usuario usuarioActualizado)
+    {
+        Usuario usuarioActual = usuarioRepository.findById(id).orElse(null);
+
+        if (usuarioActual == null)
+            throw new NoSuchElementException("Usuario no encontrado");
+
+        Optional<Usuario> otro = usuarioRepository.findByEmail(usuarioActualizado.getEmail());
+        if (otro.isPresent() && otro.get().getId() != id)
+            throw new IllegalArgumentException("Ya existe un usuario con ese email");
+
+        usuarioActual.setNombreUsuario(usuarioActualizado.getNombreUsuario());
+        usuarioActual.setEmail(usuarioActualizado.getEmail());
+        usuarioActual.setPassword(usuarioActualizado.getPassword());
+
+        return usuarioRepository.save(usuarioActual);
     }
 
     public void borrar(int id)
     {
         usuarioRepository.deleteById(id);
-    }
-
-    public Usuario findByEmail(String email) 
-    {
-        return usuarioRepository.findByEmail(email).orElse(null);
     }
 }
