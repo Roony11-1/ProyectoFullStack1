@@ -55,6 +55,7 @@ public class UsuarioService
         usuarioActual.setNombreUsuario(usuarioActualizado.getNombreUsuario());
         usuarioActual.setEmail(usuarioActualizado.getEmail());
         usuarioActual.setPassword(usuarioActualizado.getPassword());
+        usuarioActual.setTipoUsuario(usuarioActualizado.getTipoUsuario());
 
         return usuarioRepository.save(usuarioActual);
     }
