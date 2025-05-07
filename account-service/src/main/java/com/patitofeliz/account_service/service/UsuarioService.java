@@ -28,11 +28,19 @@ public class UsuarioService
     {
         Usuario nuevo = usuarioRepository.save(usuario);
 
+        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent())
+            throw new IllegalArgumentException("Ya existe un usuario con ese email");
+
         return nuevo;
     }
 
     public void borrar(int id)
     {
         usuarioRepository.deleteById(id);
+    }
+
+    public Usuario findByEmail(String email) 
+    {
+        return usuarioRepository.findByEmail(email).orElse(null);
     }
 }
