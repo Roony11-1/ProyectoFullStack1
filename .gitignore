@@ -15,3 +15,14 @@
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# VSCode project files
+.vscode/
+
+# Spring Boot specific
+*.log
+*.pid
+*.h2.db
+
+# IntelliJ IDEA specific
+*.iml
