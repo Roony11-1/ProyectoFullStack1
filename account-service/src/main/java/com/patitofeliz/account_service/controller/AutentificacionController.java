@@ -13,7 +13,7 @@ import com.patitofeliz.account_service.service.UsuarioService;
 
 @RestController
 @RequestMapping("/auth")
-public class LoginController 
+public class AutentificacionController 
 {
     @Autowired
     private UsuarioService usuarioService;
