@@ -33,6 +33,7 @@ public class UsuarioService
 
     public Usuario registrar(Usuario usuario)
     {
+        // Verificación a nivel de software para evitar que nos ingresen email repetidos o nulos
         if (findByEmail(usuario.getEmail()) != null)
             throw new IllegalArgumentException("Ya existe un usuario con ese email");
 
@@ -48,6 +49,8 @@ public class UsuarioService
         if (usuarioActual == null)
             throw new NoSuchElementException("Usuario no encontrado");
 
+        // Como se puede ver optional nos permite verificar si es nulo [otro.ispresent = otro != null]
+        // se podria generar un metodo para delegar la responsabilidad de verificar esta condicion ya que la repetimos
         Optional<Usuario> otro = usuarioRepository.findByEmail(usuarioActualizado.getEmail());
         if (otro.isPresent() && otro.get().getId() != id)
             throw new IllegalArgumentException("Ya existe un usuario con ese email");
