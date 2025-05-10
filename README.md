@@ -5,7 +5,6 @@ Repositorio monolitico que guardara todos los microservicios<br><br>
 # Comandos (terminal control + ñ)<br><br>
 git config --global user.email "EMAIL"<br>
 git config --global user.name "USERNAME"<br><br>
-Weko
 # Microservicios
 - Cuentas<br>-- Creación de cuentas y gestión de perfiles<br><br>
 - Administración<br>-- Monitorización del sistema, respaldar/restaurar información y envio de alerta por fallos
