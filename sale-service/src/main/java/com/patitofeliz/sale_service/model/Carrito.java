@@ -1,9 +1,9 @@
 package com.patitofeliz.sale_service.model;
 
-import java.util.List;
+//import java.util.List;
 
-import com.patitofeliz.sale_service.model.producto_conexion.Producto;
-import com.patitofeliz.sale_service.model.facturacion.Facturacion;
+//import com.patitofeliz.sale_service.model.producto_conexion.Producto;
+//import com.patitofeliz.sale_service.model.facturacion.Facturacion;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +21,6 @@ public class Carrito
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int usuarioId;
-    private List<Producto> listaProductos; // Agregar producto cuando se haga la conexion
-    private Facturacion Facturacion; // Crea boletas
+    //private List<Producto> listaProductos; // Agregar producto cuando se haga la conexion
+    //private Facturacion Facturacion; // Crea boletas
 }

@@ -45,7 +45,7 @@ public class CarritoService
             throw new NoSuchElementException("Carrito no encontrado");
 
         carritoActual.setUsuarioId(carritoActualizado.getUsuarioId());
-        carritoActual.setListaProductos(carritoActualizado.getListaProductos());
+        //carritoActual.setListaProductos(carritoActualizado.getListaProductos());
 
         return carritoRepository.save(carritoActual);
     }
