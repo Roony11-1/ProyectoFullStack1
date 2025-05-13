@@ -35,7 +35,6 @@ public class ReviewController
         return ResponseEntity.ok(reviews);
      }   
 
-<<<<<<< HEAD:review-service/src/main/java/review/service/review_service/controller/ReviewController.java
     @GetMapping("/{id}")
     public ResponseEntity<Review> obtenerReviewId(@PathVariable("id") int id)
     {
@@ -44,24 +43,13 @@ public class ReviewController
         if (review == null)
             return ResponseEntity.notFound().build();
 
-=======
-     @GetMapping("/{productoId}")
-     public ResponseEntity<Review> obtenerReview(@PathVariable("productoId") int productoId)
-     {
-        Review review = reviewService.getReviewByProductoId(productoId);
-        
-        if(review == null)
-            return ResponseEntity.notFound().build();
-        
->>>>>>> 857f9709caa4f736893dfc6774216d88ddfef2c4:review-service/src/main/java/com/patitofeliz/review_service/controller/ReviewController.java
         return ResponseEntity.ok(review);
      }
 
-<<<<<<< HEAD:review-service/src/main/java/review/service/review_service/controller/ReviewController.java
    @GetMapping("/producto/{productoId}")
     public ResponseEntity<List<Review>> obtenerReviewPorProductoId(@PathVariable("productoId") int productoId)
     {
-        List<Review> reviews = reviewService.getReviewsByProductoId(productoId);
+        List<Review> reviews = reviewService.getReviewByProductoId(productoId);
 
         if (reviews == null)
             return ResponseEntity.notFound().build();
@@ -73,17 +61,11 @@ public class ReviewController
     @PostMapping
     public ResponseEntity<Review> registrarReview(@RequestBody Review review)
     {
-=======
-     @PostMapping
-     public ResponseEntity<Review> registrarReview(@RequestBody Review review)
-     {
->>>>>>> 857f9709caa4f736893dfc6774216d88ddfef2c4:review-service/src/main/java/com/patitofeliz/review_service/controller/ReviewController.java
         Review reviewNueva = reviewService.registrar(review);
 
         return ResponseEntity.ok(reviewNueva);
      }
 
-<<<<<<< HEAD:review-service/src/main/java/review/service/review_service/controller/ReviewController.java
     @DeleteMapping("/{id}")
     public ResponseEntity<Review> borrarReview(@PathVariable int id)
     {
@@ -92,16 +74,6 @@ public class ReviewController
         if (review == null)
             return ResponseEntity.notFound().build();
 
-=======
-     @DeleteMapping("/{id}")
-     public ResponseEntity<Review> borrarReview(@PathVariable int id)
-     {
-        Review review = reviewService.getReviewByProductoId(id);
-
-        if (review == null)
-            return ResponseEntity.notFound().build();
-        
->>>>>>> 857f9709caa4f736893dfc6774216d88ddfef2c4:review-service/src/main/java/com/patitofeliz/review_service/controller/ReviewController.java
         reviewService.borrar(id);
             
         return ResponseEntity.noContent().build();
