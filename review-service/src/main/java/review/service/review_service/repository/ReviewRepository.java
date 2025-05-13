@@ -1,6 +1,6 @@
 package review.service.review_service.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +11,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     // puedes preguntar si existe, y el caso que fuera nulo se maneja automaticamente
     // Ademas Jpa al seguir la estructura findBy... genera el metodo automaticamente no hay que crearlo nosotros
     // almenos se que es asi al buscar atributos (nombre, edad, correo)
-    Optional<Review> findByReview(String email);
+    // Optional<Review> findByReview(String email);
 
+    List<Review> findByProductoId(int productoId);
 }

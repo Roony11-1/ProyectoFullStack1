@@ -19,9 +19,20 @@ public class ReviewService
         return reviewRepository.findAll();
     }
 
+    public Review getReview(int id)
+    {
+        return reviewRepository.findById(id).orElse(null);
+    }
+
+    /*
     public Review getReviewByProductoId(int productoId)
     {
         return reviewRepository.findById(productoId).orElse(null);
+    }*/
+
+    public List<Review> getReviewsByProductoId(int id)
+    {
+        return reviewRepository.findByProductoId(id);
     }
     
     public Review registrar(Review review)

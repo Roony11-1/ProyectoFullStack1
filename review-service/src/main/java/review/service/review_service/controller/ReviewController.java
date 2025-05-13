@@ -22,7 +22,7 @@ public class ReviewController
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping
+   @GetMapping
     public ResponseEntity<List<Review>> listarReviews()
     {
         List<Review> reviews = reviewService.getReviews();
@@ -33,15 +33,28 @@ public class ReviewController
         return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("/{productoId}")
-    public ResponseEntity<Review> obtenerReview(@PathVariable("productoId") int productoId)
+    @GetMapping("/{id}")
+    public ResponseEntity<Review> obtenerReviewId(@PathVariable("id") int id)
     {
-        Review review = reviewService.getReviewByProductoId(productoId);
+        Review review = reviewService.getReview(id);
 
         if (review == null)
             return ResponseEntity.notFound().build();
+
         return ResponseEntity.ok(review);
     }
+
+   @GetMapping("/producto/{productoId}")
+    public ResponseEntity<List<Review>> obtenerReviewPorProductoId(@PathVariable("productoId") int productoId)
+    {
+        List<Review> reviews = reviewService.getReviewsByProductoId(productoId);
+
+        if (reviews == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(reviews);
+    }
+
 
     @PostMapping
     public ResponseEntity<Review> registrarReview(@RequestBody Review review)
@@ -54,12 +67,13 @@ public class ReviewController
     @DeleteMapping("/{id}")
     public ResponseEntity<Review> borrarReview(@PathVariable int id)
     {
-        Review review = reviewService.getReviewByProductoId(id);
+        Review review = reviewService.getReview(id);
 
         if (review == null)
-        return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
 
         reviewService.borrar(id);
+            
         return ResponseEntity.noContent().build();
     }
 }
