@@ -24,7 +24,6 @@ Thumbs.db
 *.log
 *.pid
 *.h2.db
-/src/test/
 
 # IntelliJ IDEA specific
 *.iml
