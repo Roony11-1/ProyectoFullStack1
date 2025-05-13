@@ -1,4 +1,4 @@
-package review.service.review_service;
+package com.patitofeliz.review_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

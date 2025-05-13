@@ -8,7 +8,7 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>review.service</groupId>
+	<groupId>com.patitofeliz</groupId>
 	<artifactId>review-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>review-service</name>
