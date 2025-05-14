@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.sale_service.model.Carrito;
 import com.patitofeliz.sale_service.model.CarritoProducto;
+import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.ReporitoryCarrito;
 
 @Service
@@ -20,6 +21,7 @@ public class CarritoService
     private ReporitoryCarrito carritoRepository;
 
     private static final String PRODUCTO_API = "http://localhost:8003/producto";
+    private static final String USUARIO_API = "http://localhost:8001/usuario";
 
     public List<Carrito> getCarritos()
     {
@@ -39,6 +41,9 @@ public class CarritoService
     public Carrito guardar(Carrito carrito)
     {
         Integer total = calcularTotal(carrito);
+
+        if (!existeUsuario(carrito.getUsuarioId()))
+            throw new IllegalArgumentException("Usuario no encontrado");
 
         carrito.setTotal(total);
 
@@ -81,6 +86,13 @@ public class CarritoService
         }
 
         return total;
+    }
+
+    public boolean existeUsuario(int id)
+    {
+        Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+id, Usuario.class);
+
+        return usuario != null;
     }
 
 }
