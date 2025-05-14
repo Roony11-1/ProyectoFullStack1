@@ -23,4 +23,6 @@ public class Carrito
     @ElementCollection
     private List<CarritoProducto> listaProductos;
     private int total;
+
+    public List<CarritoProducto> getListaProductos() { return listaProductos; }
 }
