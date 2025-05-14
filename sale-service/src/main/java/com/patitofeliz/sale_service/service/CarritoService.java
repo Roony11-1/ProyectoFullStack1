@@ -28,14 +28,14 @@ public class CarritoService
         return carritoRepository.findAll();
     }
 
+    public List<Carrito> getCarritosByUsuarioid(int id)
+    {
+        return carritoRepository.findByUsuarioId(id);
+    }
+
     public Carrito getCarrito(int id)
     {
         return carritoRepository.findById(id).orElse(null);
-    }
-
-    public Carrito findByNombre(int id) 
-    {
-        return carritoRepository.findByUsuarioId(id);
     }
 
     public Carrito guardar(Carrito carrito)
