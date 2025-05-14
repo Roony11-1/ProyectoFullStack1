@@ -17,7 +17,7 @@ import com.patitofeliz.sale_service.model.Carrito;
 import com.patitofeliz.sale_service.service.CarritoService;
 
 @RestController
-@RequestMapping("/venta")
+@RequestMapping("/carrito")
 public class CarritoController 
 {
     @Autowired

@@ -1,12 +1,13 @@
 package com.patitofeliz.inventory_service.service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.patitofeliz.inventory_service.model.Producto;
 import com.patitofeliz.inventory_service.repository.ProductoRepository;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ProductoService 
@@ -14,7 +15,7 @@ public class ProductoService
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Producto> getProducto()
+    public List<Producto> getProductos()
     {
         return productoRepository.findAll();
     }
@@ -23,7 +24,6 @@ public class ProductoService
     {
         return productoRepository.findById(id).orElse(null);
     }
-
  
     public Producto registrar(Producto producto)
     {
@@ -44,7 +44,7 @@ public class ProductoService
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
         productoActual.setPrecio(productoActualizado.getPrecio());
-        productoActual.setCantidad(productoActualizado.getCantidad());
+        productoActual.setCantidadInventario(productoActualizado.getCantidadInventario());
 
         return productoRepository.save(productoActual);
     }
@@ -54,23 +54,23 @@ public class ProductoService
         productoRepository.deleteById(id);
     }
 
-    public List<Producto> getAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    public Integer getPrecioProducto(int id)
+    {
+        Producto producto = productoRepository.findById(id).orElse(null);
+
+        if (producto == null)
+            return null;
+
+        return producto.getPrecio();
     }
 
-    public Producto getProductoById(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProductoById'");
-    }
+    public Integer getCantidadProducto(int id)
+    {
+        Producto producto = productoRepository.findById(id).orElse(null);
 
-    public Producto save(Producto producto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
-    }
+        if (producto == null)
+            return null;
 
-    public List<Producto> ByUsuarioId(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'ByUsuarioId'");
+        return producto.getCantidadInventario();
     }
 }
