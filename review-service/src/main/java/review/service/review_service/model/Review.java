@@ -22,4 +22,6 @@ public class Review
     private String autor;
     private String comentario;
     private int calificacion;
+
+  
 }
