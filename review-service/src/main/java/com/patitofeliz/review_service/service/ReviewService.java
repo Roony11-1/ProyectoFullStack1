@@ -38,6 +38,11 @@ public class ReviewService {
      {
         reviewRepository.deleteById(id);
      }
+
+     public Review actualizado(int id, Review review) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'actualizado'");
+     }
      
      
 
