@@ -69,10 +69,8 @@ public class CarritoService
     {
         int total = 0;
 
-        // Iteramos sobre los productos en el carrito
         for (CarritoProducto producto : carrito.getListaProductos()) 
         {
-            // Obtenemos el precio del producto llamando al microservicio Producto
             Integer precioProducto = restTemplate.getForObject(PRODUCTO_API + "/precio/" + producto.getProductoId(), Integer.class);
 
             // Si el producto tiene precio, lo sumamos al total
