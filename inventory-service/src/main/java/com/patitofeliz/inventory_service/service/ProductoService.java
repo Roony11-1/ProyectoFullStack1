@@ -53,4 +53,24 @@ public class ProductoService
     {
         productoRepository.deleteById(id);
     }
+
+    public List<Producto> getAll() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    }
+
+    public Producto getProductoById(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProductoById'");
+    }
+
+    public Producto save(Producto producto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    }
+
+    public List<Producto> ByUsuarioId(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ByUsuarioId'");
+    }
 }
