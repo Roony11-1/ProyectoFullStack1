@@ -44,21 +44,38 @@ public class VentaService
         return ventaRepository.findById(id).orElse(null);
     }
 
-    @Transactional
-    public Venta generarVenta(Venta venta)
+    private Usuario getUsuarioId(int id)
     {
-        Carrito carritoVenta = carritoService.getCarrito(venta.getCarritoId());
-        Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+venta.getUsuarioId(), Usuario.class);
-        Usuario vendedor = restTemplate.getForObject(USUARIO_API+"/"+venta.getVendedorId(), Usuario.class);
-        
-        if (carritoVenta == null)
-            throw new NoSuchElementException("Carrito no encontrado");
+        Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+id, Usuario.class);
 
         if (usuario == null)
             throw new NoSuchElementException("Usuario no encontrado");
 
-        if (vendedor == null)
-            throw new NoSuchElementException("Vendedor no encontrado");
+        return usuario;
+    }
+
+    private Producto obtenerProductoPorId(int id) 
+    {
+        Producto producto = restTemplate.getForObject(PRODUCTO_API +"/"+id, Producto.class);
+        if (producto == null)
+            throw new NoSuchElementException("Producto con id "+id+" no encontrado");
+        return producto;
+    }
+
+    private void actualizarProductoInventario(int id, Producto productoActualizado) 
+    {
+        restTemplate.put(PRODUCTO_API + "/update/" + id, productoActualizado);
+    }
+
+    @Transactional
+    public Venta generarVenta(Venta venta)
+    {
+        Carrito carritoVenta = carritoService.getCarrito(venta.getCarritoId());
+        Usuario usuario = getUsuarioId(venta.getUsuarioId());
+        Usuario vendedor = getUsuarioId(venta.getVendedorId());
+        
+        if (carritoVenta == null)
+            throw new NoSuchElementException("Carrito no encontrado");
 
         if (carritoVenta.getListaProductos().isEmpty())
             throw new NoSuchElementException("Carrito vacío!");
@@ -66,16 +83,14 @@ public class VentaService
         // Descuento de productos del inventario
         for (CarritoProducto producto : carritoVenta.getListaProductos()) 
         {
-            Producto productoInventario = restTemplate.getForObject(PRODUCTO_API+"/"+producto.getProductoId(), Producto.class);
-            if (productoInventario == null)
-                throw new NoSuchElementException("Producto con id "+producto.getProductoId()+" no encontrado");
+            Producto productoInventario = obtenerProductoPorId(producto.getProductoId());
 
             if (producto.getCantidad()>productoInventario.getCantidadInventario())
                 throw new NoSuchElementException("No hay suficientes existencias de "+productoInventario.getNombre());
             else
             {
                 productoInventario.setCantidadInventario(productoInventario.getCantidadInventario()-producto.getCantidad());
-                restTemplate.put(PRODUCTO_API+"/update/"+producto.getProductoId(), productoInventario);
+                actualizarProductoInventario(producto.getProductoId(), productoInventario);
             }
         }
 
