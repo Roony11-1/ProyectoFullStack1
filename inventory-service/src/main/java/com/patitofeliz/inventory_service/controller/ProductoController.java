@@ -65,6 +65,30 @@ public class ProductoController {
         return ResponseEntity.ok(precio);
     }
 
+    // Devuelve la marca del producto
+    @GetMapping("/marca/{id}")
+    public ResponseEntity<String> obtenerMarcaProducto(@PathVariable("id") int id)
+    {
+        String marca = productoService.getMarcaProductoPorId(id);
+
+        if (marca == null)
+            return ResponseEntity.notFound().build();
+        
+        return ResponseEntity.ok(marca);
+    }
+
+    // Devuelve el nombre del producto
+    @GetMapping("/nombre/{id}")
+    public ResponseEntity<String> obtenerNombreProducto(@PathVariable("id") int id)
+    {
+        String nombre = productoService.getNombreProductoPorId(id);
+
+        if (nombre == null)
+            return ResponseEntity.notFound().build();
+        
+        return ResponseEntity.ok(nombre);
+    }
+
     @PostMapping
     public ResponseEntity<Producto> guardarProducto(@RequestBody Producto producto)
     {

@@ -54,6 +54,16 @@ public class ProductoService
         productoRepository.deleteById(id);
     }
 
+    public String getMarcaProductoPorId(int id)
+    {
+        Producto producto = productoRepository.findById(id).orElse(null);
+
+        if (producto == null)
+            return null;
+
+        return producto.getMarca();
+    }
+
     public Integer getPrecioProducto(int id)
     {
         Producto producto = productoRepository.findById(id).orElse(null);
@@ -62,6 +72,16 @@ public class ProductoService
             return null;
 
         return producto.getPrecio();
+    }
+
+    public String getNombreProductoPorId(int id)
+    {
+        Producto producto = productoRepository.findById(id).orElse(null);
+
+        if (producto == null)
+            return null;
+
+        return producto.getNombre();
     }
 
     public Integer getCantidadProducto(int id)
