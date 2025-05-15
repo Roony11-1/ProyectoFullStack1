@@ -53,4 +53,10 @@ Carrito<br>
         }
         ],
     "total" : int
+}<br>
+Venta<br>
+{
+    "usuarioId" : int,
+    "vendedorId" : int,
+    "carritoId" : int
 }
