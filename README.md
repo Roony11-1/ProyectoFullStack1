@@ -8,7 +8,7 @@ git config --global user.name "USERNAME"<br><br>
 
 # Actualizar Archivos<br>
 git pull<br><br>
-# Microservicios - fprmato de datos<br><br>
+# Microservicios - formato de datos<br><br>
 JSON<br>
 
 # Cuentas<br>
