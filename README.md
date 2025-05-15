@@ -8,6 +8,13 @@ git config --global user.name "USERNAME"<br><br>
 
 # Actualizar Archivos<br>
 git pull<br><br>
-# Microservicios
-- Cuentas<br>-- Creación de cuentas y gestión de perfiles<br><br>
-- Administración<br>-- Monitorización del sistema, respaldar/restaurar información y envio de alerta por fallos
+# Microservicios - fprmato de datos<br><br>
+JSON<br>
+
+# Cuentas<br>
+{
+    "email" : String,
+    "nombreUsuario" : String,
+    "password" : String,
+    "tipoUsuario" : String
+}
