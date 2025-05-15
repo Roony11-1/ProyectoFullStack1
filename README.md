@@ -12,9 +12,45 @@ git pull<br><br>
 JSON<br>
 
 # Cuentas<br>
+Usuario<br>
 {
     "email" : String,
     "nombreUsuario" : String,
     "password" : String,
     "tipoUsuario" : String
+}<br>
+# Administracion<br>
+Alerta<br>
+{
+    "mensaje" : String,
+    "tipoAlerta" : String,
+    "fecha" : String
+}<br>
+# Inventario<br>
+Producto<br>
+{
+    "nombre" : String,
+    "marca" : String,
+    "precio" : int,
+    "cantidadInventario" : int
+}<br>
+# Reseña<br>
+Reseña<br>
+{
+    "productoId" : int,
+    "usuarioId" : int,
+    "autor" : String,
+    "comentario" : String
+}<br>
+# Venta<br>
+Carrito<br>
+{
+    "usuarioId" : int,
+    "listaProducto" : [
+        {
+        "productoId" : int,
+        "cantidad" : int
+        }
+        ],
+    "total" : int
 }
