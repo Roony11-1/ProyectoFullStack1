@@ -60,7 +60,7 @@ public class CarritoService
             throw new NoSuchElementException("Carrito no encontrado");
 
         carritoActual.setUsuarioId(carritoActualizado.getUsuarioId());
-        //carritoActual.setListaProductos(carritoActualizado.getListaProductos());
+        carritoActual.setListaProductos(carritoActualizado.getListaProductos());
 
         return carritoRepository.save(carritoActual);
     }
@@ -78,7 +78,6 @@ public class CarritoService
         {
             Integer precioProducto = restTemplate.getForObject(PRODUCTO_API + "/precio/" + producto.getProductoId(), Integer.class);
 
-            // Si el producto tiene precio, lo sumamos al total
             if (precioProducto != null) 
             {
                 total += precioProducto * producto.getCantidad();
