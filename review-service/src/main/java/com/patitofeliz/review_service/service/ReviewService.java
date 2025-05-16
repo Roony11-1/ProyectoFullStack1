@@ -40,11 +40,11 @@ public class ReviewService {
      public Review registrar(Review review)
      {
          Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+review.getUsuarioId(), Usuario.class);
-         Producto producto=restTemplate.getForObject(PRODUCTO_API+"/"+review.getProductoId(),Producto.class);
+         Producto producto = restTemplate.getForObject(PRODUCTO_API+"/"+review.getProductoId(),Producto.class);
 
          if (usuario == null)
             throw new NoSuchElementException("Usuario no encontrado");
-         if(producto==null)
+         if (producto == null)
             throw new NoSuchElementException("Producto no encontrado");
 
         Review nuevo = reviewRepository.save(review);
