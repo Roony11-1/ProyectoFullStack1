@@ -46,7 +46,7 @@ Reseña<br>
 Carrito<br>
 {
     "usuarioId" : int,
-    "listaProducto" : [
+    "listaProductos" : [
         {
         "productoId" : int,
         "cantidad" : int

@@ -70,18 +70,19 @@ public class CarritoService
         carritoRepository.deleteById(id);
     }
 
-    public Integer calcularTotal(Carrito carrito)
+    public Integer calcularTotal(Carrito carrito) 
     {
         int total = 0;
+
+        if (carrito.getListaProductos() == null || carrito.getListaProductos().isEmpty())
+            return total;
 
         for (CarritoProducto producto : carrito.getListaProductos()) 
         {
             Integer precioProducto = restTemplate.getForObject(PRODUCTO_API + "/precio/" + producto.getProductoId(), Integer.class);
 
-            if (precioProducto != null) 
-            {
+            if (precioProducto != null)
                 total += precioProducto * producto.getCantidad();
-            }
         }
 
         return total;
