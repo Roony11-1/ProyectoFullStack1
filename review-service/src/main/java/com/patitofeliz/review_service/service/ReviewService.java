@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.review_service.model.Review;
 import com.patitofeliz.review_service.repository.ReviewRepository;
@@ -12,6 +13,12 @@ import com.patitofeliz.review_service.repository.ReviewRepository;
 public class ReviewService {
      @Autowired
      private ReviewRepository reviewRepository;
+     @Autowired
+     private RestTemplate restTemplate;
+    @Autowired
+    private ReviewService reviewService;
+    private static final String USUARIO_API = "http://localhost:8001/usuario";
+
 
      public List<Review> getReviews()
      {
