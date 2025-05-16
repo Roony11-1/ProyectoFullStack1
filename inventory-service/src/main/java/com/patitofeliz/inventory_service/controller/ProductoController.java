@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.patitofeliz.inventory_service.model.Producto;
 import com.patitofeliz.inventory_service.service.ProductoService;
 
+
 @RestController
 @RequestMapping("/producto")
 public class ProductoController {
@@ -113,4 +114,10 @@ public class ProductoController {
         productoService.borrar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("usuario/{id}/reviews")
+    public ResponseEntity<List<Review>> getProductoReviews(@PathVariable int id) {
+        return ResponseEntity.ok(productoService.getReviewsByProductId(id));
+    }
+    
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.patitofeliz.inventory_service.model.Producto;
 import com.patitofeliz.inventory_service.repository.ProductoRepository;
 
+
 @Service
 public class ProductoService 
 {
@@ -92,5 +93,8 @@ public class ProductoService
             return null;
 
         return producto.getCantidadInventario();
+    }
+    public List<Review>getReviewsByProductoId (int id){
+        return reviewRepository.findByProductoId(id);
     }
 }
