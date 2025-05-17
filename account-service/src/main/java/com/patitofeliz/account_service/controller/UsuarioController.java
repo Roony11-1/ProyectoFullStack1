@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.account_service.model.Usuario;
+import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.service.UsuarioService;
 
 @RestController
@@ -71,5 +72,13 @@ public class UsuarioController
 
         usuarioService.borrar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/review/{id}")
+    public ResponseEntity<List<Review>> getUsuarioReviews(@PathVariable int id) 
+    {
+        List<Review> listaReseñas = usuarioService.getReviewsByUsuarioId(id);
+
+        return ResponseEntity.ok(listaReseñas);
     }
 }

@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.account_service.model.Usuario;
+import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
 
 @Service
@@ -15,6 +17,10 @@ public class UsuarioService
 {
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String REVIEW_API = "http://localhost:8004/review";
 
     public List<Usuario> getUsuarios()
     {
@@ -66,5 +72,15 @@ public class UsuarioService
     public void borrar(int id)
     {
         usuarioRepository.deleteById(id);
+    }
+
+    public List<Review> getReviewsByUsuarioId(int id) 
+    {
+        List<Review> listaReseñasPorId = restTemplate.getForObject(REVIEW_API+"/producto/"+id, List.class);
+
+        if (listaReseñasPorId == null || listaReseñasPorId.isEmpty())
+            throw new NoSuchElementException("No se encontraron reseñas para el usuario con ID: " + id);
+
+        return listaReseñasPorId;
     }
 }
