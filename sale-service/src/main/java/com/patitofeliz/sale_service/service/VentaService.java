@@ -12,7 +12,6 @@ import com.patitofeliz.sale_service.model.Carrito;
 import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.model.Venta;
 import com.patitofeliz.sale_service.model.conexion.Producto;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 
 @Service
@@ -26,7 +25,7 @@ public class VentaService
     private CarritoService carritoService;
 
     private static final String PRODUCTO_API = "http://localhost:8003/producto";
-    private static final String USUARIO_API = "http://localhost:8001/usuario";
+    //private static final String USUARIO_API = "http://localhost:8001/usuario";
 
 
     public List<Venta> getVentasPorUsuarioId(int id)
@@ -44,7 +43,7 @@ public class VentaService
         return ventaRepository.findById(id).orElse(null);
     }
 
-    private Usuario getUsuarioId(int id)
+    /*private Usuario getUsuarioId(int id)
     {
         Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+id, Usuario.class);
 
@@ -52,7 +51,7 @@ public class VentaService
             throw new NoSuchElementException("Usuario no encontrado");
 
         return usuario;
-    }
+    }*/
 
     private Producto obtenerProductoPorId(int id) 
     {
@@ -71,8 +70,8 @@ public class VentaService
     public Venta generarVenta(Venta venta)
     {
         Carrito carritoVenta = carritoService.getCarrito(venta.getCarritoId());
-        Usuario usuario = getUsuarioId(venta.getUsuarioId());
-        Usuario vendedor = getUsuarioId(venta.getVendedorId());
+        //Usuario usuario = getUsuarioId(venta.getUsuarioId());
+        //Usuario vendedor = getUsuarioId(venta.getVendedorId());
         
         if (carritoVenta == null)
             throw new NoSuchElementException("Carrito no encontrado");
