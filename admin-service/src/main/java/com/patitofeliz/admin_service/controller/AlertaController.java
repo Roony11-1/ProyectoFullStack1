@@ -45,7 +45,7 @@ public class AlertaController
         return ResponseEntity.ok(alerta);
     }
 
-    @GetMapping("/{tipoAlerta}")
+    @GetMapping("/filtrar/{tipoAlerta}")
     public ResponseEntity<List<Alerta>> obtenerAlertaTipo(@PathVariable("tipoAlerta") String tipoAlerta)
     {
         List<Alerta> listaAlertasFiltrada = alertaService.getAlertaByTipoAlerta(tipoAlerta);
