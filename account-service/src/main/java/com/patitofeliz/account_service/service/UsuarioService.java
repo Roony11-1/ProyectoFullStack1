@@ -40,6 +40,20 @@ public class UsuarioService
         return usuarioRepository.findByEmail(email).orElse(null);
     }
 
+    private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
+    }
+
     public Usuario registrar(Usuario usuario)
     {
         // Verificación a nivel de software para evitar que nos ingresen email repetidos o nulos
@@ -48,16 +62,7 @@ public class UsuarioService
 
         Usuario nuevo = usuarioRepository.save(usuario);
 
-        Alerta alertaRegistroUsuario = new Alerta("Usuario registrado: "+nuevo.getNombreUsuario(), "Aviso", "Ahora");
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaRegistroUsuario, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
+        crearAlerta("Usuario registrado: "+nuevo.getNombreUsuario(), "Aviso");
 
         return nuevo;
     }

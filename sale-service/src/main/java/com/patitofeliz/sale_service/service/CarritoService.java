@@ -41,6 +41,20 @@ public class CarritoService
         return carritoRepository.findById(id).orElse(null);
     }
 
+    private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
+    }
+
     public Carrito guardar(Carrito carrito)
     {
         Integer total = calcularTotal(carrito);
@@ -52,16 +66,7 @@ public class CarritoService
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        Alerta alertaProductoRegistrado = new Alerta("Carrito registrado", "Aviso", "Ahora");
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
+        crearAlerta("Carrito registrado", "Aviso");
 
         return nuevo;
     }

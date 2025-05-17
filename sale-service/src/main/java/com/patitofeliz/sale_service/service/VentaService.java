@@ -65,6 +65,20 @@ public class VentaService
         return producto;
     }
 
+    private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
+    }
+
     private void actualizarProductoInventario(int id, Producto productoActualizado) 
     {
         restTemplate.put(PRODUCTO_API + "/update/" + id, productoActualizado);
@@ -104,16 +118,7 @@ public class VentaService
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
-        Alerta alertaProductoRegistrado = new Alerta("Venta Carrito - id: "+venta.getCarritoId()+" - comprador: "+usuario.getNombreUsuario()+" vendedor: "+vendedor.getNombreUsuario(), "Aviso", "Ahora");
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
+        crearAlerta("Venta Carrito - id: "+venta.getCarritoId()+" - comprador: "+usuario.getNombreUsuario()+" vendedor: "+vendedor.getNombreUsuario(), "Aviso");
 
         return nuevaVenta;
     }

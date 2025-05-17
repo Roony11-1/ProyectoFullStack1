@@ -40,6 +40,20 @@ public class ReviewService {
    {
       return reviewRepository.findByProductoId(productoId);
    }
+
+   private void crearAlerta(String mensaje, String tipoAlerta)
+   {
+      Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+      try
+      {
+         restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+      }
+      catch (RestClientException e)
+      {
+         throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+      }
+   }
      
    public Review registrar(Review review)
    {
@@ -53,17 +67,7 @@ public class ReviewService {
 
       review.setAutor(usuario.getNombreUsuario());
 
-      Alerta alertaProductoRegistrado = new Alerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso", "Ahora");
-
-      try
-      {
-         restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-      }
-      catch (RestClientException e)
-      {
-         throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-      }
-
+      crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso");
 
       Review nuevo = reviewRepository.save(review);
       return nuevo;

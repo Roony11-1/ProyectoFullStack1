@@ -34,22 +34,26 @@ public class ProductoService
     {
         return productoRepository.findById(id).orElse(null);
     }
- 
-    public Producto registrar(Producto producto)
+
+    private void crearAlerta(String mensaje, String tipoAlerta)
     {
-    
-        Producto nuevo = productoRepository.save(producto);
-        
-        Alerta alertaProductoRegistrado = new Alerta("Producto registrado: "+producto.getNombre(), "Aviso", "Ahora");
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
 
         try
         {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
         }
         catch (RestClientException e)
         {
             throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
         }
+   }
+ 
+    public Producto registrar(Producto producto)
+    {
+        Producto nuevo = productoRepository.save(producto);
+
+        crearAlerta("Producto registrado: "+producto.getNombre(), "Aviso");
 
         return nuevo;
     }
