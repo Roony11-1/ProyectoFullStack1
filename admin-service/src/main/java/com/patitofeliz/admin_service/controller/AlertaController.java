@@ -45,6 +45,17 @@ public class AlertaController
         return ResponseEntity.ok(alerta);
     }
 
+    @GetMapping("/{tipoAlerta}")
+    public ResponseEntity<List<Alerta>> obtenerAlertaTipo(@PathVariable("tipoAlerta") String tipoAlerta)
+    {
+        List<Alerta> listaAlertasFiltrada = alertaService.getAlertaByTipoAlerta(tipoAlerta);
+
+        if (listaAlertasFiltrada.isEmpty() || tipoAlerta.equalsIgnoreCase("aviso"))
+            return ResponseEntity.noContent().build();
+        
+        return ResponseEntity.ok(listaAlertasFiltrada);
+    }
+
     @PostMapping
     public ResponseEntity<Alerta> registrarAlerta(@RequestBody Alerta alerta)
     {

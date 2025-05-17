@@ -27,6 +27,11 @@ public class AlertaService
         return alertaRepository.findById(id).orElse(null);
     }
 
+    public List<Alerta> getAlertaByTipoAlerta(String tipoAlerta)
+    {
+        return alertaRepository.findByTipoAlertaContainingIgnoreCase(tipoAlerta);
+    }
+
     public Alerta guardar(Alerta alerta)
     {
         String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
