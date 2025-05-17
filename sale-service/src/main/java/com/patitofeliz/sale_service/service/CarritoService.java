@@ -5,10 +5,12 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.sale_service.model.Carrito;
 import com.patitofeliz.sale_service.model.CarritoProducto;
+import com.patitofeliz.sale_service.model.conexion.Alerta;
 import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.ReporitoryCarrito;
 
@@ -22,6 +24,7 @@ public class CarritoService
 
     private static final String PRODUCTO_API = "http://localhost:8003/producto";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
+    private static final String ALERTA_API = "http://localhost:8002/alerta";
 
     public List<Carrito> getCarritos()
     {
@@ -48,6 +51,17 @@ public class CarritoService
         carrito.setTotal(total);
 
         Carrito nuevo = carritoRepository.save(carrito);
+
+        Alerta alertaProductoRegistrado = new Alerta("Carrito registrado", "Aviso", "Ahora");
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
 
         return nuevo;
     }
