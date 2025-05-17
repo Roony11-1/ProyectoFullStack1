@@ -12,10 +12,9 @@ public class Alerta
     private String tipoAlerta;
     private String fecha;
 
-    public Alerta(String mensaje, String tipoAlerta, String fecha)
+    public Alerta(String mensaje, String tipoAlerta)
     {
         this.mensaje = mensaje;
         this.tipoAlerta = tipoAlerta;
-        this.fecha = fecha;
     }
 }
