@@ -5,9 +5,11 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.review_service.model.Review;
+import com.patitofeliz.review_service.model.conexion.Alerta;
 import com.patitofeliz.review_service.model.conexion.Producto;
 import com.patitofeliz.review_service.model.conexion.Usuario;
 import com.patitofeliz.review_service.repository.ReviewRepository;
@@ -20,6 +22,8 @@ public class ReviewService {
    private ReviewRepository reviewRepository;
    private static final String USUARIO_API = "http://localhost:8001/usuario";
    private static final String PRODUCTO_API="http://localhost:8003/producto";
+   private static final String ALERTA_API = "http://localhost:8002/alerta";
+
 
 
    public List<Review> getReviews()
@@ -48,6 +52,18 @@ public class ReviewService {
          throw new NoSuchElementException("Producto no encontrado");
 
       review.setAutor(usuario.getNombreUsuario());
+
+      Alerta alertaProductoRegistrado = new Alerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso", "Ahora");
+
+      try
+      {
+         restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+      }
+      catch (RestClientException e)
+      {
+         throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+      }
+
 
       Review nuevo = reviewRepository.save(review);
       return nuevo;
