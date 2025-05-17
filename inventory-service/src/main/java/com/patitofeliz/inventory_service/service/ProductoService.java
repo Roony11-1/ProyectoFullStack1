@@ -22,8 +22,6 @@ public class ProductoService
 
     private static final String REVIEW_API = "http://localhost:8004/review";
 
-    
-
     public List<Producto> getProductos()
     {
         return productoRepository.findAll();
