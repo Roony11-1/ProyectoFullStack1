@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.account_service.model.Usuario;
+import com.patitofeliz.account_service.model.conexion.Carrito;
 import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.service.UsuarioService;
 
@@ -80,5 +81,13 @@ public class UsuarioController
         List<Review> listaReseñas = usuarioService.getReviewsByUsuarioId(id);
 
         return ResponseEntity.ok(listaReseñas);
+    }
+
+    @GetMapping("/carrito/{id}")
+    public ResponseEntity<List<Carrito>> getUsuarioCarritos(@PathVariable int id) 
+    {
+        List<Carrito> listaCarritos = usuarioService.getCarritoByUsuarioId(id);
+
+        return ResponseEntity.ok(listaCarritos);
     }
 }

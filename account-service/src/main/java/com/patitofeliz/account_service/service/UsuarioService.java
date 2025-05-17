@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.account_service.model.Usuario;
 import com.patitofeliz.account_service.model.conexion.Alerta;
+import com.patitofeliz.account_service.model.conexion.Carrito;
 import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
 
@@ -24,6 +25,10 @@ public class UsuarioService
 
     private static final String REVIEW_API = "http://localhost:8004/review";
     private static final String ALERTA_API = "http://localhost:8002/alerta";
+    private static final String INVENTARIO_API = "http://localhost:8003/producto";
+    private static final String SALES_API = "http://localhost:8005";
+    private static final String CARRITO_API = SALES_API+"/carrito";
+    private static final String VENTA_API = SALES_API+"/venta";
 
     public List<Usuario> getUsuarios()
     {
@@ -101,5 +106,15 @@ public class UsuarioService
             throw new NoSuchElementException("No se encontraron reseñas para el usuario con ID: " + id);
 
         return listaReseñasPorId;
+    }
+
+    public List<Carrito> getCarritoByUsuarioId(int id)
+    {
+        List<Carrito> listaCarritoPorId = restTemplate.getForObject(CARRITO_API+"/usuario/"+id, List.class);
+
+        if (listaCarritoPorId == null || listaCarritoPorId.isEmpty())
+            throw new NoSuchElementException("No se encontraron reseñas para el usuario con ID: " + id);
+
+        return listaCarritoPorId;
     }
 }
