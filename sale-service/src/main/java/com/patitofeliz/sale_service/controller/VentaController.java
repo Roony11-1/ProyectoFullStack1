@@ -1,7 +1,11 @@
 package com.patitofeliz.sale_service.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +27,27 @@ public class VentaController
         Venta nuevaVenta = ventaService.generarVenta(venta);
 
         return ResponseEntity.ok(nuevaVenta);
+    }
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<Venta>> getCarritosUsuarioId(@PathVariable("id") int id)
+    {
+        List<Venta> ventaId = ventaService.getVentasPorUsuarioId(id);
+
+        if (ventaId.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(ventaId);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Venta>> getCarritos()
+    {
+        List<Venta> carritos = ventaService.getVentas();
+
+        if (carritos.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(carritos);
     }
 }

@@ -86,8 +86,8 @@ public class UsuarioController
     @GetMapping("/carrito/{id}")
     public ResponseEntity<List<Carrito>> getUsuarioCarritos(@PathVariable int id) 
     {
-        List<Carrito> listaCarritos = usuarioService.getCarritoByUsuarioId(id);
+        List<Carrito> listaProducto = usuarioService.getCarritoByUsuarioId(id);
 
-        return ResponseEntity.ok(listaCarritos);
+        return ResponseEntity.ok(listaProducto);
     }
 }
