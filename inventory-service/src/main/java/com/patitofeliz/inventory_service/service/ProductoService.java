@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Producto;
+import com.patitofeliz.inventory_service.model.conexion.Review;
 import com.patitofeliz.inventory_service.repository.ProductoRepository;
 
 
@@ -15,6 +20,12 @@ public class ProductoService
 {
     @Autowired
     private ProductoRepository productoRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String REVIEW_API = "http://localhost:8004/review";
+
+    
 
     public List<Producto> getProductos()
     {
@@ -94,7 +105,22 @@ public class ProductoService
 
         return producto.getCantidadInventario();
     }
-    public List<Review>getReviewsByProductoId (int id){
-        return reviewRepository.findByProductoId(id);
+
+    public List<Review> getReviewsByProductoId(int id) 
+    {
+        ResponseEntity<List<Review>> response = restTemplate.exchange(
+            REVIEW_API + "/producto/" + id,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Review>>() {}
+        );
+
+        List<Review> listaReseñasPorId = response.getBody();
+
+        if (listaReseñasPorId == null || listaReseñasPorId.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron reseñas para el producto con ID: " + id);
+        }
+
+        return listaReseñasPorId;
     }
 }

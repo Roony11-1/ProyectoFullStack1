@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.patitofeliz.inventory_service.model.Producto;
 
 @Repository
-public interface ProductoRepository extends JpaRepository<Producto,Integer> {
+public interface ProductoRepository extends JpaRepository<Producto,Integer> 
+{
+    
 }

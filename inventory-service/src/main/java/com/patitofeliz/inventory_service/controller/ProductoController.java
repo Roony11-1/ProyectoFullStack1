@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.inventory_service.model.Producto;
+import com.patitofeliz.inventory_service.model.conexion.Review;
 import com.patitofeliz.inventory_service.service.ProductoService;
 
 
@@ -115,9 +116,12 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("usuario/{id}/reviews")
-    public ResponseEntity<List<Review>> getProductoReviews(@PathVariable int id) {
-        return ResponseEntity.ok(productoService.getReviewsByProductId(id));
+    @GetMapping("/review/{id}")
+    public ResponseEntity<List<Review>> getProductoReviews(@PathVariable int id) 
+    {
+        List<Review> listaReseñas = productoService.getReviewsByProductoId(id);
+
+        return ResponseEntity.ok(listaReseñas);
     }
     
 }
