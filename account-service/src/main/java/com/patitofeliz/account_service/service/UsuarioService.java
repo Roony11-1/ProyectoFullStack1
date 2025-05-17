@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.account_service.model.Usuario;
+import com.patitofeliz.account_service.model.conexion.Alerta;
 import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
 
@@ -21,6 +22,7 @@ public class UsuarioService
     private RestTemplate restTemplate;
 
     private static final String REVIEW_API = "http://localhost:8004/review";
+    private static final String ALERTA_API = "http://localhost:8002/alerta";
 
     public List<Usuario> getUsuarios()
     {
@@ -44,6 +46,17 @@ public class UsuarioService
             throw new IllegalArgumentException("Ya existe un usuario con ese email");
 
         Usuario nuevo = usuarioRepository.save(usuario);
+
+        Alerta alertaRegistroUsuario = new Alerta("Usuario registrado", "Aviso", "Ahora");
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaRegistroUsuario, Alerta.class);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
 
         return nuevo;
     }
