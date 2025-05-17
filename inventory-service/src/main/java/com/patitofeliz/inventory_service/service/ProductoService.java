@@ -5,9 +5,11 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Producto;
+import com.patitofeliz.inventory_service.model.conexion.Alerta;
 import com.patitofeliz.inventory_service.model.conexion.Review;
 import com.patitofeliz.inventory_service.repository.ProductoRepository;
 
@@ -21,6 +23,7 @@ public class ProductoService
     private RestTemplate restTemplate;
 
     private static final String REVIEW_API = "http://localhost:8004/review";
+    private static final String ALERTA_API = "http://localhost:8002/alerta";
 
     public List<Producto> getProductos()
     {
@@ -36,6 +39,17 @@ public class ProductoService
     {
     
         Producto nuevo = productoRepository.save(producto);
+        
+        Alerta alertaProductoRegistrado = new Alerta("Producto registrado: "+producto.getNombre(), "Aviso", "Ahora");
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
 
         return nuevo;
     }

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.account_service.model.Usuario;
@@ -53,7 +54,7 @@ public class UsuarioService
         {
             restTemplate.postForObject(ALERTA_API, alertaRegistroUsuario, Alerta.class);
         }
-        catch (Exception e)
+        catch (RestClientException e)
         {
             throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
         }
