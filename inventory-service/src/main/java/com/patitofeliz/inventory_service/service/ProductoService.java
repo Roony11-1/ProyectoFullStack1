@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -108,18 +105,10 @@ public class ProductoService
 
     public List<Review> getReviewsByProductoId(int id) 
     {
-        ResponseEntity<List<Review>> response = restTemplate.exchange(
-            REVIEW_API + "/producto/" + id,
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<List<Review>>() {}
-        );
+        List<Review> listaReseñasPorId = restTemplate.getForObject(REVIEW_API+"/producto/"+id, List.class);
 
-        List<Review> listaReseñasPorId = response.getBody();
-
-        if (listaReseñasPorId == null || listaReseñasPorId.isEmpty()) {
+        if (listaReseñasPorId == null || listaReseñasPorId.isEmpty())
             throw new NoSuchElementException("No se encontraron reseñas para el producto con ID: " + id);
-        }
 
         return listaReseñasPorId;
     }
