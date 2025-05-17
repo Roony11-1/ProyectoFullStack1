@@ -62,7 +62,7 @@ public class UsuarioService
 
         Usuario nuevo = usuarioRepository.save(usuario);
 
-        crearAlerta("Usuario registrado: "+nuevo.getNombreUsuario(), "Aviso");
+        crearAlerta("Usuario registrado: "+nuevo.getNombreUsuario(), "Aviso: Usuario");
 
         return nuevo;
     }

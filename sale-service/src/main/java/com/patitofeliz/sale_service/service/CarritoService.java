@@ -66,7 +66,7 @@ public class CarritoService
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        crearAlerta("Carrito registrado", "Aviso");
+        crearAlerta("Carrito registrado", "Aviso: Carrito");
 
         return nuevo;
     }

@@ -53,7 +53,7 @@ public class ProductoService
     {
         Producto nuevo = productoRepository.save(producto);
 
-        crearAlerta("Producto registrado: "+producto.getNombre(), "Aviso");
+        crearAlerta("Producto registrado: "+producto.getNombre(), "Aviso: Producto");
 
         return nuevo;
     }

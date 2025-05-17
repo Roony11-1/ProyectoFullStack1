@@ -67,7 +67,7 @@ public class ReviewService {
 
       review.setAutor(usuario.getNombreUsuario());
 
-      crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso");
+      crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
 
       Review nuevo = reviewRepository.save(review);
       return nuevo;

@@ -118,7 +118,7 @@ public class VentaService
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
-        crearAlerta("Venta Carrito - id: "+venta.getCarritoId()+" - comprador: "+usuario.getNombreUsuario()+" vendedor: "+vendedor.getNombreUsuario(), "Aviso");
+        crearAlerta("Venta Carrito - id: "+venta.getCarritoId()+" - comprador: "+usuario.getNombreUsuario()+" vendedor: "+vendedor.getNombreUsuario(), "Aviso: Venta");
 
         return nuevaVenta;
     }
