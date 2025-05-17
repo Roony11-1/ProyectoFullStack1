@@ -29,11 +29,10 @@ public class AlertaService
 
     public Alerta guardar(Alerta alerta)
     {
-        Alerta alertaNueva = alertaRepository.save(alerta);
-
-        
         String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        alertaNueva.setFecha(fechaActual);
+        alerta.setFecha(fechaActual);
+
+        Alerta alertaNueva = alertaRepository.save(alerta);
 
         return alertaNueva;
     }
