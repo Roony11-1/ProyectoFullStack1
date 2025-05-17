@@ -46,7 +46,7 @@ public class AlertaController
     }
 
     @PostMapping
-    public ResponseEntity<Alerta> registrarUsuario(@RequestBody Alerta alerta)
+    public ResponseEntity<Alerta> registrarAlerta(@RequestBody Alerta alerta)
     {
         Alerta alertaNueva = alertaService.guardar(alerta);
         
