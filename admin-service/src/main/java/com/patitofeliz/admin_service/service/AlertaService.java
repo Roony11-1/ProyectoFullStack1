@@ -1,5 +1,7 @@
 package com.patitofeliz.admin_service.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,6 +30,10 @@ public class AlertaService
     public Alerta guardar(Alerta alerta)
     {
         Alerta alertaNueva = alertaRepository.save(alerta);
+
+        
+        String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        alertaNueva.setFecha(fechaActual);
 
         return alertaNueva;
     }
