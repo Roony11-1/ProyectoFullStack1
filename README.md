@@ -20,11 +20,11 @@ Usuario<br>
     "tipoUsuario" : String
 }<br>
 # Administracion<br>
+NO INGRESAMOS ALERTAS NOSOTROS A MANO, LAS GENERA LOS SISTEMA SOLO DEBEMOS HACER LOS GET
 Alerta<br>
 {
     "mensaje" : String,
     "tipoAlerta" : String,
-    "fecha" : String
 }<br>
 # Inventario<br>
 Producto<br>
@@ -39,7 +39,6 @@ Reseña<br>
 {
     "productoId" : int,
     "usuarioId" : int,
-    "autor" : String,
     "comentario" : String
 }<br>
 # Venta<br>
