@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.patitofeliz.account_service.model.Usuario;
 import com.patitofeliz.account_service.model.conexion.Carrito;
 import com.patitofeliz.account_service.model.conexion.Review;
+import com.patitofeliz.account_service.model.conexion.Venta;
 import com.patitofeliz.account_service.service.UsuarioService;
 
 @RestController
@@ -89,5 +90,13 @@ public class UsuarioController
         List<Carrito> listaProducto = usuarioService.getCarritoByUsuarioId(id);
 
         return ResponseEntity.ok(listaProducto);
+    }
+
+    @GetMapping("/venta/{id}")
+    public ResponseEntity<List<Venta>> getUsuarioVentas(@PathVariable int id) 
+    {
+        List<Venta> listaVentas = usuarioService.getVentasByUsuarioId(id);
+
+        return ResponseEntity.ok(listaVentas);
     }
 }
