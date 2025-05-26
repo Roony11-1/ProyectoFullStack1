@@ -34,20 +34,6 @@ public class ProductoService
     {
         return productoRepository.findById(id).orElse(null);
     }
-
-    private void crearAlerta(String mensaje, String tipoAlerta)
-    {
-        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
-
-        try
-        {
-        restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
-   }
  
     public Producto registrar(Producto producto)
     {
@@ -76,6 +62,24 @@ public class ProductoService
         productoRepository.deleteById(id);
     }
 
+    // Auxiliares
+
+        private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+        restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
+   }
+
+   // Conexiones
+   
     public List<Review> getReviewsByProductoId(int id) 
     {
         List<Review> listaReseñasPorId = restTemplate.getForObject(REVIEW_API+"/producto/"+id, List.class);
