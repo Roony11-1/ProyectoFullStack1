@@ -44,10 +44,8 @@ public class AlertaService
 
     public Alerta actualizar(int id, Alerta alertaActualizada)
     {
-        Alerta alertaActual = alertaRepository.findById(id).orElse(null);
-
-        if (alertaActual == null)
-            throw new NoSuchElementException("Alerta no encontrada");
+        Alerta alertaActual = alertaRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Alerta no encontrada"));
 
         alertaActual.setMensaje(alertaActualizada.getMensaje());
         alertaActual.setTipoAlerta(alertaActualizada.getTipoAlerta());
