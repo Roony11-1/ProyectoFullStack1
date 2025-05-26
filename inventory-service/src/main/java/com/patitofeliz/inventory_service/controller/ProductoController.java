@@ -43,54 +43,6 @@ public class ProductoController {
         return ResponseEntity.ok(producto);    
     }
 
-    // Devuelve la cantidad de producto en stock
-    @GetMapping("/inventario/{id}")
-    public ResponseEntity<Integer> obtenerStockProducto(@PathVariable("id") int id)
-    {
-        Integer cantidadInvetario = productoService.getCantidadProducto(id);
-
-        if (cantidadInvetario == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(cantidadInvetario);
-    }
-
-    // Devuelve el precio del producto
-    @GetMapping("/precio/{id}")
-    public ResponseEntity<Integer> obtenerPrecioProducto(@PathVariable("id") int id)
-    {
-        Integer precio = productoService.getPrecioProducto(id);
-
-        if (precio == null)
-            return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(precio);
-    }
-
-    // Devuelve la marca del producto
-    @GetMapping("/marca/{id}")
-    public ResponseEntity<String> obtenerMarcaProducto(@PathVariable("id") int id)
-    {
-        String marca = productoService.getMarcaProductoPorId(id);
-
-        if (marca == null)
-            return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(marca);
-    }
-
-    // Devuelve el nombre del producto
-    @GetMapping("/nombre/{id}")
-    public ResponseEntity<String> obtenerNombreProducto(@PathVariable("id") int id)
-    {
-        String nombre = productoService.getNombreProductoPorId(id);
-
-        if (nombre == null)
-            return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(nombre);
-    }
-
     @PostMapping
     public ResponseEntity<Producto> guardarProducto(@RequestBody Producto producto)
     {

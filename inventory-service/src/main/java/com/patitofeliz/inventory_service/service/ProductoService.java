@@ -60,11 +60,8 @@ public class ProductoService
 
     public Producto actualizar(int id, Producto productoActualizado)
     {
-        Producto productoActual = productoRepository.findById(id).orElse(null);
-
-        if (productoActual == null)
-            throw new NoSuchElementException("Producto no encontrado");
-
+        Producto productoActual = productoRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Producto no encontrado"));      
 
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
@@ -77,46 +74,6 @@ public class ProductoService
     public void borrar(int id)
     {
         productoRepository.deleteById(id);
-    }
-
-    public String getMarcaProductoPorId(int id)
-    {
-        Producto producto = productoRepository.findById(id).orElse(null);
-
-        if (producto == null)
-            return null;
-
-        return producto.getMarca();
-    }
-
-    public Integer getPrecioProducto(int id)
-    {
-        Producto producto = productoRepository.findById(id).orElse(null);
-
-        if (producto == null)
-            return null;
-
-        return producto.getPrecio();
-    }
-
-    public String getNombreProductoPorId(int id)
-    {
-        Producto producto = productoRepository.findById(id).orElse(null);
-
-        if (producto == null)
-            return null;
-
-        return producto.getNombre();
-    }
-
-    public Integer getCantidadProducto(int id)
-    {
-        Producto producto = productoRepository.findById(id).orElse(null);
-
-        if (producto == null)
-            return null;
-
-        return producto.getCantidadInventario();
     }
 
     public List<Review> getReviewsByProductoId(int id) 
