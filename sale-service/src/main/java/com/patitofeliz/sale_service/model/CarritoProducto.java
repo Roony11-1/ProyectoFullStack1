@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class CarritoProducto 
 {
     private int productoId;
+    private String nombre;
+    private String marca;
     private int cantidad;
 }

@@ -85,7 +85,13 @@ public class CarritoService
             Producto productoExtraido = obtenerProducto(producto.getProductoId());
 
             if (productoExtraido != null)
+            {
                 total += productoExtraido.getPrecio() * producto.getCantidad();
+
+                producto.setNombre(productoExtraido.getNombre());
+                producto.setMarca(productoExtraido.getMarca());
+            }
+
         }
 
         return total;
