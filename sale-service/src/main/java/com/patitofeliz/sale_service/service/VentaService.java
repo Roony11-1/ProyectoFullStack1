@@ -52,49 +52,12 @@ public class VentaService
         return ventaRepository.findById(id).orElse(null);
     }
 
-    private Usuario getUsuarioId(int id)
-    {
-        Usuario usuario = restTemplate.getForObject(USUARIO_API+"/"+id, Usuario.class);
-
-        if (usuario == null)
-            throw new NoSuchElementException("Usuario no encontrado");
-
-        return usuario;
-    }
-
-    private Producto obtenerProductoPorId(int id) 
-    {
-        Producto producto = restTemplate.getForObject(PRODUCTO_API +"/"+id, Producto.class);
-        if (producto == null)
-            throw new NoSuchElementException("Producto con id "+id+" no encontrado");
-        return producto;
-    }
-
-    private void crearAlerta(String mensaje, String tipoAlerta)
-    {
-        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
-    }
-
-    private void actualizarProductoInventario(int id, Producto productoActualizado) 
-    {
-        restTemplate.put(PRODUCTO_API + "/update/" + id, productoActualizado);
-    }
-
     @Transactional
     public Venta generarVenta(Venta venta)
     {
         Carrito carritoVenta = carritoService.getCarrito(venta.getCarritoId());
-        Usuario usuario = getUsuarioId(venta.getUsuarioId());
-        Usuario vendedor = getUsuarioId(venta.getVendedorId());
+        Usuario usuario = obtenerUsuario(venta.getUsuarioId());
+        Usuario vendedor = obtenerUsuario(venta.getVendedorId());
         
         if (carritoVenta == null)
             throw new NoSuchElementException("Carrito no encontrado");
@@ -105,7 +68,7 @@ public class VentaService
         // Descuento de productos del inventario
         for (CarritoProducto producto : carritoVenta.getListaProductos()) 
         {
-            Producto productoInventario = obtenerProductoPorId(producto.getProductoId());
+            Producto productoInventario = obtenerProducto(producto.getProductoId());
 
             if (producto.getCantidad()>productoInventario.getCantidadInventario())
                 throw new NoSuchElementException("No hay suficientes existencias de "+productoInventario.getNombre());
@@ -126,5 +89,46 @@ public class VentaService
         crearAlerta("Venta Carrito - id: "+venta.getCarritoId()+" - comprador: "+usuario.getNombreUsuario()+" vendedor: "+vendedor.getNombreUsuario(), "Aviso: Venta");
 
         return nuevaVenta;
+    }
+
+    // AUXILIARES
+
+    private Usuario obtenerUsuario(int usuarioId) 
+    {
+        Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
+
+        if (usuario == null)
+            throw new NoSuchElementException("Usuario no encontrado con ID: " + usuarioId);
+
+        return usuario;
+    }
+
+    private Producto obtenerProducto(int productoId) 
+    {
+        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
+
+        if (producto == null)
+            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
+
+        return producto;
+    }
+
+    private void actualizarProductoInventario(int id, Producto productoActualizado) 
+    {
+        restTemplate.put(PRODUCTO_API + "/update/" + id, productoActualizado);
+    }
+
+    private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
     }
 }
