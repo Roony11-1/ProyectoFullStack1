@@ -48,6 +48,7 @@ public class CarritoService
 
         Usuario usuario = obtenerUsuario(carrito.getUsuarioId());
 
+        carrito.setListaProductos(normalizarCarrito(carrito.getListaProductos()));
         carrito.setTotal(total);
 
         Carrito nuevo = carritoRepository.save(carrito);
@@ -62,8 +63,7 @@ public class CarritoService
         Carrito carritoActual = carritoRepository.findById(id)
         .orElseThrow(() -> new NoSuchElementException("Carrito no encontrado"));
 
-        carritoActual.setUsuarioId(carritoActualizado.getUsuarioId());
-        carritoActual.setListaProductos(carritoActualizado.getListaProductos());
+        carritoActual.setListaProductos(normalizarCarrito(carritoActualizado.getListaProductos()));
 
         return carritoRepository.save(carritoActual);
     }
@@ -98,6 +98,16 @@ public class CarritoService
     }
 
     // AUXILIARES
+
+    // Metodo que verificara si hay dos veces ingresado un producto en el carrito,
+    // si es el caso, el metodo fusionara las cantidades en el carrito y dejara solo 1 copia
+    // Ejemplo Carrito: auto-400, bici-200, auto-600 -|Entra al metodo|-> auto-1000, bici-600
+    private List<CarritoProducto> normalizarCarrito(List<CarritoProducto> productosCarrito)
+    {
+        List<CarritoProducto> productos = productosCarrito;
+
+        return productos;
+    }
 
     private Usuario obtenerUsuario(int usuarioId) 
     {
