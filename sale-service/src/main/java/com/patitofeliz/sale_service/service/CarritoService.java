@@ -44,12 +44,12 @@ public class CarritoService
 
     public Carrito guardar(Carrito carrito)
     {
+        carrito.setListaProductos(normalizarCarrito(carrito.getListaProductos()));
+
         Integer total = calcularTotal(carrito);
+        carrito.setTotal(total);
 
         Usuario usuario = obtenerUsuario(carrito.getUsuarioId());
-
-        carrito.setListaProductos(normalizarCarrito(carrito.getListaProductos()));
-        carrito.setTotal(total);
 
         Carrito nuevo = carritoRepository.save(carrito);
 
