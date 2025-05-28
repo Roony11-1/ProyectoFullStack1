@@ -93,7 +93,7 @@ public class ReviewService {
          throw new NoSuchElementException("Usuario no encontrado con ID: " + usuarioId);
 
       return usuario;
-}
+   }
 
    private Producto obtenerProducto(int productoId) 
    {
@@ -103,5 +103,5 @@ public class ReviewService {
          throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
 
       return producto;
-}
+   }
 }
