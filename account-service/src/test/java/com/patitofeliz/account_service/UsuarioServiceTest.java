@@ -57,8 +57,6 @@ public class UsuarioServiceTest
         //en el tamaño de la lista y que los valores sean correctos.
         assertEquals(2, resultado.size());
         assertEquals("juanito", resultado.get(0).getNombreUsuario());
-
-
     }
 
     @Test
