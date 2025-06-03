@@ -41,7 +41,7 @@ Reseña<br>
     "usuarioId" : int,
     "comentario" : String
 }<br>
-# Venta<br>
+# Carrito<br>
 Carrito<br>
 {
     "usuarioId" : int,
@@ -49,10 +49,9 @@ Carrito<br>
         {
         "productoId" : int,
         "cantidad" : int
-        }
-        ],
-    "total" : int
+        }]
 }<br>
+# Venta<br>
 Venta<br>
 {
     "usuarioId" : int,
