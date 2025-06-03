@@ -1,4 +1,4 @@
-package com.patitofeliz.inventory_service.service;
+package com.patitofeliz.producto_service.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.inventory_service.model.Producto;
-import com.patitofeliz.inventory_service.model.conexion.Alerta;
-import com.patitofeliz.inventory_service.model.conexion.Review;
-import com.patitofeliz.inventory_service.repository.ProductoRepository;
+import com.patitofeliz.producto_service.model.Producto;
+import com.patitofeliz.producto_service.model.conexion.Alerta;
+import com.patitofeliz.producto_service.model.conexion.Review;
+import com.patitofeliz.producto_service.repository.ProductoRepository;
 
 
 @Service
@@ -52,7 +52,6 @@ public class ProductoService
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
         productoActual.setPrecio(productoActualizado.getPrecio());
-        productoActual.setCantidadInventario(productoActualizado.getCantidadInventario());
 
         return productoRepository.save(productoActual);
     }

@@ -1,4 +1,4 @@
-package com.patitofeliz.inventory_service.controller;
+package com.patitofeliz.producto_service.controller;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.patitofeliz.inventory_service.model.Producto;
-import com.patitofeliz.inventory_service.model.conexion.Review;
-import com.patitofeliz.inventory_service.service.ProductoService;
+import com.patitofeliz.producto_service.model.Producto;
+import com.patitofeliz.producto_service.model.conexion.Review;
+import com.patitofeliz.producto_service.service.ProductoService;
 
 
 @RestController

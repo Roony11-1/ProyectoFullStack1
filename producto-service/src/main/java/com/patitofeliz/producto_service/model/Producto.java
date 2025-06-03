@@ -1,4 +1,4 @@
-package com.patitofeliz.inventory_service.model;
+package com.patitofeliz.producto_service.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +26,5 @@ public class Producto
     private String nombre;
     private String marca;
     private int precio;
-    private int cantidadInventario;
 }
 // nashe //
