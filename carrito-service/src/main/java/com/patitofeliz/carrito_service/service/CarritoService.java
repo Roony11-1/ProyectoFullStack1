@@ -1,4 +1,4 @@
-package com.patitofeliz.sale_service.service;
+package com.patitofeliz.carrito_service.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.sale_service.model.Carrito;
-import com.patitofeliz.sale_service.model.CarritoProducto;
-import com.patitofeliz.sale_service.model.conexion.Alerta;
-import com.patitofeliz.sale_service.model.conexion.Producto;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
-import com.patitofeliz.sale_service.repository.ReporitoryCarrito;
+import com.patitofeliz.carrito_service.model.Carrito;
+import com.patitofeliz.carrito_service.model.CarritoProducto;
+import com.patitofeliz.carrito_service.model.conexion.Alerta;
+import com.patitofeliz.carrito_service.model.conexion.Producto;
+import com.patitofeliz.carrito_service.model.conexion.Usuario;
+import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 
 @Service
 public class CarritoService 
@@ -21,7 +21,7 @@ public class CarritoService
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private ReporitoryCarrito carritoRepository;
+    private RepositoryCarrito carritoRepository;
 
     private static final String PRODUCTO_API = "http://localhost:8003/producto";
     private static final String USUARIO_API = "http://localhost:8001/usuario";

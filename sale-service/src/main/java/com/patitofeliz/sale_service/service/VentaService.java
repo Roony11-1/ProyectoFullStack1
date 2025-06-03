@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.sale_service.model.Carrito;
 import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.model.Venta;
 import com.patitofeliz.sale_service.model.conexion.Alerta;
+import com.patitofeliz.sale_service.model.conexion.Carrito;
 import com.patitofeliz.sale_service.model.conexion.Producto;
 import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.VentaRepository;
@@ -24,12 +24,11 @@ public class VentaService
     private VentaRepository ventaRepository;
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private CarritoService carritoService;
 
     private static final String PRODUCTO_API = "http://localhost:8003/producto";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
     private static final String ALERTA_API = "http://localhost:8002/alerta";
+    private static final String CARRITO_API = "http://localhost:8003/carrito";
 
 
     public List<Venta> getVentasPorUsuarioId(int id)
@@ -55,12 +54,9 @@ public class VentaService
     @Transactional
     public Venta generarVenta(Venta venta)
     {
-        Carrito carritoVenta = carritoService.getCarrito(venta.getCarritoId());
+        Carrito carritoVenta = obtenerCarrito(venta.getCarritoId());
         Usuario usuario = obtenerUsuario(venta.getUsuarioId());
         Usuario vendedor = obtenerUsuario(venta.getVendedorId());
-        
-        if (carritoVenta == null)
-            throw new NoSuchElementException("Carrito no encontrado");
 
         if (carritoVenta.getListaProductos().isEmpty())
             throw new NoSuchElementException("Carrito vacío!");
@@ -82,7 +78,8 @@ public class VentaService
         venta.setListaProductos(carritoVenta.getListaProductos());
         venta.setTotal(carritoVenta.getTotal());
 
-        carritoService.borrar(venta.getCarritoId());
+        // Borrar carrito
+        restTemplate.delete(CARRITO_API+"/"+venta.getCarritoId());
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
@@ -111,6 +108,16 @@ public class VentaService
             throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
 
         return producto;
+    }
+
+    private Carrito obtenerCarrito(int carritoId) 
+    {
+        Carrito carrito = restTemplate.getForObject(CARRITO_API + "/" + carritoId, Carrito.class);
+
+        if (carrito == null)
+            throw new NoSuchElementException("Carrito no encontrado con ID: " + carritoId);
+
+        return carrito;
     }
 
     private void actualizarProductoInventario(int id, Producto productoActualizado) 

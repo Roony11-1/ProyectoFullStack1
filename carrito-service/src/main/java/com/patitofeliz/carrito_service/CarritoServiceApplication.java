@@ -1,13 +1,13 @@
-package com.oatitofeliz.branch_service;
+package com.patitofeliz.carrito_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BranchServiceApplication {
+public class CarritoServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BranchServiceApplication.class, args);
+		SpringApplication.run(CarritoServiceApplication.class, args);
 	}
 
 }

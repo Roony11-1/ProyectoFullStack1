@@ -1,10 +1,10 @@
-package com.oatitofeliz.branch_service;
+package com.patitofeliz.carrito_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BranchServiceApplicationTests {
+class CarritoServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

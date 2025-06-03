@@ -1,4 +1,4 @@
-package com.patitofeliz.sale_service.controller;
+package com.patitofeliz.carrito_service.controller;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.patitofeliz.sale_service.model.Carrito;
-import com.patitofeliz.sale_service.service.CarritoService;
+import com.patitofeliz.carrito_service.model.Carrito;
+import com.patitofeliz.carrito_service.service.CarritoService;
 
 @RestController
 @RequestMapping("/carrito")
@@ -72,7 +72,7 @@ public class CarritoController
         return ResponseEntity.ok(actualizado);
     }
 
-        @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Carrito> borrarUsuario(@PathVariable int id)
     {
         Carrito carrito = carritoService.getCarrito(id);

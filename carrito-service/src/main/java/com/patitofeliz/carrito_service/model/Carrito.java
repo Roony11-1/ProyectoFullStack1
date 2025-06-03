@@ -1,4 +1,4 @@
-package com.patitofeliz.sale_service.model;
+package com.patitofeliz.carrito_service.model;
 
 import java.util.List;
 
