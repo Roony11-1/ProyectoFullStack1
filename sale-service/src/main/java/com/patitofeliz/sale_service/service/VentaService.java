@@ -25,7 +25,7 @@ public class VentaService
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String PRODUCTO_API = "http://localhost:8003/producto";
+    private static final String PRODUCTO_API = "http://localhost:8004/producto";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
     private static final String ALERTA_API = "http://localhost:8002/alerta";
     private static final String CARRITO_API = "http://localhost:8003/carrito";
