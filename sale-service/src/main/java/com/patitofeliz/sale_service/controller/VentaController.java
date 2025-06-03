@@ -21,6 +21,17 @@ public class VentaController
     @Autowired
     private VentaService ventaService;
 
+    @GetMapping
+    public ResponseEntity<List<Venta>> getVentas()
+    {
+        List<Venta> carritos = ventaService.getVentas();
+
+        if (carritos.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(carritos);
+    }
+
     @PostMapping
     public ResponseEntity<Venta> ejecutarVenta(@RequestBody Venta venta)
     {
@@ -30,7 +41,7 @@ public class VentaController
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<List<Venta>> getCarritosUsuarioId(@PathVariable("id") int id)
+    public ResponseEntity<List<Venta>> getVentasUsuarioId(@PathVariable("id") int id)
     {
         List<Venta> ventaId = ventaService.getVentasPorUsuarioId(id);
 
@@ -40,14 +51,14 @@ public class VentaController
         return ResponseEntity.ok(ventaId);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Venta>> getCarritos()
+    @GetMapping("/vendedor/{id}")
+    public ResponseEntity<List<Venta>> getVentasVendedorId(@PathVariable("id") int id)
     {
-        List<Venta> carritos = ventaService.getVentas();
+        List<Venta> ventaId = ventaService.getVentasPorVendedorId(id);
 
-        if (carritos.isEmpty())
+        if (ventaId.isEmpty())
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(carritos);
+        return ResponseEntity.ok(ventaId);
     }
 }
