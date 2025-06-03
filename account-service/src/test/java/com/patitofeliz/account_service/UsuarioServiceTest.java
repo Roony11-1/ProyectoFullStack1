@@ -1,18 +1,18 @@
 package com.patitofeliz.account_service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.account_service.model.Usuario;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
@@ -23,6 +23,10 @@ public class UsuarioServiceTest
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    // Simulamos el rest para el metodo crearAlerta
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     private UsuarioService usuarioService;
