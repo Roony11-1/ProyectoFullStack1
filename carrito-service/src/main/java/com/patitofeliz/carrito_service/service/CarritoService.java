@@ -1,6 +1,9 @@
 package com.patitofeliz.carrito_service.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +106,24 @@ public class CarritoService
     // Ejemplo Carrito: auto-400, bici-200, auto-600 -|Entra al metodo|-> auto-1000, bici-600
     private List<CarritoProducto> normalizarCarrito(List<CarritoProducto> productosCarrito)
     {
-        List<CarritoProducto> productos = productosCarrito;
+        // ID - CARRITO
+        Map<Integer, CarritoProducto> mapaCarritos = new HashMap<>();
+
+        for (CarritoProducto producto : productosCarrito) 
+        {
+            int id = producto.getProductoId();
+
+            if (mapaCarritos.containsKey(id))
+            {
+                CarritoProducto existente = mapaCarritos.get(id);
+                existente.setCantidad(existente.getCantidad()+producto.getCantidad());
+            }
+            else
+                mapaCarritos.put(id, producto);
+        }
+
+        // Creamos la Lista, devuelve todos los valores (objetos del carrito)
+        List<CarritoProducto> productos = new ArrayList<>(mapaCarritos.values());
 
         return productos;
     }
