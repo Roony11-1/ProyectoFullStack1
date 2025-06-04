@@ -106,7 +106,7 @@ public class CarritoService
     // Ejemplo Carrito: auto-400, bici-200, auto-600 -|Entra al metodo|-> auto-1000, bici-600
     private List<CarritoProducto> normalizarCarrito(List<CarritoProducto> productosCarrito)
     {
-        // ID - CARRITO
+        // ID - PRODUCTO DEL CARRITO
         Map<Integer, CarritoProducto> mapaCarritos = new HashMap<>();
 
         for (CarritoProducto producto : productosCarrito) 
