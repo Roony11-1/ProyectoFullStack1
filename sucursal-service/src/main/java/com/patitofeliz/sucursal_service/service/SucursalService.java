@@ -11,6 +11,8 @@ import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Alerta;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class SucursalService 
 {
@@ -30,7 +32,8 @@ public class SucursalService
     {
         return sucursalRepository.findById(id).orElse(null);
     }
-
+    
+    @Transactional
     public Sucursal guardar(Sucursal sucursal)
     {
         Sucursal sucursalGuardar = sucursalRepository.save(sucursal);

@@ -16,6 +16,8 @@ import com.patitofeliz.account_service.model.conexion.Review;
 import com.patitofeliz.account_service.model.conexion.Venta;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UsuarioService 
 {
@@ -45,6 +47,7 @@ public class UsuarioService
         return usuarioRepository.findByEmail(email).orElse(null);
     }
 
+    @Transactional
     public Usuario registrar(Usuario usuario)
     {
         // Verificación a nivel de software para evitar que nos ingresen email repetidos o nulos
@@ -58,6 +61,7 @@ public class UsuarioService
         return nuevo;
     }
 
+    @Transactional
     public Usuario actualizar(int id, Usuario usuarioActualizado)
     {
         Usuario usuarioActual = usuarioRepository.findById(id)
@@ -73,7 +77,7 @@ public class UsuarioService
 
         return usuarioRepository.save(usuarioActual);
     }
-
+    @Transactional
     public void borrar(int id)
     {
         usuarioRepository.deleteById(id);

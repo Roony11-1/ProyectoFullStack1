@@ -18,6 +18,8 @@ import com.patitofeliz.carrito_service.model.conexion.Producto;
 import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CarritoService 
 {
@@ -45,6 +47,7 @@ public class CarritoService
         return carritoRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Carrito guardar(Carrito carrito)
     {
         carrito.setListaProductos(normalizarCarrito(carrito.getListaProductos()));
@@ -61,6 +64,7 @@ public class CarritoService
         return nuevo;
     }
 
+    @Transactional
     public Carrito actualizar(int id, Carrito carritoActualizado)
     {
         Carrito carritoActual = carritoRepository.findById(id)
@@ -71,6 +75,7 @@ public class CarritoService
         return carritoRepository.save(carritoActual);
     }
 
+    @Transactional
     public void borrar(int id)
     {
         carritoRepository.deleteById(id);

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.patitofeliz.admin_service.model.Alerta;
 import com.patitofeliz.admin_service.repository.AlertaRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AlertaService 
 {
@@ -32,6 +34,7 @@ public class AlertaService
         return alertaRepository.findByTipoAlertaContainingIgnoreCase(tipoAlerta);
     }
 
+    @Transactional
     public Alerta guardar(Alerta alerta)
     {
         String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -42,6 +45,7 @@ public class AlertaService
         return alertaNueva;
     }
 
+    @Transactional
     public Alerta actualizar(int id, Alerta alertaActualizada)
     {
         Alerta alertaActual = alertaRepository.findById(id)
@@ -54,6 +58,7 @@ public class AlertaService
         return alertaRepository.save(alertaActual);
     }
 
+    @Transactional
     public void borrar(int id)
     {
         alertaRepository.deleteById(id);
