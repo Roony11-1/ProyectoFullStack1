@@ -31,7 +31,7 @@ Producto<br>
 {
     "nombre" : String,
     "marca" : String,
-    "precio" : int,
+    "precio" : int
 }<br>
 # Reseña<br>
 Reseña<br>

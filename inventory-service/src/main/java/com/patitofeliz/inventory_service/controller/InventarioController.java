@@ -76,7 +76,7 @@ public class InventarioController
     @PostMapping("/{id}/productos")
     public Inventario agregarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productos) 
     {
-        return inventarioService.agregarProductoInventario(id, productos);
+        return inventarioService.agregarProductosInventario(id, productos);
     }
 
     // Eliminar productos del inventario
