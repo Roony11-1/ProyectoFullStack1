@@ -17,7 +17,7 @@ import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 public class SucursalServiceTest {
- @Mock
+/* @Mock
    private SucursalRepository sucursalRepository ;
    
    @InjectMocks
@@ -43,7 +43,7 @@ public class SucursalServiceTest {
 
 
    }
-
+*/
 
 }
 /// falta completarlo

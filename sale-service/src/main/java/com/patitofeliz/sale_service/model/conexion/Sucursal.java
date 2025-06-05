@@ -1,4 +1,4 @@
-package com.patitofeliz.carrito_service.model;
+package com.patitofeliz.sucursal_service.model;
 
 import java.util.List;
 
@@ -10,18 +10,19 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @NoArgsConstructor
-public class Carrito 
+@Entity
+public class Sucursal 
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    private int usuarioId;
-    private int sucursalId;
+    private String nombreSucursal;
 
+    private int GerenteId;
     @ElementCollection
-    private List<CarritoProducto> listaProductos;
-    private int total;
+    private List<Empleados> listaEmpleados;
+    @ElementCollection
+    private List<Inventario> listaInventario;
 }
