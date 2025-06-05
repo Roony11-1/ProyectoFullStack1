@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
@@ -20,6 +21,10 @@ public class InventarioService
 {
     @Autowired
     private InventarioRepository inventarioRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String PRODUCTO_API = "http://localhost:8005/producto";
 
     // Inventarios
     public List<Inventario> getInventarios()
