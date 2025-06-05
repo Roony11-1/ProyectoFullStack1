@@ -72,7 +72,8 @@ public class InventarioService
     @Transactional
     public Inventario guardarInventario(Inventario inventario)
     {
-        inventario.setListaProductos(normalizarInventario(inventario.getListaProductos()));
+        // Creamos un inventario vacío siempre!
+        inventario.setListaProductos(new ArrayList<>());
 
         return inventarioRepository.save(inventario);
     }
