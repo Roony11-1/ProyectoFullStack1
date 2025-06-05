@@ -50,6 +50,13 @@ public class ProductoController {
         return ResponseEntity.ok(nuevProducto);
     }
 
+    @PostMapping("/lote")
+    public ResponseEntity<List<Producto>> guardarLoteProductos(@RequestBody List<Producto> productos) 
+    {
+        List<Producto> productosRegistrados = productoService.registrarLote(productos);
+        return ResponseEntity.ok(productosRegistrados);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Producto> actualizarUsuario(@PathVariable("id") int id, @RequestBody Producto producto)
     {

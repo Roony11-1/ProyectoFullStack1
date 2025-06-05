@@ -48,6 +48,16 @@ public class ProductoService
     }
 
     @Transactional
+    public List<Producto> registrarLote(List<Producto> productos) 
+    {
+        List<Producto> registrados = productoRepository.saveAll(productos);
+
+        crearAlerta("Lote de productos registrado (" + registrados.size() + ")", "Aviso: Producto");
+        
+        return registrados;
+    }
+
+    @Transactional
     public Producto actualizar(int id, Producto productoActualizado)
     {
         Producto productoActual = productoRepository.findById(id)
