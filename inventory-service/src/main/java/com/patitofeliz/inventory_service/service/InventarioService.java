@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
 import com.patitofeliz.inventory_service.model.conexion.Alerta;
-import com.patitofeliz.inventory_service.model.conexion.Producto;
 import com.patitofeliz.inventory_service.repository.InventarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -50,8 +49,6 @@ public class InventarioService
         inventarioProductos.addAll(productos);
 
         inventarioProductos = normalizarInventario(inventarioProductos);
-
-        asignarParametrosProductos(inventarioProductos);
 
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
@@ -180,30 +177,6 @@ public class InventarioService
         catch (RestClientException e)
         {
             throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
-    }
-
-    private Producto getProducto(int productoId) 
-    {
-        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
-
-        if (producto == null)
-            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
-
-        return producto;
-    }
-
-    private void asignarParametrosProductos(List<ProductoInventario> inventarioProductos) 
-    {
-        for (ProductoInventario producto : inventarioProductos) 
-        {
-            Producto productoApi = getProducto(producto.getProductoId());
-
-            if (productoApi != null) {
-                producto.setNombre(productoApi.getNombre());
-                producto.setMarca(productoApi.getMarca());
-                producto.setPrecio(productoApi.getPrecio());
-            }
         }
     }
 }

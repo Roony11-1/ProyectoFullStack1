@@ -1,9 +1,8 @@
-package com.patitofeliz.sucursal_service.model;
+package com.patitofeliz.sale_service.model.conexion;
 
 import java.util.List;
 
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Entity
 public class Sucursal 
 {
     @Id
@@ -21,8 +19,8 @@ public class Sucursal
     private String nombreSucursal;
 
     private int GerenteId;
+    private int inventarioId;
+
     @ElementCollection
-    private List<Empleados> listaEmpleados;
-    @ElementCollection
-    private List<Inventario> listaInventario;
+    private List<Integer> listaInventario;
 }

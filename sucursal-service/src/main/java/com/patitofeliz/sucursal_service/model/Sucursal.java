@@ -21,8 +21,8 @@ public class Sucursal
     private String nombreSucursal;
 
     private int GerenteId;
+    private int inventarioId;
+
     @ElementCollection
-    private List<Empleados> listaEmpleados;
-    @ElementCollection
-    private List<Inventario> listaInventario;
+    private List<Integer> listaEmpleados;
 }
