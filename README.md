@@ -63,11 +63,10 @@ Venta<br>
     "carritoId" : int
 }
 # Inventario<br>
+EL INVENTARIO SE CREA AUTOMATICAMENTE CUANDO CREAMOS LA SUCURSAL<BR>
 Inventario<br>
 {
-  "listaProductos": [
-    ProductoInventario
-  ]
+
 }<br>
 ProductoInventario<br>
 {
