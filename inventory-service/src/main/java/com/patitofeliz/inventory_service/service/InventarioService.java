@@ -8,10 +8,13 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
+import com.patitofeliz.inventory_service.model.conexion.Alerta;
+import com.patitofeliz.inventory_service.model.conexion.Producto;
 import com.patitofeliz.inventory_service.repository.InventarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +28,7 @@ public class InventarioService
     private RestTemplate restTemplate;
 
     private static final String PRODUCTO_API = "http://localhost:8005/producto";
+    private static final String ALERTA_API = "http://localhost:8002/alerta";
 
     // Inventarios
     public List<Inventario> getInventarios()
@@ -38,15 +42,21 @@ public class InventarioService
     }
 
     @Transactional
-    public Inventario agregarProductoInventario (int id, List<ProductoInventario> productos)
+    public Inventario agregarProductosInventario (int id, List<ProductoInventario> productos)
     {
         Inventario inventarioActual = getInventarioPorId(id);
         List<ProductoInventario> inventarioProductos = inventarioActual.getListaProductos();
 
-        inventarioProductos.addAll(normalizarInventario(productos));
+        inventarioProductos.addAll(productos);
+
+        inventarioProductos = normalizarInventario(inventarioProductos);
+
+        asignarParametrosProductos(inventarioProductos);
 
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
+
+        crearAlerta("Productos agregados al inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -66,6 +76,8 @@ public class InventarioService
 
         inventarioActual.setListaProductos(inventarioProductos);
 
+        crearAlerta("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
+
         return inventarioRepository.save(inventarioActual);
     }
 
@@ -74,6 +86,8 @@ public class InventarioService
     {
         // Creamos un inventario vacío siempre!
         inventario.setListaProductos(new ArrayList<>());
+
+        crearAlerta("Inventario creado ID:"+inventario.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventario);
     }
@@ -89,6 +103,7 @@ public class InventarioService
     {
         Inventario inventario = getInventarioPorId(id);
         inventario.setListaProductos(new ArrayList<>());
+        crearAlerta("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
         return inventarioRepository.save(inventario);
     }
 
@@ -120,6 +135,7 @@ public class InventarioService
             }
         }
         inventario.setListaProductos(normalizarInventario(productos));
+        crearAlerta("Cantidad de articulos del inventario modificados ID:"+inventario.getId(), "Aviso: Inventario");
         return inventarioRepository.save(inventario);
     }
 
@@ -151,5 +167,43 @@ public class InventarioService
     private Inventario getInventarioPorId(int id) 
     {
         return inventarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Inventario no encontrado"));
+    }
+
+    private void crearAlerta(String mensaje, String tipoAlerta)
+    {
+        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
+
+        try
+        {
+            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
+        }
+        catch (RestClientException e)
+        {
+            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
+        }
+    }
+
+    private Producto getProducto(int productoId) 
+    {
+        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
+
+        if (producto == null)
+            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
+
+        return producto;
+    }
+
+    private void asignarParametrosProductos(List<ProductoInventario> inventarioProductos) 
+    {
+        for (ProductoInventario producto : inventarioProductos) 
+        {
+            Producto productoApi = getProducto(producto.getProductoId());
+
+            if (productoApi != null) {
+                producto.setNombre(productoApi.getNombre());
+                producto.setMarca(productoApi.getMarca());
+                producto.setPrecio(productoApi.getPrecio());
+            }
+        }
     }
 }
