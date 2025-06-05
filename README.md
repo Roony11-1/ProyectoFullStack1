@@ -26,13 +26,12 @@ Alerta<br>
     "mensaje" : String,
     "tipoAlerta" : String,
 }<br>
-# Inventario<br>
+# Producto<br>
 Producto<br>
 {
     "nombre" : String,
     "marca" : String,
     "precio" : int,
-    "cantidadInventario" : int
 }<br>
 # Reseña<br>
 Reseña<br>
@@ -46,10 +45,15 @@ Carrito<br>
 {
     "usuarioId" : int,
     "listaProductos" : [
-        {
-        "productoId" : int,
-        "cantidad" : int
-        }]
+        ProductoCarrito
+    ]
+}<br>
+ProductoCarrito<br>
+{
+  "productoId": int,
+  "nombre": String,
+  "marca": String,
+  "cantidad": int
 }<br>
 # Venta<br>
 Venta<br>
@@ -58,3 +62,15 @@ Venta<br>
     "vendedorId" : int,
     "carritoId" : int
 }
+# Inventario<br>
+Inventario<br>
+{
+  "listaProductos": [
+    ProductoInventario
+  ]
+}<br>
+ProductoInventario<br>
+{
+  "productoId": int,
+  "cantidad": int
+}<br>

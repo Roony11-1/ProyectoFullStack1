@@ -21,6 +21,7 @@ public class InventarioService
     @Autowired
     private InventarioRepository inventarioRepository;
 
+    // Inventarios
     public List<Inventario> getInventarios()
     {
         return inventarioRepository.findAll();
@@ -32,19 +33,9 @@ public class InventarioService
     }
 
     @Transactional
-    public Inventario guardarInventario(Inventario inventario)
-    {
-        inventario.setListaProductos(normalizarInventario(inventario.getListaProductos()));
-
-        return inventarioRepository.save(inventario);
-    }
-
-    @Transactional
     public Inventario agregarProductoInventario (int id, List<ProductoInventario> productos)
     {
-        Inventario inventarioActual = inventarioRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Inventario no encontrado"));
-
+        Inventario inventarioActual = getInventarioPorId(id);
         List<ProductoInventario> inventarioProductos = inventarioActual.getListaProductos();
 
         inventarioProductos.addAll(normalizarInventario(productos));
@@ -55,6 +46,76 @@ public class InventarioService
         return inventarioRepository.save(inventarioActual);
     }
 
+    @Transactional
+    public Inventario eliminarProductoInventario(int id, List<ProductoInventario> productosEliminar) 
+    {
+        Inventario inventarioActual = getInventarioPorId(id);
+
+        List<ProductoInventario> inventarioProductos = normalizarInventario(inventarioActual.getListaProductos());
+
+        for (ProductoInventario productoEliminar : productosEliminar) 
+        {
+            // Iterador remueve si corresponden a las id, como si usaramos dos iteradores pero mas compacto
+            inventarioProductos.removeIf(p -> p.getProductoId() == productoEliminar.getProductoId());
+        }
+
+        inventarioActual.setListaProductos(inventarioProductos);
+
+        return inventarioRepository.save(inventarioActual);
+    }
+
+    @Transactional
+    public Inventario guardarInventario(Inventario inventario)
+    {
+        inventario.setListaProductos(normalizarInventario(inventario.getListaProductos()));
+
+        return inventarioRepository.save(inventario);
+    }
+
+    @Transactional
+    public void borrarInventario(int id)
+    {
+        inventarioRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Inventario vaciarInventario(int id) 
+    {
+        Inventario inventario = getInventarioPorId(id);
+        inventario.setListaProductos(new ArrayList<>());
+        return inventarioRepository.save(inventario);
+    }
+
+    // Objetos del inventario
+    public List<ProductoInventario> getProductosInventarioId(int idInventario)
+    {
+        Inventario inventarioActual = getInventarioPorId(idInventario);
+
+        return inventarioActual.getListaProductos();
+    }
+
+    @Transactional
+    public Inventario actualizarProductosEnInventario(int idInventario, List<ProductoInventario> productosActualizados) 
+    {
+        Inventario inventario = getInventarioPorId(idInventario);
+        List<ProductoInventario> productos = inventario.getListaProductos();
+
+        normalizarInventario(productosActualizados);
+
+        for (ProductoInventario productoActualizado : productosActualizados) 
+        {
+            for (ProductoInventario producto : productos) 
+            {
+                if (producto.getProductoId() == productoActualizado.getProductoId()) 
+                {
+                    producto.setCantidad(productoActualizado.getCantidad());
+                    break;
+                }
+            }
+        }
+        inventario.setListaProductos(normalizarInventario(productos));
+        return inventarioRepository.save(inventario);
+    }
 
     // Auxiliar
     private List<ProductoInventario> normalizarInventario(List<ProductoInventario> productosInventario)
@@ -79,5 +140,10 @@ public class InventarioService
         List<ProductoInventario> productos = new ArrayList<>(mapaProductos.values());
 
         return productos;
+    }
+
+    private Inventario getInventarioPorId(int id) 
+    {
+        return inventarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Inventario no encontrado"));
     }
 }
