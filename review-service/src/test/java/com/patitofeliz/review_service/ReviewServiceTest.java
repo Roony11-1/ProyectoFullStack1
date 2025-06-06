@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.patitofeliz.review_service.model.Review;
+import com.patitofeliz.review_service.model.conexion.Usuario;
 import com.patitofeliz.review_service.repository.ReviewRepository;
 import com.patitofeliz.review_service.service.ReviewService;
 
@@ -65,6 +66,17 @@ public class ReviewServiceTest {
         assertNull(resultado);
     }
 
+    @Test
+    public void testSave(){
+        Review r3 = new Review();
+        r3.setAutor("Juancho");
+
+        when(reviewRepository.save(r3)).thenReturn(r3);
+
+        Review resultado = reviewService.registrar(r3);
+
+        assertEquals("Juancho", resultado.getAutor());
+    }
     
 
 
