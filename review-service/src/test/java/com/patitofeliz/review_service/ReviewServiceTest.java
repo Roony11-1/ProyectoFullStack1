@@ -2,6 +2,7 @@ package com.patitofeliz.review_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -76,6 +77,18 @@ public class ReviewServiceTest {
         Review resultado = reviewService.registrar(r3);
 
         assertEquals("Juancho", resultado.getAutor());
+    }
+
+    @Test
+    public void testBorrar(){
+        Review r4 = new Review();
+        r4.setId(1);
+
+        when(reviewRepository.findById(1)).thenReturn(Optional.of(r4));
+
+        reviewService.borrar(1);
+        
+        verify(reviewRepository).deleteById(1);
     }
     
 
