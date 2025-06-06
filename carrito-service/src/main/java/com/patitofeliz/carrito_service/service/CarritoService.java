@@ -15,6 +15,7 @@ import com.patitofeliz.carrito_service.model.Carrito;
 import com.patitofeliz.carrito_service.model.CarritoProducto;
 import com.patitofeliz.carrito_service.model.conexion.Alerta;
 import com.patitofeliz.carrito_service.model.conexion.Producto;
+import com.patitofeliz.carrito_service.model.conexion.Sucursal;
 import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 
@@ -31,6 +32,7 @@ public class CarritoService
     private static final String PRODUCTO_API = "http://localhost:8005/producto";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
     private static final String ALERTA_API = "http://localhost:8002/alerta";
+    private static final String SUCURSAL_API = "http://localhost:8008/sucursal";
 
     public List<Carrito> getCarritos()
     {
@@ -55,11 +57,14 @@ public class CarritoService
         Integer total = calcularTotal(carrito);
         carrito.setTotal(total);
 
-        Usuario usuario = obtenerUsuario(carrito.getUsuarioId());
+        Usuario usuario = getUsuario(carrito.getUsuarioId());
+
+        Sucursal sucursal = getSucursal(carrito.getSucursalId());
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        crearAlerta("Carrito registrado - Dueño: "+usuario.getNombreUsuario(), "Aviso: Carrito");
+        crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - SucursalId: " + sucursal.getId(), "Aviso: Carrito");
+
 
         return nuevo;
     }
@@ -90,7 +95,7 @@ public class CarritoService
 
         for (CarritoProducto producto : carrito.getListaProductos()) 
         {
-            Producto productoExtraido = obtenerProducto(producto.getProductoId());
+            Producto productoExtraido = getProducto(producto.getProductoId());
 
             if (productoExtraido != null)
             {
@@ -130,7 +135,7 @@ public class CarritoService
         return productos;
     }
 
-    private Usuario obtenerUsuario(int usuarioId) 
+    private Usuario getUsuario(int usuarioId) 
     {
         Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
 
@@ -140,7 +145,7 @@ public class CarritoService
         return usuario;
     }
 
-    private Producto obtenerProducto(int productoId) 
+    private Producto getProducto(int productoId) 
     {
         Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
 
@@ -148,6 +153,16 @@ public class CarritoService
             throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
 
         return producto;
+    }
+
+    private Sucursal getSucursal(int sucursalId) 
+    {
+        Sucursal sucursal = restTemplate.getForObject(SUCURSAL_API + "/" + sucursalId, Sucursal.class);
+
+        if (sucursal == null)
+            throw new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId);
+
+        return sucursal;
     }
 
     private void crearAlerta(String mensaje, String tipoAlerta)

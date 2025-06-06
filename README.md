@@ -44,6 +44,7 @@ Reseña<br>
 Carrito<br>
 {
     "usuarioId" : int,
+    "sucursalId": int,
     "listaProductos" : [
         ProductoCarrito
     ]
@@ -51,8 +52,6 @@ Carrito<br>
 ProductoCarrito<br>
 {
   "productoId": int,
-  "nombre": String,
-  "marca": String,
   "cantidad": int
 }<br>
 # Venta<br>
@@ -60,7 +59,8 @@ Venta<br>
 {
     "usuarioId" : int,
     "vendedorId" : int,
-    "carritoId" : int
+    "carritoId" : int,
+    "sucursalId" : int
 }
 # Inventario<br>
 EL INVENTARIO SE CREA AUTOMATICAMENTE CUANDO CREAMOS LA SUCURSAL<BR>
