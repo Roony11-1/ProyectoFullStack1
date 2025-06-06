@@ -134,7 +134,7 @@ public class InventarioService
             }
         }
         inventario.setListaProductos(normalizarInventario(productos));
-        crearAlerta("Cantidad de articulos del inventario modificados ID:"+inventario.getId(), "Aviso: Inventario");
+        crearAlerta("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
         return inventarioRepository.save(inventario);
     }
 
