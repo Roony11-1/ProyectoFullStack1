@@ -2,6 +2,7 @@ package com.patitofeliz.carrito_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Array;
@@ -102,8 +103,31 @@ public class CarritoServiceTest {
         Carrito resultado =carritoService.guardar(c);
 
         assertEquals(1, resultado.getId());
+    }
+    //test para actualizar carrito///
+    @Test
+    public void testActualizar(){
+        Carrito c = new Carrito();
+        c.setId(1);
+        c.setUsuarioId(1);
 
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(c));
 
+        Carrito resultado=carritoService.actualizar(1, c);
+
+        assertEquals(2,resultado.getUsuarioId());
+    }
+    //test eliminar un carrito//
+    @Test
+    public void testBorrar(){
+        Carrito c=new Carrito();
+        c.setId(1);
+
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(c));
+
+        carritoService.borrar(1);
+
+        verify(carritoRepository).deleteById(1);
     }
 
 }
