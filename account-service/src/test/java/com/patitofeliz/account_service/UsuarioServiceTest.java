@@ -59,8 +59,18 @@ public class UsuarioServiceTest
 
         //Verificamos que el resultado sea el esperado. Para esto nos enfocaremos
         //en el tamaño de la lista y que los valores sean correctos.
+        // Tamaño de la lista
         assertEquals(2, resultado.size());
+
+        // Verificamos el objeto usuario
         assertEquals("juanito", resultado.get(0).getNombreUsuario());
+        assertEquals("juanito@duoc.cl", resultado.get(0).getEmail());
+        assertEquals("admin", resultado.get(0).getTipoUsuario());
+
+        // Verificamos el segundo usuario        
+        assertEquals("megan", resultado.get(1).getNombreUsuario());
+        assertEquals("megancita@duoc.cl", resultado.get(1).getEmail());
+        assertEquals("vendedor", resultado.get(1).getTipoUsuario());
     }
 
     @Test
