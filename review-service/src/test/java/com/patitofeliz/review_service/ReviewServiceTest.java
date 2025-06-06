@@ -1,11 +1,13 @@
 package com.patitofeliz.review_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.service.spi.InjectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +57,16 @@ public class ReviewServiceTest {
         assertEquals(2, resultado.size());
         assertEquals("Juanito Cliente", resultado.get(0).getAutor());
     }
+
+    @Test
+    public void testGetReviewById_NoExiste(){
+        when(reviewRepository.findById(99)).thenReturn(Optional.empty());
+        Review resultado = reviewService.getReview(99);
+        assertNull(resultado);
+    }
+
+    
+
 
     
 }

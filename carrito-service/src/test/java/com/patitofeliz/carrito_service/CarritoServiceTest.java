@@ -30,6 +30,7 @@ public class CarritoServiceTest {
     public void setup(){
         MockitoAnnotations.openMocks(carritoRepository);
     }
+    ///test para obtener todos los carritos/// 
     @Test
     public void testGetCarritos(){
         Carrito c1=new Carrito();
@@ -45,6 +46,25 @@ public class CarritoServiceTest {
         assertEquals(2, resultado.size());
         assertEquals(1, resultado.get(0).getId());
         assertEquals(2, resultado.get(1).getId());
+    }
+    ///test para obtener carrito por usuario id//
+    @Test
+    public void testGetCarritosByUsuarioId(){
+        Carrito c1= new Carrito();
+        c1.setId(1);
+        c1.setUsuarioId(1);
+
+        Carrito c2=new Carrito();
+        c2.setId(2);
+        c2.setUsuarioId(2);
+        
+        when(carritoRepository.findByUsuarioId(1)).thenReturn(Arrays.asList(c1,c2));
+
+        List<Carrito> resultado=carritoService.getCarritosByUsuarioid(1);
+
+        assertEquals(2, resultado.size());
+        assertEquals(1, resultado.get(0).getUsuarioId());
+        assertEquals(1, resultado.get(1).getUsuarioId());
     }
 
 }
