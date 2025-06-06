@@ -63,7 +63,7 @@ public class CarritoService
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - SucursalId: " + sucursal.getId(), "Aviso: Carrito");
+        crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), "Aviso: Carrito");
 
 
         return nuevo;

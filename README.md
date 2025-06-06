@@ -73,3 +73,8 @@ ProductoInventario<br>
   "productoId": int,
   "cantidad": int
 }<br>
+# Sucursal<br>
+Sucursal<br>
+{
+    "gerenteId" : int
+}

@@ -113,7 +113,7 @@ public class VentaService
             "Venta Carrito - id: " + venta.getCarritoId() +
             " - comprador: " + usuario.getNombreUsuario() +
             " - vendedor: " + vendedor.getNombreUsuario() +
-            " - Sucursal: "+ venta.getSucursalId(),
+            " - Sucursal: "+ sucursal.getNombreSucursal(),
             "Aviso: Venta"
         );
 

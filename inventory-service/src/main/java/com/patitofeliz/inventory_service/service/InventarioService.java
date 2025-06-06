@@ -53,7 +53,7 @@ public class InventarioService
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
 
-        crearAlerta("Productos agregados al inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
+        crearAlerta("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -84,9 +84,11 @@ public class InventarioService
         // Creamos un inventario vacío siempre!
         inventario.setListaProductos(new ArrayList<>());
 
-        crearAlerta("Inventario creado ID:"+inventario.getId(), "Aviso: Inventario");
+        Inventario inventarioGuardado = inventarioRepository.save(inventario);
 
-        return inventarioRepository.save(inventario);
+        crearAlerta("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
+
+        return inventarioGuardado;
     }
 
     @Transactional
