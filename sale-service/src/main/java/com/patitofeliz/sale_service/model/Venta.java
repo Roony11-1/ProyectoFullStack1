@@ -22,6 +22,7 @@ public class Venta
     private int usuarioId;
     private int vendedorId;
     private int carritoId;
+    private int sucursalId;
     @ElementCollection
     private List<CarritoProducto> listaProductos;
     private int total;

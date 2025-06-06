@@ -13,6 +13,8 @@ import com.patitofeliz.producto_service.model.conexion.Alerta;
 import com.patitofeliz.producto_service.model.conexion.Review;
 import com.patitofeliz.producto_service.repository.ProductoRepository;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class ProductoService 
@@ -34,7 +36,8 @@ public class ProductoService
     {
         return productoRepository.findById(id).orElse(null);
     }
- 
+    
+    @Transactional
     public Producto registrar(Producto producto)
     {
         Producto nuevo = productoRepository.save(producto);
@@ -44,6 +47,17 @@ public class ProductoService
         return nuevo;
     }
 
+    @Transactional
+    public List<Producto> registrarLote(List<Producto> productos) 
+    {
+        List<Producto> registrados = productoRepository.saveAll(productos);
+
+        crearAlerta("Lote de productos registrado (" + registrados.size() + ")", "Aviso: Producto");
+        
+        return registrados;
+    }
+
+    @Transactional
     public Producto actualizar(int id, Producto productoActualizado)
     {
         Producto productoActual = productoRepository.findById(id)
@@ -56,6 +70,7 @@ public class ProductoService
         return productoRepository.save(productoActual);
     }
 
+    @Transactional
     public void borrar(int id)
     {
         productoRepository.deleteById(id);

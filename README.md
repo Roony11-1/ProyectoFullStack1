@@ -26,13 +26,12 @@ Alerta<br>
     "mensaje" : String,
     "tipoAlerta" : String,
 }<br>
-# Inventario<br>
+# Producto<br>
 Producto<br>
 {
     "nombre" : String,
     "marca" : String,
-    "precio" : int,
-    "cantidadInventario" : int
+    "precio" : int
 }<br>
 # Reseña<br>
 Reseña<br>
@@ -45,16 +44,37 @@ Reseña<br>
 Carrito<br>
 {
     "usuarioId" : int,
+    "sucursalId": int,
     "listaProductos" : [
-        {
-        "productoId" : int,
-        "cantidad" : int
-        }]
+        ProductoCarrito
+    ]
+}<br>
+ProductoCarrito<br>
+{
+  "productoId": int,
+  "cantidad": int
 }<br>
 # Venta<br>
 Venta<br>
 {
     "usuarioId" : int,
     "vendedorId" : int,
-    "carritoId" : int
+    "carritoId" : int,
+    "sucursalId" : int
+}
+# Inventario<br>
+EL INVENTARIO SE CREA AUTOMATICAMENTE CUANDO CREAMOS LA SUCURSAL<BR>
+Inventario<br>
+{
+
+}<br>
+ProductoInventario<br>
+{
+  "productoId": int,
+  "cantidad": int
+}<br>
+# Sucursal<br>
+Sucursal<br>
+{
+    "gerenteId" : int
 }

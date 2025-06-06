@@ -20,9 +20,9 @@ public class Sucursal
     private int id;
     private String nombreSucursal;
 
-    private int GerenteId;
+    private int gerenteId;
+    private int inventarioId;
+
     @ElementCollection
-    private List<Empleados> listaEmpleados;
-    @ElementCollection
-    private List<Inventario> listaInventario;
+    private List<Integer> listaEmpleados;
 }

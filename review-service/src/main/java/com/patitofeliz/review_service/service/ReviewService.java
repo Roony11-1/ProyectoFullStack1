@@ -14,6 +14,8 @@ import com.patitofeliz.review_service.model.conexion.Producto;
 import com.patitofeliz.review_service.model.conexion.Usuario;
 import com.patitofeliz.review_service.repository.ReviewRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ReviewService {
    @Autowired
@@ -40,7 +42,8 @@ public class ReviewService {
    {
       return reviewRepository.findByProductoId(productoId);
    }
-     
+   
+   @Transactional
    public Review registrar(Review review)
    {
       Usuario usuario = obtenerUsuario(review.getUsuarioId());
@@ -54,11 +57,13 @@ public class ReviewService {
       return nuevo;
    }
 
+   @Transactional
    public void borrar(int id)
    {
       reviewRepository.deleteById(id);
    }
 
+   @Transactional
    public Review actualizar(int id, Review reviewActualizada)
    {
       Review reviewActual = reviewRepository.findById(id)

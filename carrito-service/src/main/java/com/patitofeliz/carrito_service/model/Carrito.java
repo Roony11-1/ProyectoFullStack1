@@ -19,6 +19,7 @@ public class Carrito
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int usuarioId;
+    private int sucursalId;
 
     @ElementCollection
     private List<CarritoProducto> listaProductos;
