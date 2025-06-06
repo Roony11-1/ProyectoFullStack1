@@ -68,6 +68,19 @@ public class ReviewServiceTest {
     }
 
     @Test
+    public void testGetReview_Existe(){
+        Review r5 = new Review();
+        r5.setId(1);
+        r5.setAutor("JauncarloChupapija");
+
+        when(reviewRepository.findById(1)).thenReturn(Optional.of(r5));
+        Review resultado = reviewService.getReview(1);
+        assertEquals(1, resultado.getId());
+        assertEquals("JuancarloChupapija", resultado.getAutor());
+    }
+
+
+    @Test
     public void testSave(){
         Review r3 = new Review();
         r3.setAutor("Juancho");
