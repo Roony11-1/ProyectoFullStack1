@@ -1,12 +1,14 @@
 package com.patitofeliz.carrito_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,6 +67,43 @@ public class CarritoServiceTest {
         assertEquals(2, resultado.size());
         assertEquals(1, resultado.get(0).getUsuarioId());
         assertEquals(1, resultado.get(1).getUsuarioId());
+    }
+    ///test para obtener carrito por id cuando no existe
+    @Test
+    public void testGetCarrito_NOExiste(){
+        when(carritoRepository.findById(99)).thenReturn(Optional.empty());
+
+        Carrito resultado=carritoService.getCarrito(99);
+
+        assertNull(resultado);
+    }
+    ///test para obtener un carrito por id cuando existe
+    @Test
+    public void testGetCarrito_Existe(){
+        Carrito c=new Carrito();
+        c.setId(1);
+        c.setUsuarioId(1);
+
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(c));
+
+        Carrito resultado=carritoService.getCarrito(1);
+
+        assertEquals(1, resultado.getId());
+        assertEquals(1, resultado.getUsuarioId());
+    }
+    ///test guardar un carrito
+    @Test
+    public void testGuardar(){
+        Carrito c = new Carrito();
+        c.setId(1);
+
+        when(carritoRepository.save(c)).thenReturn(c);
+
+        Carrito resultado =carritoService.guardar(c);
+
+        assertEquals(1, resultado.getId());
+
+
     }
 
 }
