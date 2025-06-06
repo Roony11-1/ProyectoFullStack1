@@ -44,6 +44,13 @@ public class SucursalService
 
         Sucursal sucursalGuardar = sucursalRepository.save(sucursal);
 
+        if (sucursalGuardar.getNombreSucursal() == null || sucursalGuardar.getNombreSucursal().isBlank()) 
+        {
+            String nombreGenerado = "Perfulandia " + sucursalGuardar.getId();
+            sucursalGuardar.setNombreSucursal(nombreGenerado);
+            sucursalGuardar = sucursalRepository.save(sucursalGuardar);
+        }
+
         crearAlerta("Sucursal creada: "+sucursalGuardar.getNombreSucursal()+" - Inventario Asociado: "+nuevoInventario.getId(), "Aviso: Sucursal");
 
         return sucursalGuardar;

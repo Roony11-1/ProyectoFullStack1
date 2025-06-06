@@ -25,14 +25,12 @@ public class InventarioController
     @Autowired
     private InventarioService inventarioService;
 
-    // Obtener todos los inventarios
     @GetMapping
     public List<Inventario> getInventarios() 
     {
         return inventarioService.getInventarios();
     }
 
-    // Obtener inventario por id
     @GetMapping("/{id}")
     public ResponseEntity<Inventario> getInventario(@PathVariable int id) 
     {
@@ -43,14 +41,12 @@ public class InventarioController
         return ResponseEntity.ok(inventario);
     }
 
-    // Crear o actualizar inventario completo
     @PostMapping
     public Inventario guardarInventario(@RequestBody Inventario inventario) 
     {
         return inventarioService.guardarInventario(inventario);
     }
 
-    // Eliminar inventario por id
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrarInventario(@PathVariable int id) 
     {
@@ -58,35 +54,30 @@ public class InventarioController
         return ResponseEntity.noContent().build();
     }
 
-    // Vaciar inventario
     @PostMapping("/{id}/vaciar")
     public Inventario vaciarInventario(@PathVariable int id) 
     {
         return inventarioService.vaciarInventario(id);
     }
 
-    // Obtener productos de un inventario
     @GetMapping("/{id}/productos")
     public List<ProductoInventario> getProductosInventario(@PathVariable int id) 
     {
         return inventarioService.getProductosInventarioId(id);
     }
 
-    // Agregar productos al inventario
     @PostMapping("/{id}/productos")
     public Inventario agregarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productos) 
     {
         return inventarioService.agregarProductosInventario(id, productos);
     }
 
-    // Eliminar productos del inventario
     @DeleteMapping("/{id}/productos")
     public Inventario eliminarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosEliminar)
     {
         return inventarioService.eliminarProductoInventario(id, productosEliminar);
     }
 
-    // Actualizar productos en inventario (en lote)
     @PutMapping("/{id}/productos")
     public Inventario actualizarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosActualizados) 
     {

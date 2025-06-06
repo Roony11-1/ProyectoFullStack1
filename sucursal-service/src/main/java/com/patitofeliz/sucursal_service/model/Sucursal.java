@@ -20,7 +20,7 @@ public class Sucursal
     private int id;
     private String nombreSucursal;
 
-    private int GerenteId;
+    private int gerenteId;
     private int inventarioId;
 
     @ElementCollection

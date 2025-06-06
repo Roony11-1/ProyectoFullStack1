@@ -1,8 +1,8 @@
 package com.patitofeliz.inventory_service.model.conexion;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 public class Producto 
