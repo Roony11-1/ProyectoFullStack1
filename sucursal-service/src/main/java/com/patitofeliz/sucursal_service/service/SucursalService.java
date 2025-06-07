@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Alerta;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
+import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Usuario;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
@@ -85,6 +86,22 @@ public class SucursalService
         return sucursalGuardar;
     }
 
+    @Transactional
+    public Sucursal añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+
+        if (listaProductos == null || listaProductos.isEmpty()) 
+            throw new IllegalArgumentException("La lista de productos no puede estar vacía.");
+            
+        agregarProductosInventario(sucursal.getInventarioId(), listaProductos);
+
+        crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),"Aviso: Sucursal");
+
+        return sucursal;
+    }
+
     // Auxiliares
     private void crearAlerta(String mensaje, String tipoAlerta)
     {
@@ -103,6 +120,13 @@ public class SucursalService
     private Inventario postInventario() 
     {
         Inventario inventario = restTemplate.postForObject(INVENTARIO_API, new Inventario(), Inventario.class);
+
+        return inventario;
+    }
+
+    private Inventario agregarProductosInventario(int inventarioId, List<ProductoInventario> productos) 
+    {
+        Inventario inventario = restTemplate.postForObject(INVENTARIO_API + "/" + inventarioId + "/productos", productos, Inventario.class);
 
         return inventario;
     }
