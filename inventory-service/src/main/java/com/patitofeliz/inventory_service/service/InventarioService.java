@@ -54,7 +54,7 @@ public class InventarioService
         {
             try 
             {
-                // Consulta GET para saber si el producto existe
+                // existe el producto¿?
                 Producto productoExistente = getProducto(producto.getProductoId());
 
                 if (productoExistente != null)
