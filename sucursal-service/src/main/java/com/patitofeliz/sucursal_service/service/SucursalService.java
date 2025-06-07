@@ -1,5 +1,6 @@
 package com.patitofeliz.sucursal_service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Alerta;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
+import com.patitofeliz.sucursal_service.model.conexion.Usuario;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +27,7 @@ public class SucursalService
 
     private static final String ALERTA_API = "http://localhost:8002/alerta";
     private static final String INVENTARIO_API = "http://localhost:8004/inventarios";
+    private static final String USUARIO_API = "http://localhost:8001/usuario";
 
     public List<Sucursal> listarSucursales()
     {
@@ -45,13 +48,28 @@ public class SucursalService
 
         return inventario;
     }
+
+    public List<Integer> listarEmpleadosSucursal(int sucursalId)
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
+
+        return sucursal.getListaEmpleados();
+    }
     
     @Transactional
     public Sucursal guardar(Sucursal sucursal)
     {
+        Usuario gerente = getUsuario(sucursal.getGerenteId());
+
+        if (!gerente.getTipoUsuario().equalsIgnoreCase("gerente"))
+            throw new IllegalArgumentException("El usuario asignado no tiene rol de gerente.");
+
         Inventario nuevoInventario = postInventario();
 
         sucursal.setInventarioId(nuevoInventario.getId());
+
+        sucursal.setListaEmpleados(new ArrayList<>());
 
         Sucursal sucursalGuardar = sucursalRepository.save(sucursal);
 
@@ -68,7 +86,6 @@ public class SucursalService
     }
 
     // Auxiliares
-
     private void crearAlerta(String mensaje, String tipoAlerta)
     {
         Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
@@ -98,5 +115,15 @@ public class SucursalService
             throw new NoSuchElementException("Inventario no encontrado con ID: " + inventarioId);
 
         return inventario;
+    }
+
+    private Usuario getUsuario(int usuarioId) 
+    {
+        Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
+
+        if (usuario == null)
+            throw new NoSuchElementException("Usuario no encontrado con ID: " + usuarioId);
+
+        return usuario;
     }
 }

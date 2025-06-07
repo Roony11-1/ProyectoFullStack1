@@ -52,6 +52,14 @@ public class SucursalController
         return ResponseEntity.ok(inventario);
     }
 
+    @GetMapping("/empleados/{id}")
+    public ResponseEntity<List<Integer>> obtenerEmpleadosSucursal(@PathVariable("id") int id)
+    {
+        List<Integer> empleados = sucursalService.listarEmpleadosSucursal(id);
+
+        return ResponseEntity.ok(empleados);
+    }
+
     @PostMapping
     public ResponseEntity<Sucursal> crearSucursal(@RequestBody Sucursal sucursal) 
     {
