@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.sucursal_service.model.Sucursal;
+import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 @RestController
@@ -41,6 +42,14 @@ public class SucursalController
             return ResponseEntity.notFound().build();
         
         return ResponseEntity.ok(sucursal);
+    }
+
+    @GetMapping("/inventario/{id}")
+    public ResponseEntity<Inventario> obtenerInventarioSucursal(@PathVariable("id") int id)
+    {
+        Inventario inventario = sucursalService.listarInventarioSucursal(id);
+
+        return ResponseEntity.ok(inventario);
     }
 
     @PostMapping

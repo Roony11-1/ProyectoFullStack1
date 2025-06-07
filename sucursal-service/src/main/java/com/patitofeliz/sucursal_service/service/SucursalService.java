@@ -1,6 +1,7 @@
 package com.patitofeliz.sucursal_service.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,16 @@ public class SucursalService
     public Sucursal listarSucursal(int id)
     {
         return sucursalRepository.findById(id).orElse(null);
+    }
+
+    public Inventario listarInventarioSucursal(int sucursalId)
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
+
+        Inventario inventario = getInventario(sucursal.getInventarioId());
+
+        return inventario;
     }
     
     @Transactional
@@ -75,6 +86,16 @@ public class SucursalService
     private Inventario postInventario() 
     {
         Inventario inventario = restTemplate.postForObject(INVENTARIO_API, new Inventario(), Inventario.class);
+
+        return inventario;
+    }
+
+        private Inventario getInventario(int inventarioId) 
+    {
+        Inventario inventario = restTemplate.getForObject(INVENTARIO_API + "/" + inventarioId, Inventario.class);
+
+        if (inventario == null)
+            throw new NoSuchElementException("Inventario no encontrado con ID: " + inventarioId);
 
         return inventario;
     }
