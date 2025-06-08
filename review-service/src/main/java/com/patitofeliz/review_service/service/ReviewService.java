@@ -42,6 +42,11 @@ public class ReviewService {
    {
       return reviewRepository.findByProductoId(productoId);
    }
+
+   public boolean existePorId(int id) 
+   {
+      return reviewRepository.existsById(id);
+   }
    
    @Transactional
    public Review registrar(Review review)

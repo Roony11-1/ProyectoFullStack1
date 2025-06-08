@@ -28,9 +28,8 @@ public class UsuarioService
 
     private static final String REVIEW_API = "http://localhost:8004/review";
     private static final String ALERTA_API = "http://localhost:8002/alerta";
-    private static final String SALES_API = "http://localhost:8005";
-    private static final String CARRITO_API = SALES_API+"/carrito";
-    private static final String VENTA_API = SALES_API+"/venta";
+    private static final String SALES_API = "http://localhost:8005/venta";
+    private static final String CARRITO_API = "http://localhost:8004/carrito";
 
     public List<Usuario> getUsuarios()
     {
@@ -141,7 +140,7 @@ public class UsuarioService
 
     public List<Venta> getVentasByUsuarioId(int id)
     {
-        List<Venta> listaCarritoPorId = restTemplate.getForObject(VENTA_API+"/usuario/"+id, List.class);
+        List<Venta> listaCarritoPorId = restTemplate.getForObject(SALES_API+"/usuario/"+id, List.class);
 
         if (listaCarritoPorId == null || listaCarritoPorId.isEmpty())
             throw new NoSuchElementException("No se encontraron ventas para el usuario con ID: " + id);

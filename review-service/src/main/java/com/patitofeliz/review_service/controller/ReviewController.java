@@ -57,6 +57,12 @@ public class ReviewController
         return ResponseEntity.ok(reviews);
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existePorId(@PathVariable int id) 
+    {   
+        boolean existe = reviewService.existePorId(id);
+        return ResponseEntity.ok(existe);
+    }
 
     @PostMapping
     public ResponseEntity<Review> registrarReview(@RequestBody Review review)
