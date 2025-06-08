@@ -44,7 +44,7 @@ public class InventarioController
     @GetMapping("/verificar/{id}")
     public ResponseEntity<Boolean> existeUsuarioPorId(@PathVariable int id) 
     {   
-        boolean existe = inventarioService.existeInventarioPorId(id);
+        boolean existe = inventarioService.existePorId(id);
         return ResponseEntity.ok(existe);
     }
 

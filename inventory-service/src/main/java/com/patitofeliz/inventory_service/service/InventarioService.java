@@ -42,7 +42,7 @@ public class InventarioService
         return inventarioRepository.findById(id).orElse(null);
     }
 
-    public boolean existeInventarioPorId(int id) 
+    public boolean existePorId(int id) 
     {
         return inventarioRepository.existsById(id);
     }
