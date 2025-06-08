@@ -49,7 +49,7 @@ public class CarritoService
         return carritoRepository.findById(id).orElse(null);
     }
 
-    public boolean existeCarritoPorId(int id) 
+    public boolean existePorId(int id) 
     {
         return carritoRepository.existsById(id);
     }

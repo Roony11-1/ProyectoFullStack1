@@ -59,7 +59,7 @@ public class CarritoController
     @GetMapping("/verificar/{id}")
     public ResponseEntity<Boolean> existeUsuarioPorId(@PathVariable int id) 
     {   
-        boolean existe = carritoService.existeCarritoPorId(id);
+        boolean existe = carritoService.existePorId(id);
         return ResponseEntity.ok(existe);
     }
 
