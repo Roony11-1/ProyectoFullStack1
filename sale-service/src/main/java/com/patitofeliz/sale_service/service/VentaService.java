@@ -56,6 +56,11 @@ public class VentaService
         return ventaRepository.findById(id).orElse(null);
     }
 
+    public boolean existePorId(int id) 
+    {
+        return ventaRepository.existsById(id);
+    }
+
     @Transactional
     public Venta generarVenta(Venta venta)
     {

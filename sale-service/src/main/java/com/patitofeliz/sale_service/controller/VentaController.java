@@ -32,6 +32,13 @@ public class VentaController
         return ResponseEntity.ok(carritos);
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existePorId(@PathVariable int id) 
+    {   
+        boolean existe = ventaService.existePorId(id);
+        return ResponseEntity.ok(existe);
+    }
+
     @PostMapping
     public ResponseEntity<Venta> ejecutarVenta(@RequestBody Venta venta)
     {
