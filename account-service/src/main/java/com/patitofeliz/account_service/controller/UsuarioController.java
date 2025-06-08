@@ -48,6 +48,13 @@ public class UsuarioController
         return ResponseEntity.ok(usuario);
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existeUsuarioPorId(@PathVariable int id) 
+    {   
+        boolean existe = usuarioService.existeUsuarioPorId(id);
+        return ResponseEntity.ok(existe);
+    }
+
     @PostMapping
     public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario)
     {

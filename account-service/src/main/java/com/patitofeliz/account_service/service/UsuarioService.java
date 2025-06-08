@@ -47,6 +47,11 @@ public class UsuarioService
         return usuarioRepository.findByEmail(email).orElse(null);
     }
 
+    public boolean existeUsuarioPorId(int id) 
+    {
+        return usuarioRepository.existsById(id);
+    }
+
     @Transactional
     public Usuario registrar(Usuario usuario)
     {
