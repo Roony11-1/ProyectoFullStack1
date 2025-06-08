@@ -42,6 +42,11 @@ public class InventarioService
         return inventarioRepository.findById(id).orElse(null);
     }
 
+    public boolean existeInventarioPorId(int id) 
+    {
+        return inventarioRepository.existsById(id);
+    }
+
     @Transactional
     public Inventario agregarProductosInventario (int id, List<ProductoInventario> productos)
     {
