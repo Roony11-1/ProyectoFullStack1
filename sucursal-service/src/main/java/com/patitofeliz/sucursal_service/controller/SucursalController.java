@@ -61,6 +61,13 @@ public class SucursalController
         return ResponseEntity.ok(empleados);
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existePorId(@PathVariable int id) 
+    {   
+        boolean existe = sucursalService.existePorId(id);
+        return ResponseEntity.ok(existe);
+    }
+
     @PostMapping
     public ResponseEntity<Sucursal> crearSucursal(@RequestBody Sucursal sucursal) 
     {

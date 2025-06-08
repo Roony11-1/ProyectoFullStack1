@@ -50,6 +50,11 @@ public class SucursalService
         return inventario;
     }
 
+    public boolean existePorId(int id) 
+    {
+        return sucursalRepository.existsById(id);
+    }
+
     public List<Integer> listarEmpleadosSucursal(int sucursalId)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
