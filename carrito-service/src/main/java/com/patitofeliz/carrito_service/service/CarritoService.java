@@ -49,6 +49,11 @@ public class CarritoService
         return carritoRepository.findById(id).orElse(null);
     }
 
+    public boolean existeCarritoPorId(int id) 
+    {
+        return carritoRepository.existsById(id);
+    }
+
     @Transactional
     public Carrito guardar(Carrito carrito)
     {

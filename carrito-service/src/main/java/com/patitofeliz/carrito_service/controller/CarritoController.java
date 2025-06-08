@@ -56,6 +56,13 @@ public class CarritoController
         return ResponseEntity.ok(carrito);
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existeUsuarioPorId(@PathVariable int id) 
+    {   
+        boolean existe = carritoService.existeCarritoPorId(id);
+        return ResponseEntity.ok(existe);
+    }
+
     @PostMapping
     public ResponseEntity<Carrito> guardarCarrito(@RequestBody Carrito carrito)
     {
