@@ -49,9 +49,9 @@ public class InventarioController
     }
 
     @PostMapping
-    public Inventario guardarInventario(@RequestBody Inventario inventario) 
+    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) 
     {
-        return inventarioService.guardarInventario(inventario);
+        return ResponseEntity.ok(inventarioService.guardarInventario(inventario));
     }
 
     @DeleteMapping("/{id}")
@@ -62,9 +62,12 @@ public class InventarioController
     }
 
     @PostMapping("/{id}/vaciar")
-    public Inventario vaciarInventario(@PathVariable int id) 
+    public ResponseEntity<Inventario> vaciarInventario(@PathVariable int id) 
     {
-        return inventarioService.vaciarInventario(id);
+        if (!inventarioService.existePorId(id))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(inventarioService.vaciarInventario(id));
     }
 
     @GetMapping("/{id}/productos")
@@ -74,20 +77,30 @@ public class InventarioController
     }
 
     @PostMapping("/{id}/productos")
-    public Inventario agregarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productos) 
+    public ResponseEntity<Inventario> agregarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productos) 
     {
-        return inventarioService.agregarProductosInventario(id, productos);
+        return ResponseEntity.ok(inventarioService.agregarProductosInventario(id, productos));
     }
 
     @DeleteMapping("/{id}/productos")
-    public Inventario eliminarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosEliminar)
+    public ResponseEntity<Inventario> eliminarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosEliminar)
     {
-        return inventarioService.eliminarProductoInventario(id, productosEliminar);
+        Inventario inventarioActualizado = inventarioService.eliminarProductoInventario(id, productosEliminar);
+        
+        if (inventarioActualizado == null)
+            return ResponseEntity.notFound().build();
+    
+        return ResponseEntity.ok(inventarioActualizado);
     }
 
     @PutMapping("/{id}/productos")
-    public Inventario actualizarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosActualizados) 
+    public ResponseEntity<Inventario> actualizarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosActualizados) 
     {
-        return inventarioService.actualizarProductosEnInventario(id, productosActualizados);
+        Inventario inventarioActualizado = inventarioService.actualizarProductosEnInventario(id, productosActualizados);
+
+        if (inventarioActualizado == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(inventarioActualizado);
     }
 }
