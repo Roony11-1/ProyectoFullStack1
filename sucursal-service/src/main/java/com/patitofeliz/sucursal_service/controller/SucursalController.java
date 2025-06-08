@@ -35,7 +35,7 @@ public class SucursalController
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sucursal> obtenerUsuario(@PathVariable("id") int  id)
+    public ResponseEntity<Sucursal> obtenerSucursal(@PathVariable("id") int  id)
     {
         Sucursal sucursal = sucursalService.listarSucursal(id);
 
