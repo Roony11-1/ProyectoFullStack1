@@ -86,9 +86,6 @@ public class InventarioController
     public ResponseEntity<Inventario> eliminarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosEliminar)
     {
         Inventario inventarioActualizado = inventarioService.eliminarProductoInventario(id, productosEliminar);
-        
-        if (inventarioActualizado == null)
-            return ResponseEntity.notFound().build();
     
         return ResponseEntity.ok(inventarioActualizado);
     }
@@ -97,9 +94,6 @@ public class InventarioController
     public ResponseEntity<Inventario> actualizarProductosInventario(@PathVariable int id, @RequestBody List<ProductoInventario> productosActualizados) 
     {
         Inventario inventarioActualizado = inventarioService.actualizarProductosEnInventario(id, productosActualizados);
-
-        if (inventarioActualizado == null)
-            return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(inventarioActualizado);
     }
