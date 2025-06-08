@@ -47,7 +47,7 @@ public class UsuarioService
         return usuarioRepository.findByEmail(email).orElse(null);
     }
 
-    public boolean existeUsuarioPorId(int id) 
+    public boolean existePorId(int id) 
     {
         return usuarioRepository.existsById(id);
     }

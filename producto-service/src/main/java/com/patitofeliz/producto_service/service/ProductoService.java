@@ -36,6 +36,11 @@ public class ProductoService
     {
         return productoRepository.findById(id).orElse(null);
     }
+
+    public boolean existePorId(int id) 
+    {
+        return productoRepository.existsById(id);
+    }
     
     @Transactional
     public Producto registrar(Producto producto)

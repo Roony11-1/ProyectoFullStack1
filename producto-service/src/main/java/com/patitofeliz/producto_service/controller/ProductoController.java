@@ -43,6 +43,13 @@ public class ProductoController {
         return ResponseEntity.ok(producto);    
     }
 
+    @GetMapping("/verificar/{id}")
+    public ResponseEntity<Boolean> existePorId(@PathVariable int id) 
+    {   
+        boolean existe = productoService.existePorId(id);
+        return ResponseEntity.ok(existe);
+    }
+
     @PostMapping
     public ResponseEntity<Producto> guardarProducto(@RequestBody Producto producto)
     {
