@@ -62,6 +62,12 @@ public class VentaService
     }
 
     @Transactional
+    public void elimiarPorId(int id)
+    {
+        ventaRepository.deleteById(id);
+    }
+
+    @Transactional
     public Venta generarVenta(Venta venta)
     {
         Carrito carritoVenta = getCarrito(venta.getCarritoId());
@@ -127,7 +133,6 @@ public class VentaService
 
 
     // AUXILIARES
-
     private Usuario getUsuario(int usuarioId) 
     {
         Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
