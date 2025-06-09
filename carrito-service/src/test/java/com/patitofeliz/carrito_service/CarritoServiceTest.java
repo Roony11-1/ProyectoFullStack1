@@ -1,11 +1,13 @@
 package com.patitofeliz.carrito_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +21,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.carrito_service.model.Carrito;
+import com.patitofeliz.carrito_service.model.conexion.Sucursal;
+import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 import com.patitofeliz.carrito_service.service.CarritoService;
 
@@ -67,7 +71,7 @@ public class CarritoServiceTest {
 
         assertEquals(2, resultado.size());
         assertEquals(1, resultado.get(0).getUsuarioId());
-        assertEquals(1, resultado.get(1).getUsuarioId());
+        assertEquals(2, resultado.get(1).getUsuarioId());
     }
     ///test para obtener carrito por id cuando no existe
     @Test
@@ -97,12 +101,25 @@ public class CarritoServiceTest {
     public void testGuardar(){
         Carrito c = new Carrito();
         c.setId(1);
+        c.setListaProductos(new ArrayList());
+        c.setUsuarioId(1);
+        c.setSucursalId(1);
+
+        Usuario usuarioMock = new Usuario();
+        usuarioMock.setId(1);
+        usuarioMock.setNombreUsuario("Juanito");
+
+        Sucursal sucursalMock =new Sucursal();
+        sucursalMock.setId(1);
 
         when(carritoRepository.save(c)).thenReturn(c);
+        when(restTemplate.getForObject(eq("http://localhost:8001/usuario/1"),eq(Usuario.class))).thenReturn(usuarioMock);
+        when(restTemplate.getForObject(eq("http://localhost:8008/sucursal/1"),eq(Sucursal.class))).thenReturn(sucursalMock);
 
         Carrito resultado =carritoService.guardar(c);
 
         assertEquals(1, resultado.getId());
+        assertNotNull(resultado);
     }
     //test para actualizar carrito///
     @Test
@@ -110,12 +127,14 @@ public class CarritoServiceTest {
         Carrito c = new Carrito();
         c.setId(1);
         c.setUsuarioId(1);
+        c.setListaProductos(new ArrayList());
 
         when(carritoRepository.findById(1)).thenReturn(Optional.of(c));
+        when(carritoRepository.save(any(Carrito.class))).thenReturn(c);
 
         Carrito resultado=carritoService.actualizar(1, c);
 
-        assertEquals(2,resultado.getUsuarioId());
+        assertEquals(1,resultado.getUsuarioId());
     }
     //test eliminar un carrito//
     @Test
