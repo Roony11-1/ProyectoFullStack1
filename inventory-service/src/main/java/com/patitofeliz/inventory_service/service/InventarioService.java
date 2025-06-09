@@ -47,6 +47,12 @@ public class InventarioService
         return inventarioRepository.existsById(id);
     }
 
+    // Agrega un solo producto al inventario
+    public Inventario agregarProductoInventario (int id, ProductoInventario productoInventario)
+    {
+        return new Inventario();
+    }
+
     @Transactional
     public Inventario agregarProductosInventario (int id, List<ProductoInventario> productos)
     {
