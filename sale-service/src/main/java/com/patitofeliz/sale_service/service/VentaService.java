@@ -62,6 +62,12 @@ public class VentaService
     }
 
     @Transactional
+    public void elimiarPorId(int id)
+    {
+        ventaRepository.deleteById(id);
+    }
+
+    @Transactional
     public Venta generarVenta(Venta venta)
     {
         Carrito carritoVenta = getCarrito(venta.getCarritoId());
@@ -127,7 +133,6 @@ public class VentaService
 
 
     // AUXILIARES
-
     private Usuario getUsuario(int usuarioId) 
     {
         Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
@@ -173,6 +178,7 @@ public class VentaService
         Sucursal sucursal = restTemplate.getForObject(SUCURSAL_API + "/" + sucursalId, Sucursal.class);
 
         if (sucursal == null)
+        
             throw new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId);
 
         return sucursal;

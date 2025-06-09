@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class CarritoServiceTest {
     private CarritoService carritoService;
     @BeforeEach
     public void setup(){
-        MockitoAnnotations.openMocks(carritoRepository);
+        MockitoAnnotations.openMocks(this);
     }
     ///test para obtener todos los carritos/// 
     @Test
