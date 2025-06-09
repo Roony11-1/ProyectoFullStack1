@@ -178,6 +178,7 @@ public class VentaService
         Sucursal sucursal = restTemplate.getForObject(SUCURSAL_API + "/" + sucursalId, Sucursal.class);
 
         if (sucursal == null)
+        
             throw new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId);
 
         return sucursal;
