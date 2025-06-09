@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.sale_service.model.Venta;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 import com.patitofeliz.sale_service.service.VentaService;

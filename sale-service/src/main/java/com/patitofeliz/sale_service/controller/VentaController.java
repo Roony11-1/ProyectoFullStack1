@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.sale_service.model.Venta;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.service.VentaService;
 
 @RestController
