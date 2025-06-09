@@ -31,7 +31,7 @@ public class CarritoServiceTest {
     private CarritoService carritoService;
     @BeforeEach
     public void setup(){
-        MockitoAnnotations.openMocks(carritoRepository);
+        MockitoAnnotations.openMocks(this);
     }
     ///test para obtener todos los carritos/// 
     @Test
