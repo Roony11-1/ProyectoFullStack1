@@ -2,6 +2,7 @@ package com.patitofeliz.sale_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.sale_service.model.Venta;
+import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 import com.patitofeliz.sale_service.service.VentaService;
@@ -141,5 +143,15 @@ public class VentaServiceTest
     }
 
     @Test
-    
+    public void testBorrarVenta() 
+    {
+        Venta v = new Venta();
+        v.setId(1);
+
+        when(ventaRepository.findById(1)).thenReturn(Optional.of(v));
+
+        ventaService.elimiarPorId(1);
+
+        verify(ventaRepository).deleteById(1);
+    }
 }
