@@ -107,6 +107,13 @@ public class SucursalService
         return sucursal;
     }
 
+    @Transactional
+    public void borrar(int id)
+    {
+        sucursalRepository.deleteById(id);
+    }
+    
+
     // Auxiliares
     private void crearAlerta(String mensaje, String tipoAlerta)
     {
