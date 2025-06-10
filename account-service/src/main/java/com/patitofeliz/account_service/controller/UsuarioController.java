@@ -76,19 +76,35 @@ public class UsuarioController
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario)
+    public ResponseEntity<EntityModel<Usuario>> registrarUsuario(@RequestBody Usuario usuario)
     {
-        Usuario usuarioNuevo = usuarioService.registrar(usuario);
-        
-        return ResponseEntity.ok(usuarioNuevo);
+        Usuario nuevo = usuarioService.registrar(usuario);
+
+        EntityModel<Usuario> recurso = EntityModel.of(nuevo,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(nuevo.getId())).withSelfRel(),
+                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioReviews(nuevo.getId())).withRel("reviews"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(nuevo.getId())).withRel("carritos"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioVentas(nuevo.getId())).withRel("ventas")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable("id") int id, @RequestBody Usuario usuario)
+    public ResponseEntity<EntityModel<Usuario>> actualizarUsuario(@PathVariable("id") int id, @RequestBody Usuario usuario)
     {
         Usuario actualizado = usuarioService.actualizar(id, usuario);
 
-        return ResponseEntity.ok(actualizado);
+        EntityModel<Usuario> recurso = EntityModel.of(actualizado,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(actualizado.getId())).withSelfRel(),
+                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioReviews(actualizado.getId())).withRel("reviews"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(actualizado.getId())).withRel("carritos"),
+                linkTo(methodOn(UsuarioController.class).getUsuarioVentas(actualizado.getId())).withRel("ventas")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @DeleteMapping("/{id}")
