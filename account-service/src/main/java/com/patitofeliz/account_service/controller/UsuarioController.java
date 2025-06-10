@@ -1,8 +1,13 @@
 package com.patitofeliz.account_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,25 +32,45 @@ public class UsuarioController
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios()
+    public ResponseEntity<CollectionModel<EntityModel<Usuario>>> listarUsuarios()
     {
         List<Usuario> usuarios = usuarioService.getUsuarios();
 
         if (usuarios.isEmpty())
             return ResponseEntity.noContent().build();
         
-        return ResponseEntity.ok(usuarios);
+        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
+        for (Usuario usuario : usuarios) 
+        {
+            EntityModel<Usuario> recurso = EntityModel.of(usuario,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
+            );
+            usuariosConLinks.add(recurso);
+        }
+
+        CollectionModel<EntityModel<Usuario>> coleccion = CollectionModel.of(usuariosConLinks,
+            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withSelfRel());
+
+        return ResponseEntity.ok(coleccion);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable("id") int  id)
+    public ResponseEntity<EntityModel<Usuario>> obtenerUsuario(@PathVariable("id") int  id)
     {
         Usuario usuario = usuarioService.getUsuario(id);
 
         if (usuario == null)
             return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(usuario);
+
+        EntityModel<Usuario> recurso = EntityModel.of(usuario,
+            linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("reviews"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("carritos"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("ventas")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @GetMapping("/verificar/{id}")
