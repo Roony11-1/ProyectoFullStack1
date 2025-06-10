@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -32,7 +31,7 @@ public class UsuarioController
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<Usuario>>> listarUsuarios()
+    public ResponseEntity<List<EntityModel<Usuario>>> listarUsuarios()
     {
         List<Usuario> usuarios = usuarioService.getUsuarios();
 
@@ -47,11 +46,7 @@ public class UsuarioController
             );
             usuariosConLinks.add(recurso);
         }
-
-        CollectionModel<EntityModel<Usuario>> coleccion = CollectionModel.of(usuariosConLinks,
-            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withSelfRel());
-
-        return ResponseEntity.ok(coleccion);
+        return ResponseEntity.ok(usuariosConLinks);
     }
 
     @GetMapping("/{id}")
