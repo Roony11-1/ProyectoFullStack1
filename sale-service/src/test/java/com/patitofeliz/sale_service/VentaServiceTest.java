@@ -260,7 +260,8 @@ public class VentaServiceTest
         when(ventaRepository.findByVendedorId(1)).thenReturn(Arrays.asList(v1));
     
         List<Venta> resultado = ventaService.getVentasPorVendedorId(1);
-    
+        
+        // Solo una venta asociada al id 1!
         assertEquals(1, resultado.size());
 
         for (int i=0; i>resultado.size(); i++)
