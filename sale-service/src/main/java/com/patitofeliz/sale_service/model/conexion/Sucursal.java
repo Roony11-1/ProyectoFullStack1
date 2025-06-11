@@ -22,5 +22,5 @@ public class Sucursal
     private int inventarioId;
 
     @ElementCollection
-    private List<Integer> listaInventario;
+    private List<Integer> listaEmpleados;
 }

@@ -1,7 +1,9 @@
 package com.patitofeliz.sucursal_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.patitofeliz.sucursal_service.model.Sucursal;
-import com.patitofeliz.sucursal_service.model.conexion.Alerta;
+import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
@@ -35,21 +36,31 @@ public class SucursalServiceTest {
       MockitoAnnotations.openMocks(this);
    }
 
+  /*public Sucursal agregarProductosAInventario(int sucursalId, List<ProductoInventario> productos) {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new SucursalNotFoundException(sucursalId));
+        
+        inventarioServiceClient.agregarProductosASucursal(sucursalId, productos);
+        return sucursalRepository.save(sucursal);/* */
+    
+    
    @Test
-   public void TestGetAll(){
-    Sucursal u1 = new Sucursal();
-    u1.setId(1);
-    u1.setGerenteId(1);
-    u1.setNombreSucursal("Purfemelandia");
-    Mockito.when(this.sucursalRepository.findAll()).thenReturn(Arrays.asList(u1));
+    public void TestGetAll(){
+     Sucursal u1 = new Sucursal();
+     u1.setId(1);
+     u1.setGerenteId(1);
+     u1.setNombreSucursal("Perfumelandia");
+     Mockito.when(this.sucursalRepository.findAll()).thenReturn(Arrays.asList(u1));
     
-    List<Sucursal> resultado = this.sucursalRepository.findAll();
-    
-    // Creamos la lista de objetos
-    
-    assertEquals(1, resultado.size());
-    assertEquals("Purfemelandia",resultado.get(0).getNombreSucursal());
+     List<Sucursal> resultado = this.sucursalRepository.findAll();
 
+    
+     // Creamos la lista de objetos
+    
+        assertEquals(1, resultado.size());
+        assertEquals("Perfumelandia", resultado.get(0).getNombreSucursal());
+        assertEquals(1, resultado.get(0).getId());
+        verify(sucursalRepository, times(1)).findAll();
    }
 
    @Test
@@ -57,18 +68,22 @@ public class SucursalServiceTest {
         when(sucursalRepository.findById(99)).thenReturn(Optional.empty());
         Sucursal resultado = sucursalService.listarSucursal(99);
         assertNull(resultado);
+        verify(sucursalRepository, times(1)).findById(99);
    }
 
    @Test
-   public void testGetReview_Existe(){
+   public void testSucursal_Existe(){
        Sucursal r5 = new Sucursal();
        r5.setId(1);
-       r5.setNombreSucursal("Perfumeschafa");
+       r5.setNombreSucursal("PerfumesChafa");
 
        when(sucursalRepository.findById(1)).thenReturn(Optional.of(r5));
        Sucursal resultado = sucursalService.listarSucursal(1);
-       assertEquals(1, resultado.getId());
-       assertEquals("Perfumeschafa", resultado.getNombreSucursal());
+
+       assertNotNull(resultado);
+        assertEquals(1, resultado.getId());
+        assertEquals("PerfumesChafa", resultado.getNombreSucursal());
+        verify(sucursalRepository, times(1)).findById(1);
    }
 
 
