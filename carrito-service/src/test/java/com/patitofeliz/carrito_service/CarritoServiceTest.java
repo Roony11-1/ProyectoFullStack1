@@ -103,7 +103,7 @@ public class CarritoServiceTest {
     public void testGuardar(){
         Carrito c = new Carrito();
         c.setId(1);
-        c.setListaProductos(new ArrayList());
+        c.setListaProductos(new ArrayList<>());
         c.setUsuarioId(1);
         c.setSucursalId(1);
 
@@ -129,7 +129,7 @@ public class CarritoServiceTest {
         Carrito c = new Carrito();
         c.setId(1);
         c.setUsuarioId(1);
-        c.setListaProductos(new ArrayList());
+        c.setListaProductos(new ArrayList<>());
 
         when(carritoRepository.findById(1)).thenReturn(Optional.of(c));
         when(carritoRepository.save(any(Carrito.class))).thenReturn(c);
