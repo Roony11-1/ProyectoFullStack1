@@ -117,6 +117,18 @@ public class InventarioServiceTest {
         boolean resultado=inventarioService.existePorId(2);
         assertFalse(resultado);
     }
+    ///test para borrar el inventario///
+    @Test
+    public void testBorrar(){
+        Inventario i=new Inventario();
+        i.setId(1);
+
+        when(inventarioRepository.findById(1)).thenReturn(Optional.of(i));
+
+        inventarioService.borrarInventario(1);
+
+        verify(inventarioRepository).deleteById(1);
+    }
     
 
 
