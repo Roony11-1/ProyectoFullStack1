@@ -50,7 +50,22 @@ public class InventarioService
     // Agrega un solo producto al inventario
     public Inventario agregarProductoInventario (int id, ProductoInventario productoInventario)
     {
-        return new Inventario();
+        Inventario inventarioActual = getInventarioPorId(id);
+        List<ProductoInventario> inventarioProductos = inventarioActual.getListaProductos();
+
+        Producto productoExistente = getProducto(productoInventario.getProductoId());
+
+        if (productoExistente != null) {
+             inventarioProductos.add(productoInventario);
+            inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
+
+             crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
+            return inventarioRepository.save(inventarioActual);
+        } else {
+        crearAlerta("Producto no encontrado, no fue agregado!", "Aviso: Inventario");
+        }
+
+        return inventarioActual;
     }
 
     @Transactional
