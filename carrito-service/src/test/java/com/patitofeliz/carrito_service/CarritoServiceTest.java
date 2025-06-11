@@ -195,7 +195,7 @@ public class CarritoServiceTest {
         // Mock del save
         when(carritoRepository.save(carrito)).thenReturn(carrito);
 
-        // El metodo guardar invoca el metodo privado
+        // El metodo guardar invoca el metodo privado, este metodo ya esta probado
         carritoService.guardar(carrito);
 
         // por lo que la lista debera quedad con 3 objetos
