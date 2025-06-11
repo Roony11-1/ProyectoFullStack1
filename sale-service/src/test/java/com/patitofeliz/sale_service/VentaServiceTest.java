@@ -187,5 +187,89 @@ public class VentaServiceTest
         verify(ventaRepository).deleteById(1);
     }
 
+    @Test
+    public void testDescontarArticuloInventario()
+    {
+        // Como ya probamos el save tenemos que
+        Venta v1 = new Venta();
+        v1.setId(1);
+        v1.setUsuarioId(1);
+        v1.setVendedorId(1);
+        v1.setSucursalId(1);
+        v1.setCarritoId(1);
+        v1.setListaProductos(new ArrayList<>());
+        v1.setTotal(0);
+
+        // Mockearemos las cosas
+        Usuario u1 = new Usuario();
+        u1.setId(1);
+
+        Producto p1 = new Producto();
+        p1.setId(1);
+
+        Sucursal s1 = new Sucursal();
+        s1.setId(1);
+        s1.setInventarioId(1);
+        Inventario inv1 = new Inventario();
+        inv1.setId(1);
+        inv1.setListaProductos(new ArrayList<>());
+        inv1.getListaProductos().add(new ProductoInventario(1, 500));
+
+        Carrito c1 = new Carrito();
+        c1.setId(1);
+        c1.setListaProductos(new ArrayList<>());
+        c1.getListaProductos().add(new CarritoProducto(1, 100));
+
+        when(restTemplate.getForObject(eq("http://localhost:8001/usuario/1"),eq(Usuario.class))).thenReturn(u1);
+        when(restTemplate.getForObject(eq("http://localhost:8005/producto/1"),eq(Producto.class))).thenReturn(p1);
+        when(restTemplate.getForObject(eq("http://localhost:8008/sucursal/1"),eq(Sucursal.class))).thenReturn(s1);
+        when(restTemplate.getForObject(eq("http://localhost:8003/carrito/1"),eq(Carrito.class))).thenReturn(c1);
+        when(restTemplate.getForObject(eq("http://localhost:8004/inventarios/1"),eq(Inventario.class))).thenReturn(inv1);
+
+        //debemos simular que el repositorio guarda y retorna el usuario
+        when(ventaRepository.save(v1)).thenReturn(v1);
+
+        Venta resultado = ventaService.generarVenta(v1);
+
+        // Debemos verificar si el inventario contiene menos items que antes
+        // por los valores iniciales que dimos deberia ser asi 1 producto con 400 existencias
+        assertEquals(1, inv1.getListaProductos().size());
+        assertEquals(400, inv1.getListaProductos().get(0).getCantidad());
+    }
+
+    @Test
+    public void testGetPorVendedorId() 
+    {
+        // Preparar datos de prueba
+        List<CarritoProducto> listaProductos = new ArrayList<>();
+        listaProductos.add(new CarritoProducto(1, 1));
+        listaProductos.add(new CarritoProducto(2, 2));
+    
+        // Venta 1 asociada al vendedor 1
+        Venta v1 = new Venta();
+        v1.setId(1);
+        v1.setVendedorId(1);
+        v1.setListaProductos(listaProductos);
+        
+        // Venta 2 asociada al vendedor 2
+        Venta v2 = new Venta();
+        v2.setId(2);
+        v2.setVendedorId(2);
+        v2.setListaProductos(listaProductos);
+    
+        when(ventaRepository.findByVendedorId(1)).thenReturn(Arrays.asList(v1));
+    
+        List<Venta> resultado = ventaService.getVentasPorVendedorId(1);
+    
+        assertEquals(1, resultado.size());
+
+        for (int i=0; i>resultado.size(); i++)
+        {
+            assertEquals(1, resultado.get(i).getVendedorId());
+            assertEquals(i+1, resultado.get(i).getListaProductos().get(i).getProductoId());
+            assertEquals(i+1, resultado.get(i).getListaProductos().get(i).getCantidad());
+        }
+    }
+    
     
 }
