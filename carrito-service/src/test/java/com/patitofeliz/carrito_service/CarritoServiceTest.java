@@ -21,6 +21,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.carrito_service.model.Carrito;
+import com.patitofeliz.carrito_service.model.CarritoProducto;
+import com.patitofeliz.carrito_service.model.conexion.Producto;
 import com.patitofeliz.carrito_service.model.conexion.Sucursal;
 import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
@@ -149,4 +151,62 @@ public class CarritoServiceTest {
         verify(carritoRepository).deleteById(1);
     }
 
+    @Test
+    public void testNormalizarCarrito()
+    {
+        // Creamos un carrito
+        Carrito carrito = new Carrito();
+        carrito.setId(1);
+        carrito.setListaProductos(new ArrayList<>());
+        carrito.setSucursalId(1);
+        carrito.setUsuarioId(1);
+
+        // Mockearemos nuestra sucursal y usuario
+        Usuario usuarioMock = new Usuario();
+        usuarioMock.setId(1);
+
+        Sucursal sucursalMock =new Sucursal();
+        sucursalMock.setId(1);
+
+        // Mock de productos
+        Producto producto1Mock = new Producto();
+        producto1Mock.setId(1);
+
+        Producto producto2Mock = new Producto();
+        producto2Mock.setId(2);
+
+        Producto producto3Mock = new Producto();
+        producto3Mock.setId(3);
+
+        when(restTemplate.getForObject(eq("http://localhost:8001/usuario/1"),eq(Usuario.class))).thenReturn(usuarioMock);
+        when(restTemplate.getForObject(eq("http://localhost:8008/sucursal/1"),eq(Sucursal.class))).thenReturn(sucursalMock);
+        when(restTemplate.getForObject(eq("http://localhost:8005/producto/1"),eq(Producto.class))).thenReturn(producto1Mock);
+        when(restTemplate.getForObject(eq("http://localhost:8005/producto/2"),eq(Producto.class))).thenReturn(producto2Mock);
+        when(restTemplate.getForObject(eq("http://localhost:8005/producto/3"),eq(Producto.class))).thenReturn(producto3Mock);
+
+        // Llenamos la lista de prodcutos
+        carrito.getListaProductos().add(new CarritoProducto(1, 10));
+        carrito.getListaProductos().add(new CarritoProducto(2, 40));
+        carrito.getListaProductos().add(new CarritoProducto(3, 70));
+        carrito.getListaProductos().add(new CarritoProducto(1, 90));
+        carrito.getListaProductos().add(new CarritoProducto(2, 60));
+        carrito.getListaProductos().add(new CarritoProducto(3, 30));
+
+        // Mock del save
+        when(carritoRepository.save(carrito)).thenReturn(carrito);
+
+        // El metodo guardar invoca el metodo privado
+        carritoService.guardar(carrito);
+
+        // por lo que la lista debera quedad con 3 objetos
+        assertEquals(3, carrito.getListaProductos().size());
+
+        // Aqui en este for probamos por cada elemento de la lista, verificamos el id y la cantidad
+        // convenientemente le ponemos 100
+        for (int i = 0; i>carrito.getListaProductos().size(); i++)
+        {
+            assertEquals(i+1, carrito.getListaProductos().get(i).getProductoId());
+            assertEquals(100, carrito.getListaProductos().get(i).getCantidad());    
+        }
+    }
 }
