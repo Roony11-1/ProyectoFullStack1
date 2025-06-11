@@ -1,8 +1,11 @@
 package com.patitofeliz.inventory_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
@@ -26,19 +31,43 @@ public class InventarioController
     private InventarioService inventarioService;
 
     @GetMapping
-    public List<Inventario> getInventarios() 
+    public ResponseEntity<List<EntityModel<Inventario>>> getInventarios() 
     {
-        return inventarioService.getInventarios();
+        List<Inventario> lista = inventarioService.getInventarios();
+        List<EntityModel<Inventario>> inventarioResources = new ArrayList<>();
+
+        for (Inventario inventario : lista) {
+            EntityModel<Inventario> recurso = EntityModel.of(inventario,
+                linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel(),
+                linkTo(methodOn(InventarioController.class).getProductosInventario(inventario.getId())).withRel("productos"),
+                linkTo(methodOn(InventarioController.class).vaciarInventario(inventario.getId())).withRel("vaciar"),
+                linkTo(methodOn(InventarioController.class).actualizarProductosInventario(inventario.getId(), null)).withRel("actualizar-productos"),
+                linkTo(methodOn(InventarioController.class).eliminarProductosInventario(inventario.getId(), null)).withRel("eliminar-productos")
+            );
+            inventarioResources.add(recurso);
+        }
+
+        return ResponseEntity.ok(inventarioResources);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> getInventario(@PathVariable int id) 
+    public ResponseEntity<EntityModel<Inventario>> getInventario(@PathVariable int id) 
     {
         Inventario inventario = inventarioService.getInventario(id);
         if (inventario == null)
             return ResponseEntity.notFound().build();
+            
+        EntityModel<Inventario> recurso = EntityModel.of(inventario,
+        linkTo(methodOn(InventarioController.class).getInventarios()).withRel("inventarios"),
+        linkTo(methodOn(InventarioController.class).getProductosInventario(id)).withRel("productos"),
+        linkTo(methodOn(InventarioController.class).vaciarInventario(id)).withRel("vaciar"),
+        linkTo(methodOn(InventarioController.class).actualizarProductosInventario(id, null)).withRel("actualizar-productos"),
+        linkTo(methodOn(InventarioController.class).eliminarProductosInventario(id, null)).withRel("eliminar-productos")
+       
+        );
 
-        return ResponseEntity.ok(inventario);
+
+        return ResponseEntity.ok(recurso);
     }
 
     @GetMapping("/verificar/{id}")
