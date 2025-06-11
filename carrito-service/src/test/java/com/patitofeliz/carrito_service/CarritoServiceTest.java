@@ -45,16 +45,41 @@ public class CarritoServiceTest {
         Carrito c1=new Carrito();
         c1.setId(1);
         c1.setUsuarioId(1);
+        c1.setListaProductos(new ArrayList<>());
+        c1.setTotal(0);
+        c1.setSucursalId(1);
 
         Carrito c2=new Carrito();
         c2.setId(2);
         c2.setUsuarioId(2);
+        c2.setListaProductos(new ArrayList<>());
+        c2.setTotal(100);
+        c2.setSucursalId(2);
+
+        CarritoProducto carritoProducto = new CarritoProducto(1, 100);
+
+        c2.getListaProductos().add(carritoProducto);
 
         when(carritoRepository.findAll()).thenReturn(Arrays.asList(c1,c2));
+
         List<Carrito> resultado=carritoService.getCarritos();
         assertEquals(2, resultado.size());
-        assertEquals(1, resultado.get(0).getId());
-        assertEquals(2, resultado.get(1).getId());
+
+        for (int i = 0; i>resultado.size(); i++)
+        {
+            assertEquals(i+1, resultado.get(i).getId());
+            assertEquals(i+1, resultado.get(i).getUsuarioId());
+            assertEquals(i+1, resultado.get(i).getSucursalId());
+        }
+
+        // probamos los casos no iguales
+        assertEquals(new ArrayList<>(), resultado.get(0).getListaProductos());
+        ArrayList<CarritoProducto> nueva = new ArrayList<>();
+        CarritoProducto carritoProducto2 = new CarritoProducto(1, 100);
+        nueva.add(carritoProducto2);
+
+        assertEquals(nueva, resultado.get(1).getListaProductos());
+
     }
     ///test para obtener carrito por usuario id//
     @Test
@@ -67,14 +92,14 @@ public class CarritoServiceTest {
         c2.setId(2);
         c2.setUsuarioId(2);
         
-        when(carritoRepository.findByUsuarioId(1)).thenReturn(Arrays.asList(c1,c2));
+        when(carritoRepository.findByUsuarioId(1)).thenReturn(Arrays.asList(c1));
 
         List<Carrito> resultado=carritoService.getCarritosByUsuarioid(1);
 
-        assertEquals(2, resultado.size());
+        assertEquals(1, resultado.size());
         assertEquals(1, resultado.get(0).getUsuarioId());
-        assertEquals(2, resultado.get(1).getUsuarioId());
     }
+
     ///test para obtener carrito por id cuando no existe
     @Test
     public void testGetCarrito_NOExiste(){
