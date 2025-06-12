@@ -59,7 +59,8 @@ public class AlertaController
         EntityModel<Alerta> recurso = EntityModel.of(alerta,
             linkTo(methodOn(AlertaController.class).obtenerAlerta(id)).withSelfRel(),
             linkTo(methodOn(AlertaController.class).listarAlertas()).withRel("GET/alertas"),
-            linkTo(methodOn(AlertaController.class).obtenerAlertaTipo(tipo)).withRel("GET/alertasTipo")
+            linkTo(methodOn(AlertaController.class).obtenerAlertaTipo(tipo)).withRel("GET/alertasTipo"),
+            linkTo(methodOn(AlertaController.class).actualizarAlerta(id, null)).withRel("PUT/update")
         );
 
         return ResponseEntity.ok(recurso);
