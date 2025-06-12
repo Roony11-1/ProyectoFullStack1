@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
-import com.patitofeliz.sucursal_service.model.conexion.Usuario;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 @RestController
