@@ -101,11 +101,11 @@ public class SucursalController
     }
 
     @PostMapping("/productos/{id}")
-    public ResponseEntity<Sucursal> agregarProductosSucursal(@PathVariable("id") int id, @RequestBody List<ProductoInventario> productos)
+    public ResponseEntity<Inventario> agregarProductosSucursal(@PathVariable("id") int id, @RequestBody List<ProductoInventario> productos)
     {
-        Sucursal sucursal = sucursalService.añadirProductosSucursal(id, productos);
+        Inventario inventario = sucursalService.añadirProductosSucursal(id, productos);
 
-        return ResponseEntity.ok(sucursal);
+        return ResponseEntity.ok(inventario);
     }
 
     @DeleteMapping("/{id}")

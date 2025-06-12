@@ -92,7 +92,7 @@ public class SucursalService
     }
 
     @Transactional
-    public Sucursal añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
+    public Inventario añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -104,7 +104,7 @@ public class SucursalService
 
         crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),"Aviso: Sucursal");
 
-        return sucursal;
+        return getInventario(sucursal.getInventarioId());
     }
 
     @Transactional
