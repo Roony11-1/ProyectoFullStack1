@@ -37,11 +37,7 @@ public class InventarioController
 
         for (Inventario inventario : lista) {
             EntityModel<Inventario> recurso = EntityModel.of(inventario,
-                linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel(),
-                linkTo(methodOn(InventarioController.class).getProductosInventario(inventario.getId())).withRel("GET/productos"),
-                linkTo(methodOn(InventarioController.class).vaciarInventario(inventario.getId())).withRel("POST/vaciar"),
-                linkTo(methodOn(InventarioController.class).actualizarProductosInventario(inventario.getId(), null)).withRel("PUT/actualizar-productos"),
-                linkTo(methodOn(InventarioController.class).eliminarProductosInventario(inventario.getId(), null)).withRel("DELETE/eliminar-productos")
+                linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel()
             );
             inventarioResources.add(recurso);
         }
