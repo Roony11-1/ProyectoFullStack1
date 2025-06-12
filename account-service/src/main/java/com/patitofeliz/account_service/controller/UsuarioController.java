@@ -89,9 +89,19 @@ public class UsuarioController
     }
 
     @PostMapping("/lote")
-    public ResponseEntity<List<Usuario>> registrarUsuarios(@RequestBody List<Usuario> listaUsuarios)
+    public ResponseEntity<List<EntityModel<Usuario>>> registrarUsuarios(@RequestBody List<Usuario> listaUsuarios)
     {
-        return ResponseEntity.ok(usuarioService.registrarLote(listaUsuarios));
+        List<Usuario> listaRegistros =  usuarioService.registrarLote(listaUsuarios);
+
+        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
+        for (Usuario usuario : listaRegistros) 
+        {
+            EntityModel<Usuario> recurso = EntityModel.of(usuario,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
+            );
+            usuariosConLinks.add(recurso);
+        }
+        return ResponseEntity.ok(usuariosConLinks);
     }
 
     @PutMapping("/update/{id}")
