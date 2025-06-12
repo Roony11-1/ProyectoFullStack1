@@ -1,8 +1,12 @@
 package com.patitofeliz.producto_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,21 +30,21 @@ public class ProductoController {
     private ProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> listarProductos(){
+    public ResponseEntity<List<EntityModel<Producto>>> listarProductos(){
         List<Producto>productos = productoService.getProductos();
         if(productos.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(productos);
+        return ResponseEntity.ok(hateoasPlural(productos));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable("id") int id){
+    public ResponseEntity<EntityModel<Producto>> obtenerProducto(@PathVariable("id") int id){
         Producto producto = productoService.getProducto(id);
         if(producto==null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(producto);    
+        return ResponseEntity.ok(hateoasSingular(producto));
     }
 
     @GetMapping("/verificar/{id}")
@@ -58,14 +62,15 @@ public class ProductoController {
     }
 
     @PostMapping("/lote")
-    public ResponseEntity<List<Producto>> guardarLoteProductos(@RequestBody List<Producto> productos) 
+    public ResponseEntity<List<EntityModel<Producto>>> guardarLoteProductos(@RequestBody List<Producto> productos) 
     {
         List<Producto> productosRegistrados = productoService.registrarLote(productos);
-        return ResponseEntity.ok(productosRegistrados);
+
+        return ResponseEntity.ok(hateoasPlural(productosRegistrados));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Producto> actualizarUsuario(@PathVariable("id") int id, @RequestBody Producto producto)
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable("id") int id, @RequestBody Producto producto)
     {
         Producto actualizado = productoService.actualizar(id, producto);
 
@@ -90,4 +95,33 @@ public class ProductoController {
         return ResponseEntity.ok(listaReseñas);
     }
     
+    // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    private EntityModel<Producto> hateoasSingular(Producto producto) 
+    {
+        int id = producto.getId();
+
+        return EntityModel.of(producto,
+            linkTo(methodOn(ProductoController.class).obtenerProducto(id)).withSelfRel(),
+            linkTo(methodOn(ProductoController.class).listarProductos()).withRel("GET/productos"),
+            linkTo(methodOn(ProductoController.class).guardarLoteProductos(null)).withRel("POST/guardarLote"),
+            linkTo(methodOn(ProductoController.class).getProductoReviews(id)).withRel("GET/reviews"),
+            linkTo(methodOn(ProductoController.class).actualizarProducto(id, null)).withRel("PUT/actualizar")
+        );
+    }
+
+    private List<EntityModel<Producto>> hateoasPlural(List<Producto> productos) 
+    {
+        List<EntityModel<Producto>> productosConLinks = new ArrayList<>();
+        
+        for (Producto producto : productos) 
+        {
+            EntityModel<Producto> recurso = EntityModel.of(producto,
+                linkTo(methodOn(ProductoController.class).obtenerProducto(producto.getId())).withSelfRel(),
+                linkTo(methodOn(ProductoController.class).listarProductos()).withRel("GET/productos")
+            );
+            productosConLinks.add(recurso);
+        }
+
+        return productosConLinks;
+    }
 }
