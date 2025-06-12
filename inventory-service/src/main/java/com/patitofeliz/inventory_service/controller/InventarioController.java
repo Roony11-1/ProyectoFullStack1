@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
@@ -39,10 +38,10 @@ public class InventarioController
         for (Inventario inventario : lista) {
             EntityModel<Inventario> recurso = EntityModel.of(inventario,
                 linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel(),
-                linkTo(methodOn(InventarioController.class).getProductosInventario(inventario.getId())).withRel("productos"),
-                linkTo(methodOn(InventarioController.class).vaciarInventario(inventario.getId())).withRel("vaciar"),
-                linkTo(methodOn(InventarioController.class).actualizarProductosInventario(inventario.getId(), null)).withRel("actualizar-productos"),
-                linkTo(methodOn(InventarioController.class).eliminarProductosInventario(inventario.getId(), null)).withRel("eliminar-productos")
+                linkTo(methodOn(InventarioController.class).getProductosInventario(inventario.getId())).withRel("GET/productos"),
+                linkTo(methodOn(InventarioController.class).vaciarInventario(inventario.getId())).withRel("POST/vaciar"),
+                linkTo(methodOn(InventarioController.class).actualizarProductosInventario(inventario.getId(), null)).withRel("PUT/actualizar-productos"),
+                linkTo(methodOn(InventarioController.class).eliminarProductosInventario(inventario.getId(), null)).withRel("DELETE/eliminar-productos")
             );
             inventarioResources.add(recurso);
         }
@@ -58,11 +57,11 @@ public class InventarioController
             return ResponseEntity.notFound().build();
             
         EntityModel<Inventario> recurso = EntityModel.of(inventario,
-        linkTo(methodOn(InventarioController.class).getInventarios()).withRel("inventarios"),
-        linkTo(methodOn(InventarioController.class).getProductosInventario(id)).withRel("productos"),
-        linkTo(methodOn(InventarioController.class).vaciarInventario(id)).withRel("vaciar"),
-        linkTo(methodOn(InventarioController.class).actualizarProductosInventario(id, null)).withRel("actualizar-productos"),
-        linkTo(methodOn(InventarioController.class).eliminarProductosInventario(id, null)).withRel("eliminar-productos")
+        linkTo(methodOn(InventarioController.class).getInventarios()).withRel("GET/inventarios"),
+        linkTo(methodOn(InventarioController.class).getProductosInventario(id)).withRel("GET/productos"),
+        linkTo(methodOn(InventarioController.class).vaciarInventario(id)).withRel("POST/vaciar"),
+        linkTo(methodOn(InventarioController.class).actualizarProductosInventario(id, null)).withRel("PUT/actualizar-productos"),
+        linkTo(methodOn(InventarioController.class).eliminarProductosInventario(id, null)).withRel("DELETE/eliminar-productos")
        
         );
 
