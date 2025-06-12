@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.sucursal_service.model.Sucursal;
+import com.patitofeliz.sucursal_service.model.conexion.Carrito;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Venta;
@@ -61,6 +62,7 @@ public class SucursalController
             linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("GET/obtener inventario sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("GET/obtener empleados sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerVentasSucursal(id)).withRel("GET/obtener ventas sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/obtener carritos sucursal"),
             linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("POST/gregar producto inv. sucursal")
         );
 
@@ -83,12 +85,20 @@ public class SucursalController
         return ResponseEntity.ok(empleados);
     }
 
-    @GetMapping("ventas/{id}")
+    @GetMapping("/ventas/{id}")
     public ResponseEntity<List<Venta>> obtenerVentasSucursal(@PathVariable("id") int id)
     {
         List<Venta> ventas = sucursalService.listarVentasSucursal(id);
 
         return ResponseEntity.ok(ventas);
+    }
+
+    @GetMapping("/carrito/{id}")
+    public ResponseEntity<List<Carrito>> obtenerCarritosSucursal(@PathVariable("id") int id)
+    {
+        List<Carrito> carritos = sucursalService.listarCarritosSucursal(id);
+
+        return ResponseEntity.ok(carritos);
     }
 
     @GetMapping("/verificar/{id}")

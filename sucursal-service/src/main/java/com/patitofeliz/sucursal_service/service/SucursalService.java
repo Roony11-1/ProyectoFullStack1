@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Alerta;
+import com.patitofeliz.sucursal_service.model.conexion.Carrito;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Usuario;
@@ -31,6 +32,7 @@ public class SucursalService
     private static final String INVENTARIO_API = "http://localhost:8004/inventarios";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
     private static final String VENTAS_API = "http://localhost:8007/venta";
+    private static final String CARRITO_API = "http://localhost:8003/carrito";
 
     public List<Sucursal> listarSucursales()
     {
@@ -45,6 +47,11 @@ public class SucursalService
     public List<Venta> listarVentasSucursal(int sucursalId)
     {
         return getVentasPorSucursal(sucursalId);
+    }
+
+    public List<Carrito> listarCarritosSucursal(int sucursalId)
+    {
+        return getCarritosPorSucursal(sucursalId);
     }
 
     public Inventario listarInventarioSucursal(int sucursalId)
@@ -168,6 +175,16 @@ public class SucursalService
             throw new NoSuchElementException("Esta sucursal no tiene ventas asociadas");
 
         return ventasSucursalId;
+    }
+
+    private List<Carrito> getCarritosPorSucursal(int sucursalId)
+    {
+        List<Carrito> carritoSucursalId = restTemplate.getForObject(CARRITO_API+"/sucursal/"+sucursalId, List.class);
+
+        if (carritoSucursalId == null || carritoSucursalId.isEmpty())
+            throw new NoSuchElementException("Esta sucursal no tiene carritos asociados");
+
+        return carritoSucursalId;
     }
 
     private Usuario getUsuario(int usuarioId) 
