@@ -39,10 +39,7 @@ public class CarritoController
         for (Carrito carrito : carritos) 
         {
             EntityModel<Carrito> recurso = EntityModel.of(carrito,
-                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel(),
-                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getUsuarioId())).withRel("GET/filtrarPorUsuario"),
-                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getSucursalId())).withRel("GET/filtrarPorSucursal"),
-                linkTo(methodOn(CarritoController.class).actualizarCarrito(carrito.getId(), null)).withRel("PUT/actualizarCarrito")
+                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel()
             );
             carritosConLinks.add(recurso);
         }

@@ -62,7 +62,8 @@ public class UsuarioController
             linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
             linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
             linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas")
+            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
+            linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
         );
 
         return ResponseEntity.ok(recurso);
