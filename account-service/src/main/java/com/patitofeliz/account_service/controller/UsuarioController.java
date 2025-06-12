@@ -59,10 +59,10 @@ public class UsuarioController
 
         EntityModel<Usuario> recurso = EntityModel.of(usuario,
             linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
-            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("reviews"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("carritos"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("ventas")
+            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas")
         );
 
         return ResponseEntity.ok(recurso);
@@ -82,7 +82,7 @@ public class UsuarioController
 
         EntityModel<Usuario> recurso = EntityModel.of(nuevo,
                 linkTo(methodOn(UsuarioController.class).obtenerUsuario(nuevo.getId())).withSelfRel(),
-                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios")
+                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios")
         );
 
         return ResponseEntity.ok(recurso);
@@ -94,11 +94,7 @@ public class UsuarioController
         Usuario actualizado = usuarioService.actualizar(id, usuario);
 
         EntityModel<Usuario> recurso = EntityModel.of(actualizado,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(actualizado.getId())).withSelfRel(),
-                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioReviews(actualizado.getId())).withRel("reviews"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(actualizado.getId())).withRel("carritos"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioVentas(actualizado.getId())).withRel("ventas")
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(actualizado.getId())).withSelfRel()
         );
 
         return ResponseEntity.ok(recurso);
