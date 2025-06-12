@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.carrito_service.model.Carrito;
+import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.service.CarritoService;
 
 @RestController
@@ -111,7 +112,7 @@ public class CarritoController
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Carrito> borrarUsuario(@PathVariable int id)
+    public ResponseEntity<Carrito> borrarCarrito(@PathVariable int id)
     {
         Carrito carrito = carritoService.getCarrito(id);
 
@@ -120,5 +121,35 @@ public class CarritoController
 
         carritoService.borrar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    private EntityModel<Carrito> hateoasSingular(Carrito carrito) 
+    {
+        int id = carrito.getId();
+
+        return EntityModel.of(carrito,
+            linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
+            linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
+        );
+    }
+
+    private List<EntityModel<Carrito>> hateoasPlural(List<Usuario> carritos) 
+    {
+        List<EntityModel<Carrito>> listaconLinks = new ArrayList<>();
+        
+        for (Carrito carrito : carritos) 
+        {
+            EntityModel<Carrito> recurso = EntityModel.of(usuario,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
+            );
+            listaconLinks.add(recurso);
+        }
+
+        return listaconLinks;
     }
 }
