@@ -38,15 +38,7 @@ public class UsuarioController
         if (usuarios.isEmpty())
             return ResponseEntity.noContent().build();
         
-        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
-        for (Usuario usuario : usuarios) 
-        {
-            EntityModel<Usuario> recurso = EntityModel.of(usuario,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
-            );
-            usuariosConLinks.add(recurso);
-        }
-        return ResponseEntity.ok(usuariosConLinks);
+        return ResponseEntity.ok(hateoasPlural(usuarios));
     }
 
     @GetMapping("/{id}")
@@ -57,15 +49,7 @@ public class UsuarioController
         if (usuario == null)
             return ResponseEntity.notFound().build();
 
-        EntityModel<Usuario> recurso = EntityModel.of(usuario,
-            linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
-            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
-            linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
-        );
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(usuario));
     }
 
     @GetMapping("/verificar/{id}")
@@ -80,12 +64,7 @@ public class UsuarioController
     {
         Usuario nuevo = usuarioService.registrar(usuario);
 
-        EntityModel<Usuario> recurso = EntityModel.of(nuevo,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(nuevo.getId())).withSelfRel(),
-                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios")
-        );
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(nuevo));
     }
 
     @PostMapping("/lote")
@@ -93,15 +72,7 @@ public class UsuarioController
     {
         List<Usuario> listaRegistros =  usuarioService.registrarLote(listaUsuarios);
 
-        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
-        for (Usuario usuario : listaRegistros) 
-        {
-            EntityModel<Usuario> recurso = EntityModel.of(usuario,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
-            );
-            usuariosConLinks.add(recurso);
-        }
-        return ResponseEntity.ok(usuariosConLinks);
+        return ResponseEntity.ok(hateoasPlural(listaRegistros));
     }
 
     @PutMapping("/update/{id}")
@@ -109,11 +80,7 @@ public class UsuarioController
     {
         Usuario actualizado = usuarioService.actualizar(id, usuario);
 
-        EntityModel<Usuario> recurso = EntityModel.of(actualizado,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(actualizado.getId())).withSelfRel()
-        );
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(actualizado));
     }
 
     @DeleteMapping("/{id}")
@@ -150,5 +117,35 @@ public class UsuarioController
         List<Venta> listaVentas = usuarioService.getVentasByUsuarioId(id);
 
         return ResponseEntity.ok(listaVentas);
+    }
+
+        // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    private EntityModel<Usuario> hateoasSingular(Usuario usuario) 
+    {
+        int id = usuario.getId();
+
+        return EntityModel.of(usuario,
+            linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
+            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
+            linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
+        );
+    }
+
+    private List<EntityModel<Usuario>> hateoasPlural(List<Usuario> usuarios) 
+    {
+        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
+        
+        for (Usuario usuario : usuarios) 
+        {
+            EntityModel<Usuario> recurso = EntityModel.of(usuario,
+                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
+            );
+            usuariosConLinks.add(recurso);
+        }
+
+        return usuariosConLinks;
     }
 }
