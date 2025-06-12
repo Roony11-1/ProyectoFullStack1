@@ -1,8 +1,12 @@
 package com.patitofeliz.carrito_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +28,25 @@ public class CarritoController
     private CarritoService carritoService;
 
     @GetMapping
-    public ResponseEntity<List<Carrito>> getCarritos()
+    public ResponseEntity<List<EntityModel<Carrito>>> getCarritos()
     {
         List<Carrito> carritos = carritoService.getCarritos();
 
         if (carritos.isEmpty())
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(carritos);
+        List<EntityModel<Carrito>> carritosConLinks = new ArrayList<>();
+        for (Carrito carrito : carritos) 
+        {
+            EntityModel<Carrito> recurso = EntityModel.of(carrito,
+                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel(),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getUsuarioId())).withRel("GET/filtrarPorUsuario"),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getSucursalId())).withRel("GET/filtrarPorSucursal"),
+                linkTo(methodOn(CarritoController.class).actualizarCarrito(carrito.getId(), null)).withRel("PUT/actualizarCarrito")
+            );
+            carritosConLinks.add(recurso);
+        }
+        return ResponseEntity.ok(carritosConLinks);
     }
 
     @GetMapping("/usuario/{id}")
@@ -57,14 +72,22 @@ public class CarritoController
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Carrito> getCarrito(@PathVariable("id") int id)
+    public ResponseEntity<EntityModel<Carrito>> getCarrito(@PathVariable("id") int id)
     {
         Carrito carrito = carritoService.getCarrito(id);
 
         if (carrito == null)
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(carrito);
+        EntityModel<Carrito> recurso = EntityModel.of(carrito,
+                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel(),
+                linkTo(methodOn(CarritoController.class).getCarritos()).withRel("GET/carritos"),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getUsuarioId())).withRel("GET/filtrarPorUsuario"),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getSucursalId())).withRel("GET/filtrarPorSucursal"),
+                linkTo(methodOn(CarritoController.class).actualizarCarrito(carrito.getId(), null)).withRel("PUT/actualizarCarrito")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @GetMapping("/verificar/{id}")
