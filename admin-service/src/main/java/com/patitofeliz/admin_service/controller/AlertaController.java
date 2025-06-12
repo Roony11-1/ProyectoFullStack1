@@ -69,11 +69,11 @@ public class AlertaController
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Alerta> actualizarAlerta(@PathVariable("id") int id, @RequestBody Alerta alerta)
+    public ResponseEntity<EntityModel<Alerta>> actualizarAlerta(@PathVariable("id") int id, @RequestBody Alerta alerta)
     {
         Alerta actualizada = alertaService.actualizar(id, alerta);
 
-        return ResponseEntity.ok(actualizada);
+        return ResponseEntity.ok(hateoasSingular(actualizada));
     }
 
     @DeleteMapping("/{id}")
