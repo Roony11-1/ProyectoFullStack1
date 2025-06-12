@@ -106,16 +106,16 @@ public class AlertaController
 
     private List<EntityModel<Alerta>> hateoasPlural(List<Alerta> alertas) 
     {
-        List<EntityModel<Alerta>> alertasConLinks = new ArrayList<>();
+        List<EntityModel<Alerta>> listaconLinks = new ArrayList<>();
         
         for (Alerta alerta : alertas) 
         {
             EntityModel<Alerta> recurso = EntityModel.of(alerta,
                 linkTo(methodOn(AlertaController.class).obtenerAlerta(alerta.getId())).withSelfRel()
             );
-            alertasConLinks.add(recurso);
+            listaconLinks.add(recurso);
         }
 
-        return alertasConLinks;
+        return listaconLinks;
     }
 }
