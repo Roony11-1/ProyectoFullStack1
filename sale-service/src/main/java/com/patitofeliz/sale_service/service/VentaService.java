@@ -79,7 +79,6 @@ public class VentaService
         if (carritoVenta.getListaProductos().isEmpty())
             throw new NoSuchElementException("Carrito vacío!");
 
-
         // Creamos una Lista para guardar los producto inventario
         List<ProductoInventario> listaInventarioActualizar = new ArrayList<>();
 
@@ -114,6 +113,8 @@ public class VentaService
 
         venta.setListaProductos(carritoVenta.getListaProductos());
         venta.setTotal(carritoVenta.getTotal());
+        venta.setUsuarioId(usuario.getId());
+        venta.setSucursalId(sucursal.getId());
 
         // Borrar carrito
         restTemplate.delete(CARRITO_API + "/" + venta.getCarritoId());
@@ -130,7 +131,6 @@ public class VentaService
 
         return nuevaVenta;
     }
-
 
     // AUXILIARES
     private Usuario getUsuario(int usuarioId) 

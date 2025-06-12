@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.patitofeliz.sale_service.model.CarritoProducto;
 
-import jakarta.persistence.ElementCollection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +15,6 @@ public class Carrito
     private int usuarioId;
     private int sucursalId;
 
-    @ElementCollection
     private List<CarritoProducto> listaProductos;
     private int total;
 }
