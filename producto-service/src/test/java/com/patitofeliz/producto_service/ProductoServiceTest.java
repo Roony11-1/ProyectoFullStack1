@@ -2,6 +2,7 @@ package com.patitofeliz.producto_service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -69,6 +70,18 @@ public class ProductoServiceTest {
     }
 
     @Test
+    public void testGetProductoById_Existe(){
+        Producto p4 = new Producto();
+        p4.setId(1);
+        p4.setNombre("mouse");
+
+        when(productoRepository.findById(1)).thenReturn(Optional.of(p4));
+        Producto resultado = productoService.getProducto(1);
+        assertEquals(1, resultado.getId());
+        assertEquals("mouse", resultado.getNombre());
+    }
+
+    @Test
     public void testSave(){
         // Se crea el objeto producto de prueba para guardarlo
         Producto p = new Producto();
@@ -83,5 +96,16 @@ public class ProductoServiceTest {
         // Verificamos que el usuario guardado tenga el nombre correcto
         assertEquals("Iphone 13", resultado.getNombre());
 
+    }
+
+    @Test
+    public void testBorrar(){
+        Producto p3 = new Producto();
+        p3.setId(1);
+
+        when(productoRepository.findById(1)).thenReturn(Optional.of(p3));
+
+        productoService.borrar(1);
+        verify(productoRepository).deleteById(null);
     }
 }
