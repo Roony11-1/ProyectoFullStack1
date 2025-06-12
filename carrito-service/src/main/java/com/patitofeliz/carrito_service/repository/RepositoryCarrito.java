@@ -9,5 +9,5 @@ import com.patitofeliz.carrito_service.model.Carrito;
 @Repository
 public interface RepositoryCarrito extends JpaRepository<Carrito,Integer>  {
     List<Carrito> findByUsuarioId(int id);
-
+    List<Carrito> findBySucursalId(int sucursalId);
 }

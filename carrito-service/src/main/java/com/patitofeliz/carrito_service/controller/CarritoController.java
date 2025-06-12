@@ -45,6 +45,17 @@ public class CarritoController
         return ResponseEntity.ok(carritosId);
     }
 
+    @GetMapping("/sucursal/{id}")
+    public ResponseEntity<List<Carrito>> getCarritosSucursalId(@PathVariable("id") int id)
+    {
+        List<Carrito> carritosId = carritoService.getCarritosBySucursalid(id);
+
+        if (carritosId.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(carritosId);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Carrito> getCarrito(@PathVariable("id") int id)
     {

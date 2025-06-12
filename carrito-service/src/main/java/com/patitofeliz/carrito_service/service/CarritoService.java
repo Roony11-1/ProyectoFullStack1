@@ -44,6 +44,11 @@ public class CarritoService
         return carritoRepository.findByUsuarioId(id);
     }
 
+    public List<Carrito> getCarritosBySucursalid(int id)
+    {
+        return carritoRepository.findBySucursalId(id);
+    }
+
     public Carrito getCarrito(int id)
     {
         return carritoRepository.findById(id).orElse(null);
