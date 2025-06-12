@@ -70,6 +70,17 @@ public class VentaController
         return ResponseEntity.ok(ventaId);
     }
 
+    @GetMapping("/sucursal/{id}")
+    public ResponseEntity<List<Venta>> getVentasSucursalId(@PathVariable("id") int id)
+    {
+        List<Venta> ventaId = ventaService.getVentasPorSucursalId(id);
+
+        if (ventaId.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(ventaId);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Venta> borrarUsuario(@PathVariable int id)
     {

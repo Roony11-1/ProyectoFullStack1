@@ -46,6 +46,11 @@ public class VentaService
         return ventaRepository.findByVendedorId(id);
     }
 
+    public List<Venta> getVentasPorSucursalId(int id)
+    {
+        return ventaRepository.findBySucursalId(id);
+    }
+
     public List<Venta> getVentas()
     {
         return ventaRepository.findAll();
