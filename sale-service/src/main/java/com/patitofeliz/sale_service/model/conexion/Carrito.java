@@ -14,6 +14,7 @@ public class Carrito
 {
     private int id;
     private int usuarioId;
+    private int sucursalId;
 
     @ElementCollection
     private List<CarritoProducto> listaProductos;

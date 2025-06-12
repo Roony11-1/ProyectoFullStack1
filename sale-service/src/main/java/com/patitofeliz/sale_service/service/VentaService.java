@@ -71,9 +71,9 @@ public class VentaService
     public Venta generarVenta(Venta venta)
     {
         Carrito carritoVenta = getCarrito(venta.getCarritoId());
-        Usuario usuario = getUsuario(venta.getUsuarioId());
+        Usuario usuario = getUsuario(carritoVenta.getUsuarioId());
         Usuario vendedor = getUsuario(venta.getVendedorId());
-        Sucursal sucursal = getSucursal(venta.getSucursalId());
+        Sucursal sucursal = getSucursal(carritoVenta.getSucursalId());
         Inventario inventario = getInventario(sucursal.getInventarioId());
 
         if (carritoVenta.getListaProductos().isEmpty())
