@@ -65,7 +65,6 @@ public class UsuarioController
             linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
             linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
         );
-
         return ResponseEntity.ok(recurso);
     }
 
