@@ -1,5 +1,6 @@
 package com.patitofeliz.producto_service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -55,11 +56,16 @@ public class ProductoService
     @Transactional
     public List<Producto> registrarLote(List<Producto> productos) 
     {
-        List<Producto> registrados = productoRepository.saveAll(productos);
+        List<Producto> productosRegistrados = new ArrayList<>();
 
-        crearAlerta("Lote de productos registrado (" + registrados.size() + ")", "Aviso: Producto");
-        
-        return registrados;
+        for (Producto producto : productos) 
+        {
+            Producto productoRegistrado = registrar(producto);
+
+            productosRegistrados.add(productoRegistrado);
+        }
+
+        return productosRegistrados;
     }
 
     @Transactional
