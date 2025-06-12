@@ -1,8 +1,12 @@
 package com.patitofeliz.admin_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,25 +28,41 @@ public class AlertaController
     private AlertaService alertaService;
 
     @GetMapping
-    public ResponseEntity<List<Alerta>> listarAlertas()
+    public ResponseEntity<List<EntityModel<Alerta>>> listarAlertas()
     {
         List<Alerta> alertas = alertaService.getAlertas();
 
         if (alertas.isEmpty())
             return ResponseEntity.noContent().build();
-        
-        return ResponseEntity.ok(alertas);
+
+        List<EntityModel<Alerta>> alertasConLinks = new ArrayList<>();
+        for (Alerta alerta : alertas) 
+        {
+            EntityModel<Alerta> recurso = EntityModel.of(alerta,
+                linkTo(methodOn(AlertaController.class).obtenerAlerta(alerta.getId())).withSelfRel()
+            );
+            alertasConLinks.add(recurso);
+        }
+        return ResponseEntity.ok(alertasConLinks);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Alerta> obtenerAlerta(@PathVariable("id") int  id)
+    public ResponseEntity<EntityModel<Alerta>> obtenerAlerta(@PathVariable("id") int  id)
     {
         Alerta alerta = alertaService.getAlerta(id);
 
         if (alerta == null)
             return ResponseEntity.notFound().build();
+
+        String tipo = alerta.getTipoAlerta().substring("Aviso: ".length());
         
-        return ResponseEntity.ok(alerta);
+        EntityModel<Alerta> recurso = EntityModel.of(alerta,
+            linkTo(methodOn(AlertaController.class).obtenerAlerta(id)).withSelfRel(),
+            linkTo(methodOn(AlertaController.class).listarAlertas()).withRel("GET/alertas"),
+            linkTo(methodOn(AlertaController.class).obtenerAlertaTipo(tipo)).withRel("GET/alertasTipo")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @GetMapping("/filtrar/{tipoAlerta}")
