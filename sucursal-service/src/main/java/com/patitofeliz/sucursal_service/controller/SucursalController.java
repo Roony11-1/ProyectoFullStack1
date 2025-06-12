@@ -1,8 +1,12 @@
 package com.patitofeliz.sucursal_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,25 +30,40 @@ public class SucursalController
     private SucursalService sucursalService;
 
     @GetMapping
-    public ResponseEntity<List<Sucursal>> listarSucursales() 
+    public ResponseEntity<List<EntityModel<Sucursal>>> listarSucursales() 
     {
         List<Sucursal> sucursales = sucursalService.listarSucursales();
 
         if (sucursales.isEmpty())
             return ResponseEntity.noContent().build();
 
-        return ResponseEntity.ok(sucursales);
+        List<EntityModel<Sucursal>> sucursalesConLinks = new ArrayList<>();
+        for (Sucursal sucursal : sucursales) 
+        {
+            EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
+                linkTo(methodOn(SucursalController.class).obtenerSucursal(sucursal.getId())).withSelfRel()
+            );
+            sucursalesConLinks.add(recurso);
+        }
+        return ResponseEntity.ok(sucursalesConLinks);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sucursal> obtenerSucursal(@PathVariable("id") int  id)
+    public ResponseEntity<EntityModel<Sucursal>> obtenerSucursal(@PathVariable("id") int  id)
     {
         Sucursal sucursal = sucursalService.listarSucursal(id);
 
         if (sucursal == null)
             return ResponseEntity.notFound().build();
-        
-        return ResponseEntity.ok(sucursal);
+
+        EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
+            linkTo(methodOn(SucursalController.class).listarSucursales()).withRel("sucursales"),
+            linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("obtener inventario sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("obtener inventario sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("agregar producto inv. sucursal")
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @GetMapping("/inventario/{id}")
@@ -71,11 +90,15 @@ public class SucursalController
     }
 
     @PostMapping
-    public ResponseEntity<Sucursal> crearSucursal(@RequestBody Sucursal sucursal) 
+    public ResponseEntity<EntityModel<Sucursal>> crearSucursal(@RequestBody Sucursal sucursal) 
     {
         Sucursal creada = sucursalService.guardar(sucursal);
 
-        return ResponseEntity.ok(creada);
+        EntityModel<Sucursal> recurso = EntityModel.of(creada,
+                linkTo(methodOn(SucursalController.class).obtenerSucursal(creada.getId())).withSelfRel()
+        );
+
+        return ResponseEntity.ok(recurso);
     }
 
     @PostMapping("/productos/{id}")
