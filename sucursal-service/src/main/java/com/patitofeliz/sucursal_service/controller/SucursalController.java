@@ -59,7 +59,7 @@ public class SucursalController
         EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
             linkTo(methodOn(SucursalController.class).listarSucursales()).withRel("sucursales"),
             linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("obtener inventario sucursal"),
-            linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("obtener inventario sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("obtener empleados sucursal"),
             linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("agregar producto inv. sucursal")
         );
 
