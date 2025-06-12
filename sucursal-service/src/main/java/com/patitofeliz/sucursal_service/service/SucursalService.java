@@ -14,6 +14,7 @@ import com.patitofeliz.sucursal_service.model.conexion.Alerta;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Usuario;
+import com.patitofeliz.sucursal_service.model.conexion.Venta;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
 import jakarta.transaction.Transactional;
@@ -39,6 +40,11 @@ public class SucursalService
     public Sucursal listarSucursal(int id)
     {
         return sucursalRepository.findById(id).orElse(null);
+    }
+
+    public List<Venta> listarVentasSucursal(int sucursalId)
+    {
+        return getVentasPorSucursal(sucursalId);
     }
 
     public Inventario listarInventarioSucursal(int sucursalId)
@@ -152,6 +158,16 @@ public class SucursalService
             throw new NoSuchElementException("Inventario no encontrado con ID: " + inventarioId);
 
         return inventario;
+    }
+
+    private List<Venta> getVentasPorSucursal(int sucursalId)
+    {
+        List<Venta> ventasSucursalId = restTemplate.getForObject(VENTAS_API+"/sucursal/"+sucursalId, List.class);
+
+        if (ventasSucursalId == null || ventasSucursalId.isEmpty())
+            throw new NoSuchElementException("Esta sucursal no tiene ventas asociadas");
+
+        return ventasSucursalId;
     }
 
     private Usuario getUsuario(int usuarioId) 

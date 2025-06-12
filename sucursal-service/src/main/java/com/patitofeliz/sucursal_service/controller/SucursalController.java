@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
+import com.patitofeliz.sucursal_service.model.conexion.Venta;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 @RestController
@@ -79,6 +80,14 @@ public class SucursalController
         List<Integer> empleados = sucursalService.listarEmpleadosSucursal(id);
 
         return ResponseEntity.ok(empleados);
+    }
+
+    @GetMapping("ventas/{id}")
+    public ResponseEntity<List<Venta>> obtenerVentasSucursal(@PathVariable("id") int id)
+    {
+        List<Venta> ventas = sucursalService.listarVentasSucursal(id);
+
+        return ResponseEntity.ok(ventas);
     }
 
     @GetMapping("/verificar/{id}")
