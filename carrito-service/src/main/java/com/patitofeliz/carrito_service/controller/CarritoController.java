@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.carrito_service.model.Carrito;
-import com.patitofeliz.carrito_service.model.conexion.Usuario;
 import com.patitofeliz.carrito_service.service.CarritoService;
 
 @RestController
@@ -36,15 +35,7 @@ public class CarritoController
         if (carritos.isEmpty())
             return ResponseEntity.noContent().build();
 
-        List<EntityModel<Carrito>> carritosConLinks = new ArrayList<>();
-        for (Carrito carrito : carritos) 
-        {
-            EntityModel<Carrito> recurso = EntityModel.of(carrito,
-                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel()
-            );
-            carritosConLinks.add(recurso);
-        }
-        return ResponseEntity.ok(carritosConLinks);
+        return ResponseEntity.ok(hateoasPlural(carritos));
     }
 
     @GetMapping("/usuario/{id}")
@@ -77,15 +68,7 @@ public class CarritoController
         if (carrito == null)
             return ResponseEntity.noContent().build();
 
-        EntityModel<Carrito> recurso = EntityModel.of(carrito,
-                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel(),
-                linkTo(methodOn(CarritoController.class).getCarritos()).withRel("GET/carritos"),
-                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getUsuarioId())).withRel("GET/filtrarPorUsuario"),
-                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getSucursalId())).withRel("GET/filtrarPorSucursal"),
-                linkTo(methodOn(CarritoController.class).actualizarCarrito(carrito.getId(), null)).withRel("PUT/actualizarCarrito")
-        );
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(carrito));
     }
 
     @GetMapping("/verificar/{id}")
@@ -96,19 +79,19 @@ public class CarritoController
     }
 
     @PostMapping
-    public ResponseEntity<Carrito> guardarCarrito(@RequestBody Carrito carrito)
+    public ResponseEntity<EntityModel<Carrito>> guardarCarrito(@RequestBody Carrito carrito)
     {
         Carrito nuevoCarrito = carritoService.guardar(carrito);
 
-        return ResponseEntity.ok(nuevoCarrito);
+        return ResponseEntity.ok(hateoasSingular(nuevoCarrito));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Carrito> actualizarCarrito(@PathVariable("id") int id, @RequestBody Carrito carrito)
+    public ResponseEntity<EntityModel<Carrito>> actualizarCarrito(@PathVariable("id") int id, @RequestBody Carrito carrito)
     {
         Carrito actualizado = carritoService.actualizar(id, carrito);
 
-        return ResponseEntity.ok(actualizado);
+        return ResponseEntity.ok(hateoasSingular(actualizado));
     }
 
     @DeleteMapping("/{id}")
@@ -129,23 +112,22 @@ public class CarritoController
         int id = carrito.getId();
 
         return EntityModel.of(carrito,
-            linkTo(methodOn(UsuarioController.class).obtenerUsuario(id)).withSelfRel(),
-            linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("GET/usuarios"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioReviews(id)).withRel("GET/reviews"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(id)).withRel("GET/carritos"),
-            linkTo(methodOn(UsuarioController.class).getUsuarioVentas(id)).withRel("GET/ventas"),
-            linkTo(methodOn(UsuarioController.class).actualizarUsuario(id, null)).withRel("PUT/actualizarUsuario")
+                linkTo(methodOn(CarritoController.class).getCarrito(id)).withSelfRel(),
+                linkTo(methodOn(CarritoController.class).getCarritos()).withRel("GET/carritos"),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getUsuarioId())).withRel("GET/filtrarPorUsuario"),
+                linkTo(methodOn(CarritoController.class).getCarritosUsuarioId(carrito.getSucursalId())).withRel("GET/filtrarPorSucursal"),
+                linkTo(methodOn(CarritoController.class).actualizarCarrito(carrito.getId(), null)).withRel("PUT/actualizarCarrito")
         );
     }
 
-    private List<EntityModel<Carrito>> hateoasPlural(List<Usuario> carritos) 
+    private List<EntityModel<Carrito>> hateoasPlural(List<Carrito> carritos) 
     {
         List<EntityModel<Carrito>> listaconLinks = new ArrayList<>();
         
         for (Carrito carrito : carritos) 
         {
-            EntityModel<Carrito> recurso = EntityModel.of(usuario,
-                linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
+            EntityModel<Carrito> recurso = EntityModel.of(carrito,
+                linkTo(methodOn(CarritoController.class).getCarrito(carrito.getId())).withSelfRel()
             );
             listaconLinks.add(recurso);
         }

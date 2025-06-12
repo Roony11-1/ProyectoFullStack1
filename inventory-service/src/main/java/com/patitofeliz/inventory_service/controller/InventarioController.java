@@ -33,16 +33,8 @@ public class InventarioController
     public ResponseEntity<List<EntityModel<Inventario>>> getInventarios() 
     {
         List<Inventario> lista = inventarioService.getInventarios();
-        List<EntityModel<Inventario>> inventarioResources = new ArrayList<>();
 
-        for (Inventario inventario : lista) {
-            EntityModel<Inventario> recurso = EntityModel.of(inventario,
-                linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel()
-            );
-            inventarioResources.add(recurso);
-        }
-
-        return ResponseEntity.ok(inventarioResources);
+        return ResponseEntity.ok(hateoasPlural(lista));
     }
 
     @GetMapping("/{id}")
@@ -51,18 +43,8 @@ public class InventarioController
         Inventario inventario = inventarioService.getInventario(id);
         if (inventario == null)
             return ResponseEntity.notFound().build();
-            
-        EntityModel<Inventario> recurso = EntityModel.of(inventario,
-        linkTo(methodOn(InventarioController.class).getInventarios()).withRel("GET/inventarios"),
-        linkTo(methodOn(InventarioController.class).getProductosInventario(id)).withRel("GET/productos"),
-        linkTo(methodOn(InventarioController.class).vaciarInventario(id)).withRel("POST/vaciar"),
-        linkTo(methodOn(InventarioController.class).actualizarProductosInventario(id, null)).withRel("PUT/actualizar-productos"),
-        linkTo(methodOn(InventarioController.class).eliminarProductosInventario(id, null)).withRel("DELETE/eliminar-productos")
-       
-        );
 
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(inventario));
     }
 
     @GetMapping("/verificar/{id}")
@@ -73,9 +55,9 @@ public class InventarioController
     }
 
     @PostMapping
-    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) 
+    public ResponseEntity<EntityModel<Inventario>> guardarInventario(@RequestBody Inventario inventario) 
     {
-        return ResponseEntity.ok(inventarioService.guardarInventario(inventario));
+        return ResponseEntity.ok(hateoasSingular(inventarioService.guardarInventario(inventario)));
     }
 
     @DeleteMapping("/{id}")
@@ -120,5 +102,36 @@ public class InventarioController
         Inventario inventarioActualizado = inventarioService.actualizarProductosEnInventario(id, productosActualizados);
 
         return ResponseEntity.ok(inventarioActualizado);
+    }
+
+    // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    private EntityModel<Inventario> hateoasSingular(Inventario inventario) 
+    {
+        int id = inventario.getId();
+
+        return EntityModel.of(inventario,
+        linkTo(methodOn(InventarioController.class).getInventarios()).withRel("GET/inventarios"),
+        linkTo(methodOn(InventarioController.class).getProductosInventario(id)).withRel("GET/productos"),
+        linkTo(methodOn(InventarioController.class).vaciarInventario(id)).withRel("POST/vaciar"),
+        linkTo(methodOn(InventarioController.class).agregarProductosInventario(id, null)).withRel("POST/agregar-productos"),
+        linkTo(methodOn(InventarioController.class).actualizarProductosInventario(id, null)).withRel("PUT/actualizar-productos"),
+        linkTo(methodOn(InventarioController.class).eliminarProductosInventario(id, null)).withRel("DELETE/eliminar-productos")
+       
+        );
+    }
+
+    private List<EntityModel<Inventario>> hateoasPlural(List<Inventario> inventarios) 
+    {
+        List<EntityModel<Inventario>> listaconLinks = new ArrayList<>();
+        
+        for (Inventario inventario : inventarios) 
+        {
+            EntityModel<Inventario> recurso = EntityModel.of(inventario,
+                linkTo(methodOn(InventarioController.class).getInventario(inventario.getId())).withSelfRel()
+            );
+            listaconLinks.add(recurso);
+        }
+
+        return listaconLinks;
     }
 }
