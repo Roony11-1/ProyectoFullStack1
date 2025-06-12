@@ -29,6 +29,7 @@ public class SucursalService
     private static final String ALERTA_API = "http://localhost:8002/alerta";
     private static final String INVENTARIO_API = "http://localhost:8004/inventarios";
     private static final String USUARIO_API = "http://localhost:8001/usuario";
+    private static final String VENTAS_API = "http://localhost:8007/venta";
 
     public List<Sucursal> listarSucursales()
     {
