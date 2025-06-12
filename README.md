@@ -57,7 +57,6 @@ ProductoCarrito<br>
 # Venta<br>
 Venta<br>
 {
-    "usuarioId" : 2,
     "vendedorId" : 3,
     "carritoId" : 1
 }
