@@ -119,7 +119,7 @@ public class UsuarioController
         return ResponseEntity.ok(listaVentas);
     }
 
-        // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
     private EntityModel<Usuario> hateoasSingular(Usuario usuario) 
     {
         int id = usuario.getId();
