@@ -82,10 +82,7 @@ public class UsuarioController
 
         EntityModel<Usuario> recurso = EntityModel.of(nuevo,
                 linkTo(methodOn(UsuarioController.class).obtenerUsuario(nuevo.getId())).withSelfRel(),
-                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioReviews(nuevo.getId())).withRel("reviews"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioCarritos(nuevo.getId())).withRel("carritos"),
-                linkTo(methodOn(UsuarioController.class).getUsuarioVentas(nuevo.getId())).withRel("ventas")
+                linkTo(methodOn(UsuarioController.class).listarUsuarios()).withRel("usuarios")
         );
 
         return ResponseEntity.ok(recurso);
