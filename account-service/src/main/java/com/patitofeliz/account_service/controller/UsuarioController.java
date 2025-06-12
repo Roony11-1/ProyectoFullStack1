@@ -88,6 +88,12 @@ public class UsuarioController
         return ResponseEntity.ok(recurso);
     }
 
+    @PostMapping("/lote")
+    public ResponseEntity<List<Usuario>> registrarUsuarios(@RequestBody List<Usuario> listaUsuarios)
+    {
+        return ResponseEntity.ok(usuarioService.registrarLote(listaUsuarios));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<EntityModel<Usuario>> actualizarUsuario(@PathVariable("id") int id, @RequestBody Usuario usuario)
     {

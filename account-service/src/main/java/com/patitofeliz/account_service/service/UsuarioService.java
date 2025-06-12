@@ -1,5 +1,6 @@
 package com.patitofeliz.account_service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -63,6 +64,20 @@ public class UsuarioService
         crearAlerta("Usuario registrado: "+nuevo.getNombreUsuario(), "Aviso: Usuario");
 
         return nuevo;
+    }
+
+    public List<Usuario> registrarLote(List<Usuario> usuarios)
+    {
+        List<Usuario> listaRegistrados = new ArrayList<>();
+
+        for (Usuario usuario : usuarios) 
+        {
+            Usuario registrado = registrar(usuario);
+            
+            listaRegistrados.add(registrado);
+        }
+
+        return listaRegistrados;
     }
 
     @Transactional
