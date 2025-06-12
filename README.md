@@ -57,10 +57,9 @@ ProductoCarrito<br>
 # Venta<br>
 Venta<br>
 {
-    "usuarioId" : int,
-    "vendedorId" : int,
-    "carritoId" : int,
-    "sucursalId" : int
+    "usuarioId" : 2,
+    "vendedorId" : 3,
+    "carritoId" : 1
 }
 # Inventario<br>
 EL INVENTARIO SE CREA AUTOMATICAMENTE CUANDO CREAMOS LA SUCURSAL<BR>
