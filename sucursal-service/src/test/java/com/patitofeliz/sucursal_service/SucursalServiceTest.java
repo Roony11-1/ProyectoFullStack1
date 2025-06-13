@@ -171,8 +171,7 @@ public class SucursalServiceTest {
         when(restTemplate.postForObject(
             eq("http://localhost:8004/inventarios/1/productos"),
             any(List.class),
-            eq(Inventario.class)
-        )).thenReturn(null);
+            eq(Inventario.class))).thenReturn(null);
 
         // Mock de sucursal
         Sucursal sucursal = new Sucursal();
