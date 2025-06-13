@@ -136,16 +136,16 @@ public class UsuarioController
 
     private List<EntityModel<Usuario>> hateoasPlural(List<Usuario> usuarios) 
     {
-        List<EntityModel<Usuario>> usuariosConLinks = new ArrayList<>();
+        List<EntityModel<Usuario>> listaconLinks = new ArrayList<>();
         
         for (Usuario usuario : usuarios) 
         {
             EntityModel<Usuario> recurso = EntityModel.of(usuario,
                 linkTo(methodOn(UsuarioController.class).obtenerUsuario(usuario.getId())).withSelfRel()
             );
-            usuariosConLinks.add(recurso);
+            listaconLinks.add(recurso);
         }
 
-        return usuariosConLinks;
+        return listaconLinks;
     }
 }
