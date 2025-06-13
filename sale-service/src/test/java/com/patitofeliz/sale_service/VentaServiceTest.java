@@ -1,23 +1,23 @@
 package com.patitofeliz.sale_service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
+import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.model.Venta;
 import com.patitofeliz.sale_service.model.conexion.Carrito;
 import com.patitofeliz.sale_service.model.conexion.Inventario;
@@ -25,7 +25,6 @@ import com.patitofeliz.sale_service.model.conexion.Producto;
 import com.patitofeliz.sale_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sale_service.model.conexion.Sucursal;
 import com.patitofeliz.sale_service.model.conexion.Usuario;
-import com.patitofeliz.sale_service.model.CarritoProducto;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 import com.patitofeliz.sale_service.service.VentaService;
 
@@ -75,7 +74,7 @@ public class VentaServiceTest
 
         when(ventaRepository.findAll()).thenReturn(Arrays.asList(v1,v2));
 
-        List<Venta> resultado = ventaRepository.findAll();
+        List<Venta> resultado = ventaService.getVentas();
 
         // Verificamos el largo
         assertEquals(2, resultado.size());
