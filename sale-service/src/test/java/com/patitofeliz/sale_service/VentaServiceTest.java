@@ -57,51 +57,46 @@ public class VentaServiceTest
         Venta v1 = new Venta();
         v1.setId(1);
         v1.setCarritoId(1);
+        v1.setSucursalId(1);
+        v1.setUsuarioId(1);
+        v1.setVendedorId(1);
         v1.setListaProductos(listaProductos);
-
-        // Lista de productos 2
-        List<CarritoProducto> listaProductos2 = new ArrayList<>();
-        listaProductos2.add(new CarritoProducto(1, 1));
-        listaProductos2.add(new CarritoProducto(2, 2));
-        listaProductos2.add(new CarritoProducto(3, 3));
-        listaProductos2.add(new CarritoProducto(4, 4));
+        v1.setTotal(0);
 
         // Venta 2
         Venta v2 = new Venta();
         v2.setId(2);
-        v2.setCarritoId(2);
-        v2.setListaProductos(listaProductos2);
+        v2.setCarritoId(1);
+        v2.setSucursalId(1);
+        v2.setUsuarioId(1);
+        v2.setVendedorId(1);
+        v2.setListaProductos(listaProductos);
+        v2.setTotal(0);
 
         when(ventaRepository.findAll()).thenReturn(Arrays.asList(v1,v2));
 
         List<Venta> resultado = ventaService.getVentas();
 
-        // Verificamos el largo
-        assertEquals(2, resultado.size());
-        // Verificamos el Id
-        assertEquals(1, resultado.get(0).getId());
-        // Verificamos el CarritoId
-        assertEquals(1, resultado.get(0).getCarritoId());
-        // Verificamos un objeto cualquiera
-        assertEquals(2, resultado.get(0).getListaProductos().get(1).getProductoId());
+        int contador = 1;
 
-        // Verificamos el Id
-        assertEquals(2, resultado.get(1).getId());
-        // Verificamos el CarritoId
-        assertEquals(2, resultado.get(1).getCarritoId());
-
-        // Dejamos los objetos con datos de patron simple para comprobar cada uno
-        for (Integer i = 0; i < listaProductos.size(); i++) 
+        for (Venta venta : resultado) 
         {
-            assertEquals(i+1, v1.getListaProductos().get(i).getProductoId());
-            assertEquals(i+1, v1.getListaProductos().get(i).getCantidad());
-        }
+            assertEquals(contador, venta.getId());
+            assertEquals(1, venta.getCarritoId());
+            assertEquals(1, venta.getSucursalId());
+            assertEquals(1, venta.getUsuarioId());
+            assertEquals(1, venta.getVendedorId());
 
-        // Dejamos los objetos con datos de patron simple para comprobar cada uno
-        for (Integer i = 0; i < listaProductos2.size(); i++) 
-        {
-            assertEquals(i+1, v2.getListaProductos().get(i).getProductoId());
-            assertEquals(i+1, v2.getListaProductos().get(i).getCantidad());
+                int contadorProducto = 1;
+                for (CarritoProducto producto : venta.getListaProductos()) 
+                {
+                    assertEquals(contadorProducto, producto.getProductoId());
+                    assertEquals(contadorProducto, producto.getCantidad());
+
+                    contadorProducto++;
+                }
+
+            contador++;
         }
     }
 
