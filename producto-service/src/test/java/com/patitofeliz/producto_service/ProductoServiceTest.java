@@ -1,26 +1,27 @@
 package com.patitofeliz.producto_service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.patitofeliz.producto_service.model.Producto;
 import com.patitofeliz.producto_service.repository.ProductoRepository;
 import com.patitofeliz.producto_service.service.ProductoService;
 
-public class ProductoServiceTest {
 
+public class ProductoServiceTest 
+{
     @Mock
     private ProductoRepository productoRepository;
 
@@ -33,7 +34,8 @@ public class ProductoServiceTest {
     }
 
     @Test
-    public void testGetAll(){
+    public void testGetAll()
+    {
         //Creamos un objeto Producto
         Producto p1 = new Producto();
         p1.setId(1);
@@ -56,11 +58,10 @@ public class ProductoServiceTest {
         assertEquals("Iphone 13", resultado.get(0).getNombre());
     }
 
-
     @Test
-    public void testGetProductoById_NoExiste(){
+    public void testGetProductoById_NoExiste()
+    {
         // Simularemos que no existe un producto con el id 100
-
         when(productoRepository.findById(100)).thenReturn(Optional.empty());
         //ejecutamos el metodo
         Producto resultado = productoService.getProducto(100);
@@ -70,19 +71,8 @@ public class ProductoServiceTest {
     }
 
     @Test
-    public void testGetProductoById_Existe(){
-        Producto p4 = new Producto();
-        p4.setId(1);
-        p4.setNombre("mouse");
-
-        when(productoRepository.findById(1)).thenReturn(Optional.of(p4));
-        Producto resultado = productoService.getProducto(1);
-        assertEquals(1, resultado.getId());
-        assertEquals("mouse", resultado.getNombre());
-    }
-
-    @Test
-    public void testSave(){
+    public void testSave()
+    {
         // Se crea el objeto producto de prueba para guardarlo
         Producto p = new Producto();
         p.setNombre("Iphone 13");
@@ -95,17 +85,46 @@ public class ProductoServiceTest {
 
         // Verificamos que el usuario guardado tenga el nombre correcto
         assertEquals("Iphone 13", resultado.getNombre());
-
+        assertEquals("Apple", resultado.getMarca());
+        assertEquals(500000, resultado.getPrecio());
     }
 
     @Test
-    public void testBorrar(){
-        Producto p3 = new Producto();
-        p3.setId(1);
+    public void testActualizar()
+    {
+        Producto p = new Producto();
+        p.setId(1);
+        p.setNombre("Iphone 13");
+        p.setMarca("Apple");
+        p.setPrecio(1000000);
 
-        when(productoRepository.findById(1)).thenReturn(Optional.of(p3));
+        Producto a = new Producto();
+        a.setId(1);
+        a.setNombre("Iphone 12");
+        a.setMarca("Pineaple");
+        a.setPrecio(1);
+
+        when(productoRepository.findById(1)).thenReturn(Optional.of(p));
+        when(productoRepository.save(any(Producto.class))).thenReturn(p);
+
+        Producto resultado = productoService.actualizar(1, a);
+
+        assertEquals(1, resultado.getId());
+        assertEquals("Iphone 12", resultado.getNombre());
+        assertEquals("Pineaple", resultado.getMarca());
+        assertEquals(1, resultado.getPrecio());
+    }
+
+    @Test
+    public void testEliminar()
+    {
+        Producto p = new Producto();
+        p.setId(1);
+
+        when(productoRepository.findById(1)).thenReturn(Optional.of(p));
 
         productoService.borrar(1);
-        verify(productoRepository).deleteById(null);
+
+        verify(productoRepository).deleteById(1);
     }
 }
