@@ -1,22 +1,21 @@
 package com.patitofeliz.carrito_service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
@@ -148,6 +147,7 @@ public class CarritoServiceTest {
         assertEquals(1, resultado.getId());
         assertNotNull(resultado);
     }
+    
     //test para actualizar carrito///
     @Test
     public void testActualizar(){
@@ -220,10 +220,8 @@ public class CarritoServiceTest {
         // Mock del save
         when(carritoRepository.save(carrito)).thenReturn(carrito);
 
-        // El metodo guardar invoca el metodo privado, este metodo ya esta probado
         carritoService.guardar(carrito);
 
-        // por lo que la lista debera quedad con 3 objetos
         assertEquals(3, carrito.getListaProductos().size());
 
         // Aqui en este for probamos por cada elemento de la lista, verificamos el id y la cantidad
