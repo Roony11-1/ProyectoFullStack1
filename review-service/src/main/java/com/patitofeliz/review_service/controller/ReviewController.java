@@ -51,14 +51,14 @@ public class ReviewController
      }
 
    @GetMapping("/producto/{productoId}")
-    public ResponseEntity<List<Review>> obtenerReviewPorProductoId(@PathVariable("productoId") int productoId)
+    public ResponseEntity<List<EntityModel<Review>>> obtenerReviewPorProductoId(@PathVariable("productoId") int productoId)
     {
         List<Review> reviews = reviewService.getReviewByProductoId(productoId);
 
         if (reviews == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(reviews);
+        return ResponseEntity.ok(hateoasPlural(reviews));
     }
 
     @GetMapping("/verificar/{id}")
