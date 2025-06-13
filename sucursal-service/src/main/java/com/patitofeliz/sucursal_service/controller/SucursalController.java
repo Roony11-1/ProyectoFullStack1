@@ -21,6 +21,7 @@ import com.patitofeliz.sucursal_service.model.conexion.Carrito;
 import com.patitofeliz.sucursal_service.model.conexion.Inventario;
 import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Venta;
+import com.patitofeliz.sucursal_service.model.dto.SucursalInventarioDTO;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 @RestController
@@ -53,11 +54,9 @@ public class SucursalController
     }
 
     @GetMapping("/inventario/{id}")
-    public ResponseEntity<Inventario> obtenerInventarioSucursal(@PathVariable("id") int id)
-    {
-        Inventario inventario = sucursalService.listarInventarioSucursal(id);
-
-        return ResponseEntity.ok(inventario);
+    public ResponseEntity<SucursalInventarioDTO> obtenerInventarioSucursal(@PathVariable("id") int id) {
+    SucursalInventarioDTO dto = sucursalService.obtenerSucursalConInventario(id);
+    return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/empleados/{id}")

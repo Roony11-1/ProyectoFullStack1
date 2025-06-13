@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -17,6 +18,7 @@ import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
 import com.patitofeliz.sucursal_service.model.conexion.Usuario;
 import com.patitofeliz.sucursal_service.model.conexion.Venta;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
+import com.patitofeliz.sucursal_service.model.dto.SucursalInventarioDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -196,4 +198,12 @@ public class SucursalService
 
         return usuario;
     }
+    public SucursalInventarioDTO obtenerSucursalConInventario(int sucursalId) {
+    Sucursal sucursal = sucursalRepository.findById(sucursalId)
+        .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
+
+    Inventario inventario = getInventario(sucursal.getInventarioId());
+
+    return new SucursalInventarioDTO(sucursal.getId(), sucursal.getInventarioId(), inventario);
+       }
 }
