@@ -11,4 +11,5 @@ public class Usuario
     private String nombreUsuario;
     private String password;
     private String tipoUsuario;
+    private int id;
 }

@@ -9,5 +9,5 @@ public class SucursalServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SucursalServiceApplication.class, args);
 	}
-
+	
 }
