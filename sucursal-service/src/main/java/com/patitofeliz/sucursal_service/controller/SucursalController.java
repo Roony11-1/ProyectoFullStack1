@@ -130,7 +130,7 @@ public class SucursalController
             linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("GET/obtener inventario sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("GET/obtener empleados sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerVentasSucursal(id)).withRel("GET/obtener ventas sucursal"),
-            linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/obtener carritos sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/aobtener carritos sucursal"),
             linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("POST/gregar producto inv. sucursal")
         );
     }
