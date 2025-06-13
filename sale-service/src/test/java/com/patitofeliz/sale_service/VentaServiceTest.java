@@ -78,7 +78,6 @@ public class VentaServiceTest
         List<Venta> resultado = ventaService.getVentas();
 
         int contador = 1;
-
         for (Venta venta : resultado) 
         {
             assertEquals(contador, venta.getId());
