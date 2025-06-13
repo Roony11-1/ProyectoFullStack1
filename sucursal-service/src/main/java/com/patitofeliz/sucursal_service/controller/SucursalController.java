@@ -38,15 +38,7 @@ public class SucursalController
         if (sucursales.isEmpty())
             return ResponseEntity.noContent().build();
 
-        List<EntityModel<Sucursal>> sucursalesConLinks = new ArrayList<>();
-        for (Sucursal sucursal : sucursales) 
-        {
-            EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
-                linkTo(methodOn(SucursalController.class).obtenerSucursal(sucursal.getId())).withSelfRel()
-            );
-            sucursalesConLinks.add(recurso);
-        }
-        return ResponseEntity.ok(sucursalesConLinks);
+        return ResponseEntity.ok(hateoasPlural(sucursales));
     }
 
     @GetMapping("/{id}")
@@ -57,16 +49,7 @@ public class SucursalController
         if (sucursal == null)
             return ResponseEntity.notFound().build();
 
-        EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
-            linkTo(methodOn(SucursalController.class).listarSucursales()).withRel("sucursales"),
-            linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("GET/obtener inventario sucursal"),
-            linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("GET/obtener empleados sucursal"),
-            linkTo(methodOn(SucursalController.class).obtenerVentasSucursal(id)).withRel("GET/obtener ventas sucursal"),
-            linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/obtener carritos sucursal"),
-            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("POST/gregar producto inv. sucursal")
-        );
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(sucursal));
     }
 
     @GetMapping("/inventario/{id}")
@@ -113,11 +96,7 @@ public class SucursalController
     {
         Sucursal creada = sucursalService.guardar(sucursal);
 
-        EntityModel<Sucursal> recurso = EntityModel.of(creada,
-                linkTo(methodOn(SucursalController.class).obtenerSucursal(creada.getId())).withSelfRel()
-        );
-
-        return ResponseEntity.ok(recurso);
+        return ResponseEntity.ok(hateoasSingular(creada));
     }
 
     @PostMapping("/productos/{id}")
@@ -136,7 +115,38 @@ public class SucursalController
         if (sucursal == null)
             return ResponseEntity.notFound().build();
 
-    sucursalService.borrar(id);
+        sucursalService.borrar(id);
+        
         return ResponseEntity.noContent().build();
+    }
+
+    // Metodos que me entregan los hateoas -- me chorie de ponerlos uno a uno xD como los weones ya basta
+    private EntityModel<Sucursal> hateoasSingular(Sucursal sucursal) 
+    {
+        int id = sucursal.getId();
+
+        return EntityModel.of(sucursal,
+            linkTo(methodOn(SucursalController.class).listarSucursales()).withRel("sucursales"),
+            linkTo(methodOn(SucursalController.class).obtenerInventarioSucursal(id)).withRel("GET/obtener inventario sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("GET/obtener empleados sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerVentasSucursal(id)).withRel("GET/obtener ventas sucursal"),
+            linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/obtener carritos sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("POST/gregar producto inv. sucursal")
+        );
+    }
+
+    private List<EntityModel<Sucursal>> hateoasPlural(List<Sucursal> sucursales) 
+    {
+        List<EntityModel<Sucursal>> listaconLinks = new ArrayList<>();
+        
+        for (Sucursal sucursal : sucursales) 
+        {
+            EntityModel<Sucursal> recurso = EntityModel.of(sucursal,
+                linkTo(methodOn(SucursalController.class).obtenerSucursal(sucursal.getId())).withSelfRel()
+            );
+            listaconLinks.add(recurso);
+        }
+
+        return listaconLinks;
     }
 }
