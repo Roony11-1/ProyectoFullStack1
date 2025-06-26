@@ -16,6 +16,7 @@ import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 import com.patitofeliz.main.client.AccountServiceClient;
 import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.client.SucursalServiceClient;
 import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
@@ -26,8 +27,6 @@ import jakarta.transaction.Transactional;
 public class CarritoService 
 {
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private RepositoryCarrito carritoRepository;
     @Autowired
     private AlertaServiceClient alertaServiceClient;
@@ -35,9 +34,8 @@ public class CarritoService
     private AccountServiceClient accountServiceClient;
     @Autowired
     private ProductoServiceClient productoServiceClient;
-
-
-    private static final String SUCURSAL_API = "http://localhost:8008/sucursal";
+    @Autowired
+    private SucursalServiceClient sucursalServiceClient;
 
     public List<Carrito> getCarritos()
     {
@@ -74,12 +72,11 @@ public class CarritoService
 
         Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(carrito.getUsuarioId());
 
-        Sucursal sucursal = getSucursal(carrito.getSucursalId());
+        Sucursal sucursal = sucursalServiceClient.obtenerSucursalSeguro(carrito.getSucursalId());
 
         Carrito nuevo = carritoRepository.save(carrito);
 
         alertaServiceClient.crearAlertaSeguro("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), "Aviso: Carrito");
-
 
         return nuevo;
     }
@@ -151,15 +148,5 @@ public class CarritoService
         List<CarritoProducto> productos = new ArrayList<>(mapaCarritos.values());
 
         return productos;
-    }
-
-    private Sucursal getSucursal(int sucursalId) 
-    {
-        Sucursal sucursal = restTemplate.getForObject(SUCURSAL_API + "/" + sucursalId, Sucursal.class);
-
-        if (sucursal == null)
-            throw new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId);
-
-        return sucursal;
     }
 }
