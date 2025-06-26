@@ -3,10 +3,8 @@ package com.patitofeliz.main.client;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 
@@ -27,16 +25,4 @@ public class AccountServiceClient
 
         return usuario;
     }
-
-    public Usuario obtenerUsuarioSeguro(int usuarioId) 
-    {
-        try 
-        {
-            return getUsuario(usuarioId);
-        } 
-        catch (NoSuchElementException e) 
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + usuarioId);
-        }
-    }   
 }

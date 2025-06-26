@@ -70,13 +70,13 @@ public class CarritoService
         Integer total = calcularTotal(carrito);
         carrito.setTotal(total);
 
-        Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(carrito.getUsuarioId());
+        Usuario usuario = accountServiceClient.getUsuario(carrito.getUsuarioId());
 
-        Sucursal sucursal = sucursalServiceClient.obtenerSucursalSeguro(carrito.getSucursalId());
+        Sucursal sucursal = sucursalServiceClient.getSucursal(carrito.getSucursalId());
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        alertaServiceClient.crearAlertaSeguro("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), "Aviso: Carrito");
 
         return nuevo;
     }
@@ -89,7 +89,7 @@ public class CarritoService
 
         carritoActual.setListaProductos(normalizarCarrito(carritoActualizado.getListaProductos()));
 
-        alertaServiceClient.crearAlertaSeguro("Carrito actualizado - Dueño ID: " + carritoActual.getUsuarioId() + " - Sucursal ID: " + carritoActual.getSucursalId(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito actualizado - Dueño ID: " + carritoActual.getUsuarioId() + " - Sucursal ID: " + carritoActual.getSucursalId(), "Aviso: Carrito");
 
         return carritoRepository.save(carritoActual);
     }
@@ -97,7 +97,7 @@ public class CarritoService
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlertaSeguro("Carrito borrado - Dueño ID: " + getCarrito(id).getUsuarioId(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito borrado - Dueño ID: " + getCarrito(id).getUsuarioId(), "Aviso: Carrito");
         carritoRepository.deleteById(id);
     }
 
@@ -110,7 +110,7 @@ public class CarritoService
 
         for (CarritoProducto producto : carrito.getListaProductos()) 
         {
-            Producto productoExtraido = productoServiceClient.obtenerProductoSeguro(carrito.getUsuarioId());
+            Producto productoExtraido = productoServiceClient.getProducto(carrito.getUsuarioId());
 
             if (productoExtraido != null)
             {

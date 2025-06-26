@@ -17,7 +17,7 @@ public class AlertaServiceClient
     @Autowired
     private RestTemplate restTemplate;
 
-    private void crearAlerta(String mensaje, String tipoAlerta) 
+    public void crearAlerta(String mensaje, String tipoAlerta) 
     {
         try 
         {
@@ -26,18 +26,6 @@ public class AlertaServiceClient
         catch (Exception e) 
         {
             throw new RestClientException("No se pudo ingresar la Alerta: " + e);
-        }
-    }
-
-    public void crearAlertaSeguro(String mensaje, String tipo) 
-    {
-        try 
-        {
-            crearAlerta(mensaje, tipo);
-        } 
-        catch (RestClientException e) 
-        {
-            System.out.println("Error creando alerta: " + e.getMessage());
         }
     }
 }

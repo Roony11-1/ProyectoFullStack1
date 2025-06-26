@@ -64,7 +64,7 @@ public class SucursalService
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
 
-        Inventario inventario = inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
+        Inventario inventario = inventoryServiceClient.getInventario(sucursal.getInventarioId());
 
         return new SucursalInventarioDTO(sucursal.getId(), inventario);
     }
@@ -85,7 +85,7 @@ public class SucursalService
     @Transactional
     public Sucursal guardar(Sucursal sucursal)
     {
-        Usuario gerente = accountServiceClient.obtenerUsuarioSeguro(sucursal.getGerenteId());
+        Usuario gerente = accountServiceClient.getUsuario(sucursal.getGerenteId());
 
         if (!gerente.getTipoUsuario().equalsIgnoreCase("gerente"))
             throw new IllegalArgumentException("El usuario asignado no tiene rol de gerente.");
@@ -105,7 +105,7 @@ public class SucursalService
             sucursalGuardar = sucursalRepository.save(sucursalGuardar);
         }
 
-        alertaServiceClient.crearAlertaSeguro("Sucursal creada: "+sucursalGuardar.getNombreSucursal()+" - Inventario Asociado: "+nuevoInventario.getId(), "Aviso: Sucursal");
+        alertaServiceClient.crearAlerta("Sucursal creada: "+sucursalGuardar.getNombreSucursal()+" - Inventario Asociado: "+nuevoInventario.getId(), "Aviso: Sucursal");
 
         return sucursalGuardar;
     }
@@ -141,9 +141,9 @@ public class SucursalService
             
         inventoryServiceClient.agregarProductosInventario(sucursal.getInventarioId(), listaProductos);
 
-        alertaServiceClient.crearAlertaSeguro("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),"Aviso: Sucursal");
+        alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),"Aviso: Sucursal");
 
-        return inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
+        return inventoryServiceClient.getInventario(sucursal.getInventarioId());
     }
 
     @Transactional

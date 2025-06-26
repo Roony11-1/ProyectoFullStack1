@@ -54,7 +54,7 @@ public class ProductoService
     {
         Producto nuevo = productoRepository.save(producto);
 
-        alertaServiceClient.crearAlertaSeguro("Producto registrado: "+producto.getNombre(), "Aviso: Producto");
+        alertaServiceClient.crearAlerta("Producto registrado: "+producto.getNombre(), "Aviso: Producto");
 
         return nuevo;
     }

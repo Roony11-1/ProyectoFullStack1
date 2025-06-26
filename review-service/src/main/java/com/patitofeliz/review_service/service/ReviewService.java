@@ -55,14 +55,14 @@ public class ReviewService
 
    private Usuario obtenerUsuario(int usuarioId) 
    {
-      Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(usuarioId);
+      Usuario usuario = accountServiceClient.getUsuario(usuarioId);
 
       return usuario;
    }
 
    private Producto obtenerProducto(int productoId) 
    {
-      Producto producto = productoServiceClient.obtenerProductoSeguro(productoId);
+      Producto producto = productoServiceClient.getProducto(productoId);
 
       return producto;
    }
@@ -75,7 +75,7 @@ public class ReviewService
 
       review.setAutor(usuario.getNombreUsuario());
 
-      alertaServiceClient.crearAlertaSeguro("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
+      alertaServiceClient.crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
 
       return reviewRepository.save(review);
    }
@@ -94,7 +94,7 @@ public class ReviewService
 
       reviewActual.setComentario(reviewActualizada.getComentario());
 
-      alertaServiceClient.crearAlertaSeguro("Review actualizada- Autor: "+reviewActual.getAutor()+" - Producto: "+reviewActual.getProductoId(), "Aviso: Review");
+      alertaServiceClient.crearAlerta("Review actualizada- Autor: "+reviewActual.getAutor()+" - Producto: "+reviewActual.getProductoId(), "Aviso: Review");
 
       return reviewRepository.save(reviewActual);
    }

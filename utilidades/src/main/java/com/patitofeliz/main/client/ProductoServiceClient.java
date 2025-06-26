@@ -18,7 +18,7 @@ public class ProductoServiceClient
 
         private static final String PRODUCTO_API = "http://localhost:8005/producto";
 
-    private Producto getProducto(int productoId) 
+    public Producto getProducto(int productoId) 
     {
         Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
 
@@ -26,17 +26,5 @@ public class ProductoServiceClient
             throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
 
         return producto;
-    }
-
-    public Producto obtenerProductoSeguro(int usuarioId) 
-    {
-        try 
-        {
-            return getProducto(usuarioId);
-        } 
-        catch (NoSuchElementException e) 
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado con ID: " + usuarioId);
-        }
     }
 }

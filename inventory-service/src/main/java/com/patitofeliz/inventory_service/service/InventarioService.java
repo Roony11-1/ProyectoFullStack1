@@ -54,32 +54,25 @@ public class InventarioService
         return inventarioRepository.existsById(id);
     }
 
-    private Producto getProducto(int productoId) 
-    {
-        Producto producto = productoServiceClient.obtenerProductoSeguro(productoId);
-
-        return producto;
-    }
-
     // Agrega un solo producto al inventario
     public Inventario agregarProductoInventario (int inventarioId, ProductoInventario productoInventario)
     {
         Inventario inventarioActual = getInventarioPorId(inventarioId);
         List<ProductoInventario> inventarioProductos = inventarioActual.getListaProductos();
 
-        Producto productoExistente = getProducto(productoInventario.getProductoId());
+        Producto productoExistente = productoServiceClient.getProducto(productoInventario.getProductoId());
 
         if (productoExistente != null) 
         {
             inventarioProductos.add(productoInventario);
             inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
 
-            alertaServiceClient.crearAlertaSeguro("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
+            alertaServiceClient.crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
 
             return inventarioRepository.save(inventarioActual);
         } 
         else 
-            alertaServiceClient.crearAlertaSeguro("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), "Aviso: Inventario");
+            alertaServiceClient.crearAlerta("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioActual;
     }
@@ -95,7 +88,7 @@ public class InventarioService
         for (ProductoInventario producto : productos) 
         {
             // existe el producto¿?
-            Producto productoExistente = getProducto(producto.getProductoId());
+            Producto productoExistente = productoServiceClient.getProducto(producto.getProductoId());
 
             if (productoExistente != null)
                 productosValidos.add(producto);
@@ -108,7 +101,7 @@ public class InventarioService
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
 
-        alertaServiceClient.crearAlertaSeguro("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -128,7 +121,7 @@ public class InventarioService
 
         inventarioActual.setListaProductos(inventarioProductos);
 
-        alertaServiceClient.crearAlertaSeguro("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -141,7 +134,7 @@ public class InventarioService
 
         Inventario inventarioGuardado = inventarioRepository.save(inventario);
 
-        alertaServiceClient.crearAlertaSeguro("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
 
         return inventarioGuardado;
     }
@@ -158,7 +151,7 @@ public class InventarioService
         Inventario inventario = getInventarioPorId(id);
         inventario.setListaProductos(new ArrayList<>());
 
-        alertaServiceClient.crearAlertaSeguro("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventario);
     }
@@ -191,7 +184,7 @@ public class InventarioService
             }
         }
         inventario.setListaProductos(normalizarInventario(productos));
-        alertaServiceClient.crearAlertaSeguro("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
         return inventarioRepository.save(inventario);
     }
 

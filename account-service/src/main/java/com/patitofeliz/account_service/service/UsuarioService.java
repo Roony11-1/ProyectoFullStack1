@@ -63,7 +63,7 @@ public class UsuarioService
 
         Usuario nuevo = usuarioRepository.save(usuario);
 
-        alertaServiceClient.crearAlertaSeguro("Usuario registrado: " + nuevo.getNombreUsuario(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario registrado: " + nuevo.getNombreUsuario(), "Aviso: Usuario");
 
         return nuevo;
     }
@@ -101,14 +101,14 @@ public class UsuarioService
         usuarioActual.setPassword(usuarioActualizado.getPassword());
         usuarioActual.setTipoUsuario(usuarioActualizado.getTipoUsuario());
 
-        alertaServiceClient.crearAlertaSeguro("Usuario Actualizado ID: "+usuarioActual.getId(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario Actualizado ID: "+usuarioActual.getId(), "Aviso: Usuario");
 
         return usuarioRepository.save(usuarioActual);
     }
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlertaSeguro("Usuario Eliminado ID: "+getUsuario(id).getId(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario Eliminado ID: "+getUsuario(id).getId(), "Aviso: Usuario");
         usuarioRepository.deleteById(id);
     }
 

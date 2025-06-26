@@ -84,10 +84,10 @@ public class VentaService
     {
         Carrito carritoVenta = carritoServiceClient.getCarritoById(venta.getCarritoId());
         List<CarritoProducto> listaCarrito = carritoVenta.getListaProductos();
-        Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(carritoVenta.getUsuarioId());
-        Usuario vendedor = accountServiceClient.obtenerUsuarioSeguro(venta.getVendedorId());
-        Sucursal sucursal = sucursalServiceClient.obtenerSucursalSeguro(carritoVenta.getSucursalId());
-        Inventario inventario = inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
+        Usuario usuario = accountServiceClient.getUsuario(carritoVenta.getUsuarioId());
+        Usuario vendedor = accountServiceClient.getUsuario(venta.getVendedorId());
+        Sucursal sucursal = sucursalServiceClient.getSucursal(carritoVenta.getSucursalId());
+        Inventario inventario = inventoryServiceClient.getInventario(sucursal.getInventarioId());
 
         if (carritoVenta.getListaProductos().isEmpty())
             throw new NoSuchElementException("Carrito vacío!");
@@ -99,7 +99,7 @@ public class VentaService
         // Descuento de productos del inventario
         for (CarritoProducto producto : listaCarrito) 
         {
-            Producto productoInventario = productoServiceClient.obtenerProductoSeguro(producto.getProductoId());
+            Producto productoInventario = productoServiceClient.getProducto(producto.getProductoId());
             VentaProducto productoVenta = new VentaProducto(producto.getProductoId(), producto.getProductoId());
 
             // Buscar producto en el inventario
@@ -138,7 +138,7 @@ public class VentaService
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
-        alertaServiceClient.crearAlertaSeguro(
+        alertaServiceClient.crearAlerta(
             "Venta Carrito - id: " + venta.getCarritoId() +
             " - comprador: " + usuario.getNombreUsuario() +
             " - vendedor: " + vendedor.getNombreUsuario() +
