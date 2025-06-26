@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.patitofeliz</groupId>
+    <artifactId>ProyectoFullStack1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>ProyectoFullStack1</name>
+    <description>Proyecto FullStack basado en microservicios</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <spring.boot.version>3.4.5</spring.boot.version>  <!-- si usas Spring Boot -->
+    </properties>
+
+    <!-- Opcional: gestionar versiones compartidas -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Aquí puedes agregar más BOMs si usas otros frameworks -->
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>utilidades</module>
+        <module>account-service</module>
+        <module>admin-service</module>
+        <module>carrito-service</module>
+        <module>inventory-service</module>
+        <module>producto-service</module>
+        <module>review-service</module>
+        <module>sale-service</module>
+        <module>sucursal-service</module>
+    </modules>
+
+</project>

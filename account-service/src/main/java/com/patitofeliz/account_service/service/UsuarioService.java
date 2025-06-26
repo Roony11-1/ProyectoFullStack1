@@ -8,15 +8,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.patitofeliz.account_service.client.AlertaServiceClient;
-import com.patitofeliz.account_service.client.CarritoServiceClient;
-import com.patitofeliz.account_service.client.ReviewServiceClient;
-import com.patitofeliz.account_service.client.VentaServiceClient;
 import com.patitofeliz.account_service.model.Usuario;
-import com.patitofeliz.account_service.model.conexion.carrito.Carrito;
-import com.patitofeliz.account_service.model.conexion.review.Review;
-import com.patitofeliz.account_service.model.conexion.venta.Venta;
 import com.patitofeliz.account_service.repository.UsuarioRepository;
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.CarritoServiceClient;
+import com.patitofeliz.main.client.ReviewServiceClient;
+import com.patitofeliz.main.client.VentaServiceClient;
+import com.patitofeliz.main.model.conexion.carrito.Carrito;
+import com.patitofeliz.main.model.conexion.review.Review;
+import com.patitofeliz.main.model.conexion.venta.Venta;
 
 import jakarta.transaction.Transactional;
 

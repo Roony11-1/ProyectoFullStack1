@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.account_service.model.Usuario;
-import com.patitofeliz.account_service.model.conexion.carrito.Carrito;
-import com.patitofeliz.account_service.model.conexion.review.Review;
-import com.patitofeliz.account_service.model.conexion.venta.Venta;
 import com.patitofeliz.account_service.service.UsuarioService;
+import com.patitofeliz.main.model.conexion.carrito.Carrito;
+import com.patitofeliz.main.model.conexion.review.Review;
+import com.patitofeliz.main.model.conexion.venta.Venta;
 
 @RestController
 @RequestMapping("/usuario")
