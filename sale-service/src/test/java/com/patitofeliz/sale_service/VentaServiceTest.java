@@ -25,6 +25,7 @@ import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.sale_service.model.Venta;
+import com.patitofeliz.sale_service.model.VentaProducto;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 import com.patitofeliz.sale_service.service.VentaService;
 
@@ -47,11 +48,11 @@ public class VentaServiceTest
     public void testGetAll()
     {
         // Lista de productos 1
-        List<CarritoProducto> listaProductos = new ArrayList<>();
-        listaProductos.add(new CarritoProducto(1, 1));
-        listaProductos.add(new CarritoProducto(2, 2));
-        listaProductos.add(new CarritoProducto(3, 3));
-        listaProductos.add(new CarritoProducto(4, 4));
+        List<VentaProducto> listaProductos = new ArrayList<>();
+        listaProductos.add(new VentaProducto(1, 1));
+        listaProductos.add(new VentaProducto(2, 2));
+        listaProductos.add(new VentaProducto(3, 3));
+        listaProductos.add(new VentaProducto(4, 4));
 
         // Venta 1
         Venta v1 = new Venta();
@@ -87,7 +88,7 @@ public class VentaServiceTest
             assertEquals(1, venta.getVendedorId());
 
                 int contadorProducto = 1;
-                for (CarritoProducto producto : venta.getListaProductos()) 
+                for (VentaProducto producto : venta.getListaProductos()) 
                 {
                     assertEquals(contadorProducto, producto.getProductoId());
                     assertEquals(contadorProducto, producto.getCantidad());
@@ -237,18 +238,22 @@ public class VentaServiceTest
         List<CarritoProducto> listaProductos = new ArrayList<>();
         listaProductos.add(new CarritoProducto(1, 1));
         listaProductos.add(new CarritoProducto(2, 2));
+
+        List<VentaProducto> listaProductosVenta = new ArrayList<>();
+        listaProductosVenta.add(new VentaProducto(1, 1));
+        listaProductosVenta.add(new VentaProducto(2, 2));
     
         // Venta 1 asociada al vendedor 1
         Venta v1 = new Venta();
         v1.setId(1);
         v1.setVendedorId(1);
-        v1.setListaProductos(listaProductos);
+        v1.setListaProductos(listaProductosVenta);
         
         // Venta 2 asociada al vendedor 2
         Venta v2 = new Venta();
         v2.setId(2);
         v2.setVendedorId(2);
-        v2.setListaProductos(listaProductos);
+        v2.setListaProductos(listaProductosVenta);
     
         when(ventaRepository.findByVendedorId(1)).thenReturn(Arrays.asList(v1));
     
