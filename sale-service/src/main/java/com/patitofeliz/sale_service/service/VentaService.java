@@ -7,18 +7,21 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.sale_service.model.CarritoProducto;
+import com.patitofeliz.main.client.AccountServiceClient;
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.CarritoServiceClient;
+import com.patitofeliz.main.client.InventoryServiceClient;
+import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.client.SucursalServiceClient;
+import com.patitofeliz.main.model.conexion.carrito.Carrito;
+import com.patitofeliz.main.model.conexion.carrito.CarritoProducto;
+import com.patitofeliz.main.model.conexion.inventario.Inventario;
+import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.sale_service.model.Venta;
-import com.patitofeliz.sale_service.model.conexion.Alerta;
-import com.patitofeliz.sale_service.model.conexion.Carrito;
-import com.patitofeliz.sale_service.model.conexion.Inventario;
-import com.patitofeliz.sale_service.model.conexion.Producto;
-import com.patitofeliz.sale_service.model.conexion.ProductoInventario;
-import com.patitofeliz.sale_service.model.conexion.Sucursal;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 
 @Service
@@ -27,14 +30,17 @@ public class VentaService
     @Autowired
     private VentaRepository ventaRepository;
     @Autowired
-    private RestTemplate restTemplate;
-
-    private static final String PRODUCTO_API = "http://localhost:8005/producto";
-    private static final String USUARIO_API = "http://localhost:8001/usuario";
-    private static final String ALERTA_API = "http://localhost:8002/alerta";
-    private static final String CARRITO_API = "http://localhost:8003/carrito";
-    private static final String INVENTARIO_API = "http://localhost:8004/inventarios";
-    private static final String SUCURSAL_API = "http://localhost:8008/sucursal";
+    private AlertaServiceClient alertaServiceClient;
+    @Autowired
+    private CarritoServiceClient carritoServiceClient;
+    @Autowired
+    private AccountServiceClient accountServiceClient;
+    @Autowired
+    private ProductoServiceClient productoServiceClient;
+    @Autowired
+    private SucursalServiceClient sucursalServiceClient;
+    @Autowired
+    private InventoryServiceClient inventoryServiceClient;
 
     public List<Venta> getVentasPorUsuarioId(int id)
     {
@@ -75,11 +81,12 @@ public class VentaService
     @Transactional
     public Venta generarVenta(Venta venta)
     {
-        Carrito carritoVenta = getCarrito(venta.getCarritoId());
-        Usuario usuario = getUsuario(carritoVenta.getUsuarioId());
-        Usuario vendedor = getUsuario(venta.getVendedorId());
-        Sucursal sucursal = getSucursal(carritoVenta.getSucursalId());
-        Inventario inventario = getInventario(sucursal.getInventarioId());
+        Carrito carritoVenta = carritoServiceClient.getCarritoById(venta.getCarritoId());
+        List<CarritoProducto> listaCarrito = carritoVenta.getListaProductos();
+        Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(carritoVenta.getUsuarioId());
+        Usuario vendedor = accountServiceClient.obtenerUsuarioSeguro(venta.getVendedorId());
+        Sucursal sucursal = sucursalServiceClient.obtenerSucursalSeguro(carritoVenta.getSucursalId());
+        Inventario inventario = inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
 
         if (carritoVenta.getListaProductos().isEmpty())
             throw new NoSuchElementException("Carrito vacío!");
@@ -88,9 +95,9 @@ public class VentaService
         List<ProductoInventario> listaInventarioActualizar = new ArrayList<>();
 
         // Descuento de productos del inventario
-        for (CarritoProducto producto : carritoVenta.getListaProductos()) 
+        for (CarritoProducto producto : listaCarrito) 
         {
-            Producto productoInventario = getProducto(producto.getProductoId());
+            Producto productoInventario = productoServiceClient.obtenerProductoSeguro(producto.getProductoId());
 
             // Buscar producto en el inventario
             ProductoInventario productoEnInventario = null;
@@ -114,19 +121,19 @@ public class VentaService
             listaInventarioActualizar.add(productoEnInventario);
         }
 
-        descontarProductoEnInventario(sucursal.getInventarioId(), listaInventarioActualizar);
+        inventoryServiceClient.descontarProductoEnInventario(sucursal.getInventarioId(), listaInventarioActualizar);
 
-        venta.setListaProductos(carritoVenta.getListaProductos());
+        venta.setListaProductos(listaCarrito);
         venta.setTotal(carritoVenta.getTotal());
         venta.setUsuarioId(usuario.getId());
         venta.setSucursalId(sucursal.getId());
 
         // Borrar carrito
-        restTemplate.delete(CARRITO_API + "/" + venta.getCarritoId());
+        carritoServiceClient.borrarCarritoPorId(carritoVenta.getId());
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
-        crearAlerta(
+        alertaServiceClient.crearAlertaSeguro(
             "Venta Carrito - id: " + venta.getCarritoId() +
             " - comprador: " + usuario.getNombreUsuario() +
             " - vendedor: " + vendedor.getNombreUsuario() +
@@ -135,77 +142,5 @@ public class VentaService
         );
 
         return nuevaVenta;
-    }
-
-    // AUXILIARES
-    private Usuario getUsuario(int usuarioId) 
-    {
-        Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
-
-        if (usuario == null)
-            throw new NoSuchElementException("Usuario no encontrado con ID: " + usuarioId);
-
-        return usuario;
-    }
-
-    private Producto getProducto(int productoId) 
-    {
-        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
-
-        if (producto == null)
-            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
-
-        return producto;
-    }
-
-    private Carrito getCarrito(int carritoId) 
-    {
-        Carrito carrito = restTemplate.getForObject(CARRITO_API + "/" + carritoId, Carrito.class);
-
-        if (carrito == null)
-            throw new NoSuchElementException("Carrito no encontrado con ID: " + carritoId);
-
-        return carrito;
-    }
-
-    private Inventario getInventario(int inventarioId) 
-    {
-        Inventario inventario = restTemplate.getForObject(INVENTARIO_API + "/" + inventarioId, Inventario.class);
-
-        if (inventario == null)
-            throw new NoSuchElementException("Inventario no encontrado con ID: " + inventarioId);
-
-        return inventario;
-    }
-
-    private Sucursal getSucursal(int sucursalId) 
-    {
-        Sucursal sucursal = restTemplate.getForObject(SUCURSAL_API + "/" + sucursalId, Sucursal.class);
-
-        if (sucursal == null)
-        
-            throw new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId);
-
-        return sucursal;
-    }
-
-    private void descontarProductoEnInventario(int inventarioId, List<ProductoInventario> productoInventario) 
-    {
-        restTemplate.put(INVENTARIO_API + "/" + inventarioId + "/productos", productoInventario);
-    }
-
-
-    private void crearAlerta(String mensaje, String tipoAlerta)
-    {
-        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
     }
 }

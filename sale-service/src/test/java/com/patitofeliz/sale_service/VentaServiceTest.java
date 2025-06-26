@@ -17,14 +17,14 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.sale_service.model.CarritoProducto;
+import com.patitofeliz.main.model.conexion.carrito.Carrito;
+import com.patitofeliz.main.model.conexion.carrito.CarritoProducto;
+import com.patitofeliz.main.model.conexion.inventario.Inventario;
+import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.sale_service.model.Venta;
-import com.patitofeliz.sale_service.model.conexion.Carrito;
-import com.patitofeliz.sale_service.model.conexion.Inventario;
-import com.patitofeliz.sale_service.model.conexion.Producto;
-import com.patitofeliz.sale_service.model.conexion.ProductoInventario;
-import com.patitofeliz.sale_service.model.conexion.Sucursal;
-import com.patitofeliz.sale_service.model.conexion.Usuario;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 import com.patitofeliz.sale_service.service.VentaService;
 

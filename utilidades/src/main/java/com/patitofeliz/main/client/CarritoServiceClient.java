@@ -27,4 +27,26 @@ public class CarritoServiceClient
 
         return listaCarritoPorId;
     }
+
+    public Carrito getCarritoById(int id)
+    {
+        Carrito CarritoPorId = restTemplate.getForObject(CARRITO_API+"/"+id, Carrito.class);
+
+        if (CarritoPorId == null)
+            throw new NoSuchElementException("No se encontro el carrito con ID: " + id);
+
+        return CarritoPorId;
+    }
+
+    public void borrarCarritoPorId(int id)
+    {
+        try 
+        {
+            restTemplate.delete(CARRITO_API + "/" + id);
+        } 
+        catch (Exception e) 
+        {
+            throw new RuntimeException("No se pudo eliminar el carrito con ID: " + id + ". Detalle: " + e.getMessage());
+        }
+    }
 }

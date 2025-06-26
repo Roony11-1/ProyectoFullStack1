@@ -1,6 +1,5 @@
-package com.patitofeliz.sale_service.model;
+package com.patitofeliz.main.model.conexion.inventario;
 
-import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable // Significa que es una clase auxiliar
-public class CarritoProducto 
+public class ProductoInventario 
 {
     private int productoId;
     private int cantidad;

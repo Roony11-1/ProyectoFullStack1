@@ -1,8 +1,7 @@
-package com.patitofeliz.sale_service.model.conexion;
+package com.patitofeliz.main.model.conexion.inventario;
 
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +11,5 @@ public class Inventario
 {
     private int id;
 
-    @ElementCollection
     private List<ProductoInventario> listaProductos;
 }

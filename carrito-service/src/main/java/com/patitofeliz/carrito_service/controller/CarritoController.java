@@ -95,7 +95,7 @@ public class CarritoController
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Carrito> borrarCarrito(@PathVariable int id)
+    public ResponseEntity<Void> borrarCarrito(@PathVariable int id)
     {
         Carrito carrito = carritoService.getCarrito(id);
 

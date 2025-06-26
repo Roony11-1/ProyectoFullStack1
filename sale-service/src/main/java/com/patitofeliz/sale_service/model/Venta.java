@@ -2,6 +2,8 @@ package com.patitofeliz.sale_service.model;
 
 import java.util.List;
 
+import com.patitofeliz.main.model.conexion.carrito.CarritoProducto;
+
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

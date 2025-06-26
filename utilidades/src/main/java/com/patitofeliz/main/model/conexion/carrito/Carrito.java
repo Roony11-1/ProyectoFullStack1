@@ -11,6 +11,7 @@ public class Carrito
 {
     private int id;
     private int usuarioId;
+    private int sucursalId;
 
     private List<CarritoProducto> listaProductos;
     private int total;
