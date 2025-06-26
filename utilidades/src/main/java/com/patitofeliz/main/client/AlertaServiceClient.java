@@ -17,7 +17,7 @@ public class AlertaServiceClient
     @Autowired
     private RestTemplate restTemplate;
 
-    public void crearAlerta(String mensaje, String tipoAlerta) 
+    private void crearAlerta(String mensaje, String tipoAlerta) 
     {
         try 
         {

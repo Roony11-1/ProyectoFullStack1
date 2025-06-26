@@ -14,9 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
-import com.patitofeliz.inventory_service.model.conexion.Alerta;
-import com.patitofeliz.inventory_service.model.conexion.Producto;
 import com.patitofeliz.inventory_service.repository.InventarioRepository;
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.model.conexion.producto.Producto;
 
 import jakarta.transaction.Transactional;
 
@@ -26,10 +27,10 @@ public class InventarioService
     @Autowired
     private InventarioRepository inventarioRepository;
     @Autowired
-    private RestTemplate restTemplate;
+    private ProductoServiceClient productoServiceClient;
+    @Autowired
+    private AlertaServiceClient alertaServiceClient;
 
-    private static final String PRODUCTO_API = "http://localhost:8005/producto";
-    private static final String ALERTA_API = "http://localhost:8002/alerta";
 
     // Inventarios
     public List<Inventario> getInventarios()
@@ -42,28 +43,43 @@ public class InventarioService
         return inventarioRepository.findById(id).orElse(null);
     }
 
+    // Metodo con excepción
+    private Inventario getInventarioPorId(int id) 
+    {
+        return inventarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Inventario no encontrado"));
+    }
+
     public boolean existePorId(int id) 
     {
         return inventarioRepository.existsById(id);
     }
 
-    // Agrega un solo producto al inventario
-    public Inventario agregarProductoInventario (int id, ProductoInventario productoInventario)
+    private Producto getProducto(int productoId) 
     {
-        Inventario inventarioActual = getInventarioPorId(id);
+        Producto producto = productoServiceClient.obtenerProductoSeguro(productoId);
+
+        return producto;
+    }
+
+    // Agrega un solo producto al inventario
+    public Inventario agregarProductoInventario (int inventarioId, ProductoInventario productoInventario)
+    {
+        Inventario inventarioActual = getInventarioPorId(inventarioId);
         List<ProductoInventario> inventarioProductos = inventarioActual.getListaProductos();
 
         Producto productoExistente = getProducto(productoInventario.getProductoId());
 
-        if (productoExistente != null) {
-             inventarioProductos.add(productoInventario);
+        if (productoExistente != null) 
+        {
+            inventarioProductos.add(productoInventario);
             inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
 
-             crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
+            alertaServiceClient.crearAlertaSeguro("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
+
             return inventarioRepository.save(inventarioActual);
-        } else {
-        crearAlerta("Producto no encontrado, no fue agregado!", "Aviso: Inventario");
-        }
+        } 
+        else 
+            alertaServiceClient.crearAlertaSeguro("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioActual;
     }
@@ -78,19 +94,11 @@ public class InventarioService
 
         for (ProductoInventario producto : productos) 
         {
-            try 
-            {
-                // existe el producto¿?
-                Producto productoExistente = getProducto(producto.getProductoId());
+            // existe el producto¿?
+            Producto productoExistente = getProducto(producto.getProductoId());
 
-                if (productoExistente != null)
-                    productosValidos.add(producto);
-            } 
-            catch 
-            (HttpClientErrorException.NotFound e) 
-            {
-                crearAlerta("Articulo ID: "+producto.getProductoId()+" no existe, no fue agregado!", "Aviso: Inventario");
-            }
+            if (productoExistente != null)
+                productosValidos.add(producto);
         }
 
         inventarioProductos.addAll(productosValidos);
@@ -100,7 +108,7 @@ public class InventarioService
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
 
-        crearAlerta("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlertaSeguro("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -120,7 +128,7 @@ public class InventarioService
 
         inventarioActual.setListaProductos(inventarioProductos);
 
-        crearAlerta("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlertaSeguro("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -133,7 +141,7 @@ public class InventarioService
 
         Inventario inventarioGuardado = inventarioRepository.save(inventario);
 
-        crearAlerta("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlertaSeguro("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
 
         return inventarioGuardado;
     }
@@ -150,7 +158,7 @@ public class InventarioService
         Inventario inventario = getInventarioPorId(id);
         inventario.setListaProductos(new ArrayList<>());
 
-        crearAlerta("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlertaSeguro("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
 
         return inventarioRepository.save(inventario);
     }
@@ -183,7 +191,7 @@ public class InventarioService
             }
         }
         inventario.setListaProductos(normalizarInventario(productos));
-        crearAlerta("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlertaSeguro("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
         return inventarioRepository.save(inventario);
     }
 
@@ -210,34 +218,5 @@ public class InventarioService
         List<ProductoInventario> productos = new ArrayList<>(mapaProductos.values());
 
         return productos;
-    }
-
-    private Inventario getInventarioPorId(int id) 
-    {
-        return inventarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Inventario no encontrado"));
-    }
-
-    private void crearAlerta(String mensaje, String tipoAlerta)
-    {
-        Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
-
-        try
-        {
-            restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-        }
-        catch (RestClientException e)
-        {
-            throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-        }
-    }
-
-    private Producto getProducto(int productoId) 
-    {
-        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
-
-        if (producto == null)
-            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
-
-        return producto;
     }
 }
