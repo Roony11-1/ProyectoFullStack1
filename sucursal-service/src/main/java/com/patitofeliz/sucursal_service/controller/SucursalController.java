@@ -90,6 +90,22 @@ public class SucursalController
         return ResponseEntity.ok(existe);
     }
 
+    @PostMapping("/empleado/{id}")
+    public ResponseEntity<List<Integer>> agregarEmpleadoSucursal(@PathVariable("id") int id, @RequestBody Integer empleadoId)
+    {
+        List<Integer> empleados = sucursalService.añadirEmpleadoSucursal(id, empleadoId);
+
+        return ResponseEntity.ok(empleados);
+    }
+
+    @PostMapping("/empleados/{id}")
+    public ResponseEntity<List<Integer>> agregarEmpleadosSucursal(@PathVariable("id") int id, @RequestBody List<Integer> empleadoIds)
+    {
+        List<Integer> empleados = sucursalService.añadirEmpleadosSucursal(id, empleadoIds);
+
+        return ResponseEntity.ok(empleados);
+    }
+
     @PostMapping
     public ResponseEntity<EntityModel<Sucursal>> crearSucursal(@RequestBody Sucursal sucursal) 
     {
@@ -130,7 +146,9 @@ public class SucursalController
             linkTo(methodOn(SucursalController.class).obtenerEmpleadosSucursal(id)).withRel("GET/obtener empleados sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerVentasSucursal(id)).withRel("GET/obtener ventas sucursal"),
             linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/aobtener carritos sucursal"),
-            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, new ArrayList<>())).withRel("POST/gregar producto inv. sucursal")
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar producto inv. sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarEmpleadosSucursal(id, null)).withRel("POST/agregar Empleado sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar Empleados sucursal")
         );
     }
 

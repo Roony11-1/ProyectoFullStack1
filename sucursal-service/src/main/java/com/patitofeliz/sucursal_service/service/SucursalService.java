@@ -111,6 +111,26 @@ public class SucursalService
     }
 
     @Transactional
+    public List<Integer> añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
+    {
+        List<Integer> listaEmpleados = listarSucursal(sucursalId).getListaEmpleados();
+
+        listaEmpleados.add(idEmpleado);
+
+        return listaEmpleados;
+    }
+
+    @Transactional
+    public List<Integer> añadirEmpleadosSucursal(int sucursalId, List<Integer> listaIds)
+    {
+        List<Integer> listaEmpleados = listarSucursal(sucursalId).getListaEmpleados();
+
+        listaEmpleados.addAll(listaIds);
+
+        return listaEmpleados;
+    }
+
+    @Transactional
     public Inventario añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
