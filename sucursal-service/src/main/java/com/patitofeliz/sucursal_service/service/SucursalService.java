@@ -59,14 +59,14 @@ public class SucursalService
         return carritoServiceClient.getCarritosPorSucursal(sucursalId);
     }
 
-    public Inventario listarInventarioSucursal(int sucursalId)
+    public SucursalInventarioDTO obtenerSucursalConInventario(int sucursalId) 
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
 
         Inventario inventario = inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
 
-        return inventario;
+        return new SucursalInventarioDTO(sucursal.getId(), inventario);
     }
 
     public boolean existePorId(int id) 
@@ -130,14 +130,5 @@ public class SucursalService
     public void borrar(int id)
     {
         sucursalRepository.deleteById(id);
-    }
-
-    public SucursalInventarioDTO obtenerSucursalConInventario(int sucursalId) {
-    Sucursal sucursal = sucursalRepository.findById(sucursalId)
-        .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
-
-    Inventario inventario = inventoryServiceClient.obtenerInventarioSeguro(sucursal.getInventarioId());
-
-    return new SucursalInventarioDTO(sucursal.getId(), inventario);
     }
 }
