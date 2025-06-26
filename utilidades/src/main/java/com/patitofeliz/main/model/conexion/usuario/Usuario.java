@@ -1,4 +1,4 @@
-package com.patitofeliz.carrito_service.model.conexion.usuario;
+package com.patitofeliz.main.model.conexion.usuario;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

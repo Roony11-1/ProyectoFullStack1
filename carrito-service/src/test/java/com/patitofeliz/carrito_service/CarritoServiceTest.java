@@ -21,11 +21,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.carrito_service.model.Carrito;
 import com.patitofeliz.carrito_service.model.CarritoProducto;
-import com.patitofeliz.carrito_service.model.conexion.producto.Producto;
-import com.patitofeliz.carrito_service.model.conexion.sucursal.Sucursal;
-import com.patitofeliz.carrito_service.model.conexion.usuario.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
 import com.patitofeliz.carrito_service.service.CarritoService;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 
 public class CarritoServiceTest {
     @Mock

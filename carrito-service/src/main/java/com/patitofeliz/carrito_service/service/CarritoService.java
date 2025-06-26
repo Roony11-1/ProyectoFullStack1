@@ -8,18 +8,17 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.patitofeliz.carrito_service.client.AccountServiceClient;
-import com.patitofeliz.carrito_service.client.AlertaServiceClient;
 import com.patitofeliz.carrito_service.model.Carrito;
 import com.patitofeliz.carrito_service.model.CarritoProducto;
-import com.patitofeliz.carrito_service.model.conexion.alerta.Alerta;
-import com.patitofeliz.carrito_service.model.conexion.producto.Producto;
-import com.patitofeliz.carrito_service.model.conexion.sucursal.Sucursal;
-import com.patitofeliz.carrito_service.model.conexion.usuario.Usuario;
 import com.patitofeliz.carrito_service.repository.RepositoryCarrito;
+import com.patitofeliz.main.client.AccountServiceClient;
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 
 import jakarta.transaction.Transactional;
 
@@ -34,8 +33,10 @@ public class CarritoService
     private AlertaServiceClient alertaServiceClient;
     @Autowired
     private AccountServiceClient accountServiceClient;
+    @Autowired
+    private ProductoServiceClient productoServiceClient;
 
-    private static final String PRODUCTO_API = "http://localhost:8005/producto";
+
     private static final String SUCURSAL_API = "http://localhost:8008/sucursal";
 
     public List<Carrito> getCarritos()
@@ -112,7 +113,7 @@ public class CarritoService
 
         for (CarritoProducto producto : carrito.getListaProductos()) 
         {
-            Producto productoExtraido = getProducto(producto.getProductoId());
+            Producto productoExtraido = productoServiceClient.obtenerProductoSeguro(carrito.getUsuarioId());
 
             if (productoExtraido != null)
             {
@@ -150,16 +151,6 @@ public class CarritoService
         List<CarritoProducto> productos = new ArrayList<>(mapaCarritos.values());
 
         return productos;
-    }
-
-    private Producto getProducto(int productoId) 
-    {
-        Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
-
-        if (producto == null)
-            throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
-
-        return producto;
     }
 
     private Sucursal getSucursal(int sucursalId) 
