@@ -18,11 +18,11 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
+import com.patitofeliz.main.model.conexion.inventario.Inventario;
+import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.sucursal_service.model.Sucursal;
-import com.patitofeliz.sucursal_service.model.conexion.Inventario;
-import com.patitofeliz.sucursal_service.model.conexion.Producto;
-import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
-import com.patitofeliz.sucursal_service.model.conexion.Usuario;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 

@@ -27,4 +27,14 @@ public class VentaServiceClient
 
         return listaCarritoPorId;
     }
+
+    public List<Venta> getVentasPorSucursal(int sucursalId)
+    {
+        List<Venta> ventasSucursalId = restTemplate.getForObject(SALES_API+"/sucursal/"+sucursalId, List.class);
+
+        if (ventasSucursalId == null || ventasSucursalId.isEmpty())
+            throw new NoSuchElementException("Esta sucursal no tiene ventas asociadas");
+
+        return ventasSucursalId;
+    }
 }

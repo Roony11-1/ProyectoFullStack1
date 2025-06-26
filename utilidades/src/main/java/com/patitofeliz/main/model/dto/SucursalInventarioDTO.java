@@ -1,8 +1,6 @@
-package com.patitofeliz.sucursal_service.model.dto;
-import com.patitofeliz.sucursal_service.model.conexion.Inventario;
+package com.patitofeliz.main.model.dto;
 
-
-    
+import com.patitofeliz.main.model.conexion.inventario.Inventario;
 
 public class SucursalInventarioDTO {
     private int idSucursal;

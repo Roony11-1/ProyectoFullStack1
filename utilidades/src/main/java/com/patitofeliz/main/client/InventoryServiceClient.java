@@ -42,8 +42,22 @@ public class InventoryServiceClient
         }
     }
 
+    public Inventario postInventario() 
+    {
+        Inventario inventario = restTemplate.postForObject(INVENTARIO_API, new Inventario(), Inventario.class);
+
+        return inventario;
+    }
+
     public void descontarProductoEnInventario(int inventarioId, List<ProductoInventario> productoInventario) 
     {
         restTemplate.put(INVENTARIO_API + "/" + inventarioId + "/productos", productoInventario);
+    }
+
+    public Inventario agregarProductosInventario(int inventarioId, List<ProductoInventario> productos) 
+    {
+        Inventario inventario = restTemplate.postForObject(INVENTARIO_API + "/" + inventarioId + "/productos", productos, Inventario.class);
+
+        return inventario;
     }
 }

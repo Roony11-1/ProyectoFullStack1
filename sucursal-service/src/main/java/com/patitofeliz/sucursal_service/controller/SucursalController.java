@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.patitofeliz.main.model.conexion.carrito.Carrito;
+import com.patitofeliz.main.model.conexion.inventario.Inventario;
+import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.venta.Venta;
+import com.patitofeliz.main.model.dto.SucursalInventarioDTO;
 import com.patitofeliz.sucursal_service.model.Sucursal;
-import com.patitofeliz.sucursal_service.model.conexion.Carrito;
-import com.patitofeliz.sucursal_service.model.conexion.Inventario;
-import com.patitofeliz.sucursal_service.model.conexion.ProductoInventario;
-import com.patitofeliz.sucursal_service.model.conexion.Venta;
-import com.patitofeliz.sucursal_service.model.dto.SucursalInventarioDTO;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
 @RestController

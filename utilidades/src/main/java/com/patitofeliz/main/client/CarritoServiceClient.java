@@ -28,6 +28,16 @@ public class CarritoServiceClient
         return listaCarritoPorId;
     }
 
+    public List<Carrito> getCarritosPorSucursal(int sucursalId)
+    {
+        List<Carrito> carritoSucursalId = restTemplate.getForObject(CARRITO_API+"/sucursal/"+sucursalId, List.class);
+
+        if (carritoSucursalId == null || carritoSucursalId.isEmpty())
+            throw new NoSuchElementException("Esta sucursal no tiene carritos asociados");
+
+        return carritoSucursalId;
+    }
+
     public Carrito getCarritoById(int id)
     {
         Carrito CarritoPorId = restTemplate.getForObject(CARRITO_API+"/"+id, Carrito.class);
