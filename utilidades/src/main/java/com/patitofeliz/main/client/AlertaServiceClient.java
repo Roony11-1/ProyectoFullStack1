@@ -37,7 +37,7 @@ public class AlertaServiceClient
         } 
         catch (RestClientException e) 
         {
-            System.out.println("Error enviando alerta: " + e.getMessage());
+            System.out.println("Error creando alerta: " + e.getMessage());
         }
     }
 }
