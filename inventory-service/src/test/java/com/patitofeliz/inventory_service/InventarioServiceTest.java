@@ -22,9 +22,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
-import com.patitofeliz.inventory_service.model.conexion.Alerta;
 import com.patitofeliz.inventory_service.repository.InventarioRepository;
 import com.patitofeliz.inventory_service.service.InventarioService;
+import com.patitofeliz.main.model.conexion.alerta.Alerta;
 
 public class InventarioServiceTest {
     @InjectMocks
