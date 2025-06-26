@@ -1,4 +1,4 @@
-package com.patitofeliz.account_service.model.conexion;
+package com.patitofeliz.account_service.model.conexion.carrito;
 
 import java.util.List;
 
@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Venta 
+public class Carrito 
 {
     private int id;
     private int usuarioId;
-    private int vendedorId;
-    private int carritoId;
-    
+
     @ElementCollection
     private List<CarritoProducto> listaProductos;
     private int total;

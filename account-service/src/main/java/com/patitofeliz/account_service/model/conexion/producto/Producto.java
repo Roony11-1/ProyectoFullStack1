@@ -1,4 +1,4 @@
-package com.patitofeliz.account_service.model.conexion;
+package com.patitofeliz.account_service.model.conexion.producto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -61,6 +61,17 @@ public class ReviewController
         return ResponseEntity.ok(hateoasPlural(reviews));
     }
 
+   @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<EntityModel<Review>>> obtenerReviewPorUsuarioId(@PathVariable("usuarioId") int usuarioId)
+    {
+        List<Review> reviews = reviewService.getReviewByUsuarioId(usuarioId);
+
+        if (reviews == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(hateoasPlural(reviews));
+    }
+
     @GetMapping("/verificar/{id}")
     public ResponseEntity<Boolean> existePorId(@PathVariable int id) 
     {   
@@ -97,7 +108,8 @@ public class ReviewController
         return EntityModel.of(review,
             linkTo(methodOn(ReviewController.class).obtenerReviewId(id)).withSelfRel(),
             linkTo(methodOn(ReviewController.class).listarReviews()).withRel("GET/reviews"),
-            linkTo(methodOn(ReviewController.class).obtenerReviewPorProductoId(review.getProductoId())).withRel("GET/reviewProducto")
+            linkTo(methodOn(ReviewController.class).obtenerReviewPorProductoId(review.getProductoId())).withRel("GET/reviewProducto"),
+            linkTo(methodOn(ReviewController.class).obtenerReviewPorUsuarioId(review.getProductoId())).withRel("GET/reviewUsuario")
         );
     }
 

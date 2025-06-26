@@ -8,5 +8,5 @@ import com.patitofeliz.review_service.model.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
     List<Review> findByProductoId(Integer productoId);
-    
+    List<Review> findByUsuarioId(int usuarioId);
 }

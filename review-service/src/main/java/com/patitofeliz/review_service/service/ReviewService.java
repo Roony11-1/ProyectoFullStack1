@@ -38,6 +38,11 @@ public class ReviewService {
       return reviewRepository.findById(id).orElse(null);
    }
 
+   public List<Review> getReviewByUsuarioId(int usuarioId)
+   {
+      return reviewRepository.findByUsuarioId(usuarioId);
+   }
+
    public List<Review> getReviewByProductoId(int productoId)
    {
       return reviewRepository.findByProductoId(productoId);
