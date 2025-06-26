@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.patitofeliz.main.model.conexion.review.Review;
 import com.patitofeliz.producto_service.model.Producto;
-import com.patitofeliz.producto_service.model.conexion.Review;
 import com.patitofeliz.producto_service.service.ProductoService;
 
 
