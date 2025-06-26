@@ -5,28 +5,28 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
+import com.patitofeliz.main.client.AccountServiceClient;
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.review_service.model.Review;
-import com.patitofeliz.review_service.model.conexion.Alerta;
-import com.patitofeliz.review_service.model.conexion.Producto;
-import com.patitofeliz.review_service.model.conexion.Usuario;
 import com.patitofeliz.review_service.repository.ReviewRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class ReviewService {
-   @Autowired
-   private RestTemplate restTemplate;
+public class ReviewService 
+{
    @Autowired
    private ReviewRepository reviewRepository;
-   private static final String USUARIO_API = "http://localhost:8001/usuario";
-   private static final String PRODUCTO_API="http://localhost:8005/producto";
-   private static final String ALERTA_API = "http://localhost:8002/alerta";
-
-
+   @Autowired
+   private AlertaServiceClient alertaServiceClient;
+   @Autowired
+   private AccountServiceClient accountServiceClient;
+   @Autowired
+   private ProductoServiceClient productoServiceClient;
 
    public List<Review> getReviews()
    {
@@ -52,6 +52,20 @@ public class ReviewService {
    {
       return reviewRepository.existsById(id);
    }
+
+   private Usuario obtenerUsuario(int usuarioId) 
+   {
+      Usuario usuario = accountServiceClient.obtenerUsuarioSeguro(usuarioId);
+
+      return usuario;
+   }
+
+   private Producto obtenerProducto(int productoId) 
+   {
+      Producto producto = productoServiceClient.obtenerProductoSeguro(productoId);
+
+      return producto;
+   }
    
    @Transactional
    public Review registrar(Review review)
@@ -61,10 +75,9 @@ public class ReviewService {
 
       review.setAutor(usuario.getNombreUsuario());
 
-      crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
+      alertaServiceClient.crearAlertaSeguro("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
 
-      Review nuevo = reviewRepository.save(review);
-      return nuevo;
+      return reviewRepository.save(review);
    }
 
    @Transactional
@@ -81,44 +94,8 @@ public class ReviewService {
 
       reviewActual.setComentario(reviewActualizada.getComentario());
 
+      alertaServiceClient.crearAlertaSeguro("Review actualizada- Autor: "+reviewActual.getAutor()+" - Producto: "+reviewActual.getProductoId(), "Aviso: Review");
+
       return reviewRepository.save(reviewActual);
    }
-
-   // Auxiliares
-
-   private void crearAlerta(String mensaje, String tipoAlerta)
-   {
-      Alerta alertaProductoRegistrado = new Alerta(mensaje, tipoAlerta);
-
-      try
-      {
-         restTemplate.postForObject(ALERTA_API, alertaProductoRegistrado, Alerta.class);
-      }
-      catch (RestClientException e)
-      {
-         throw new IllegalArgumentException("No se pudo ingresar la Alerta: "+e);
-      }
-   }
-
-   private Usuario obtenerUsuario(int usuarioId) 
-   {
-      Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
-
-      if (usuario == null)
-         throw new NoSuchElementException("Usuario no encontrado con ID: " + usuarioId);
-
-      return usuario;
-   }
-
-   private Producto obtenerProducto(int productoId) 
-   {
-      Producto producto = restTemplate.getForObject(PRODUCTO_API + "/" + productoId, Producto.class);
-
-      if (producto == null)
-         throw new NoSuchElementException("Producto no encontrado con ID: " + productoId);
-
-      return producto;
-   }
-
-
 }

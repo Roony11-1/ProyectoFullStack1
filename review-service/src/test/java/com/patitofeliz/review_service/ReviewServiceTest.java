@@ -16,9 +16,9 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
+import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.review_service.model.Review;
-import com.patitofeliz.review_service.model.conexion.Producto;
-import com.patitofeliz.review_service.model.conexion.Usuario;
 import com.patitofeliz.review_service.repository.ReviewRepository;
 import com.patitofeliz.review_service.service.ReviewService;
 
