@@ -18,7 +18,7 @@ public class AccountServiceClient
 
     private static final String USUARIO_API = "http://localhost:8001/usuario";
 
-    private Usuario getUsuario(int usuarioId) 
+    public Usuario getUsuario(int usuarioId) 
     {
         Usuario usuario = restTemplate.getForObject(USUARIO_API + "/" + usuarioId, Usuario.class);
 
