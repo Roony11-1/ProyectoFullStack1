@@ -22,6 +22,7 @@ import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.main.model.conexion.sucursal.Sucursal;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.sale_service.model.Venta;
+import com.patitofeliz.sale_service.model.VentaProducto;
 import com.patitofeliz.sale_service.repository.VentaRepository;
 
 @Service
@@ -93,11 +94,13 @@ public class VentaService
 
         // Creamos una Lista para guardar los producto inventario
         List<ProductoInventario> listaInventarioActualizar = new ArrayList<>();
+        List<VentaProducto> listaProductosVenta = new ArrayList<>();
 
         // Descuento de productos del inventario
         for (CarritoProducto producto : listaCarrito) 
         {
             Producto productoInventario = productoServiceClient.obtenerProductoSeguro(producto.getProductoId());
+            VentaProducto productoVenta = new VentaProducto(producto.getProductoId(), producto.getProductoId());
 
             // Buscar producto en el inventario
             ProductoInventario productoEnInventario = null;
@@ -119,11 +122,13 @@ public class VentaService
                 productoEnInventario.setCantidad(productoEnInventario.getCantidad() - producto.getCantidad());
 
             listaInventarioActualizar.add(productoEnInventario);
+            listaProductosVenta.add(productoVenta);
         }
 
         inventoryServiceClient.descontarProductoEnInventario(sucursal.getInventarioId(), listaInventarioActualizar);
 
-        venta.setListaProductos(listaCarrito);
+
+        venta.setListaProductos(listaProductosVenta);
         venta.setTotal(carritoVenta.getTotal());
         venta.setUsuarioId(usuario.getId());
         venta.setSucursalId(sucursal.getId());
