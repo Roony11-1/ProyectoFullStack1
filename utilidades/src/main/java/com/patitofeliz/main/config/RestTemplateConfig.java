@@ -1,4 +1,4 @@
-package com.patitofeliz.account_service.config;
+package com.patitofeliz.main.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
