@@ -54,26 +54,12 @@ public class ReviewService
    {
       return reviewRepository.existsById(id);
    }
-
-   private Usuario obtenerUsuario(int usuarioId) 
-   {
-      Usuario usuario = accountServiceClient.getUsuario(usuarioId);
-
-      return usuario;
-   }
-
-   private Producto obtenerProducto(int productoId) 
-   {
-      Producto producto = productoServiceClient.getProducto(productoId);
-
-      return producto;
-   }
    
    @Transactional
    public Review registrar(Review review)
    {
-      Usuario usuario = obtenerUsuario(review.getUsuarioId());
-      Producto producto = obtenerProducto(review.getProductoId());
+      Usuario usuario = accountServiceClient.getUsuario(review.getUsuarioId());
+      Producto producto = productoServiceClient.getProducto(review.getProductoId());
 
       review.setAutor(usuario.getNombreUsuario());
 
@@ -85,7 +71,11 @@ public class ReviewService
    @Transactional
    public void borrar(int id)
    {
+      if (!existePorId(id))
+         throw new NoSuchElementException("No se encontró la review con ID: " + id);
+
       reviewRepository.deleteById(id);
+      
       alertaServiceClient.crearAlerta("Review Borrada - ID: "+id, TIPO_AVISO);
    }
 

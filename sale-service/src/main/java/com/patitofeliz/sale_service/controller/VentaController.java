@@ -104,7 +104,7 @@ public class VentaController
         if (venta == null)
             return ResponseEntity.notFound().build();
 
-        ventaService.elimiarPorId(id);
+        ventaService.borrar(id);
         return ResponseEntity.noContent().build();
     }
 

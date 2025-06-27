@@ -111,6 +111,9 @@ public class UsuarioService
     @Transactional
     public void borrar(int id)
     {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el usuario con ID: " + id);
+            
         alertaServiceClient.crearAlerta("Usuario Eliminado ID: "+getUsuario(id).getId(), TIPO_AVISO);
         usuarioRepository.deleteById(id);
     }

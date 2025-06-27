@@ -98,8 +98,12 @@ public class CarritoService
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlerta("Carrito borrado - Dueño ID: " + getCarrito(id).getUsuarioId(), TIPO_AVISO);
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el carrito con ID: " + id);
+
         carritoRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Carrito borrado - ID: "+id, TIPO_AVISO);
     }
 
     private Integer calcularTotal(Carrito carrito) 

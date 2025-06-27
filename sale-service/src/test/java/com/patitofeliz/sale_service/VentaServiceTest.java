@@ -176,7 +176,7 @@ public class VentaServiceTest
 
         when(ventaRepository.findById(1)).thenReturn(Optional.of(v));
 
-        ventaService.elimiarPorId(1);
+        ventaService.borrar(1);
 
         verify(ventaRepository).deleteById(1);
     }

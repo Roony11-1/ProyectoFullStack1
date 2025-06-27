@@ -79,7 +79,7 @@ public class ProductoService
     public Producto actualizar(int id, Producto productoActualizado)
     {
         Producto productoActual = productoRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Producto no encontrado"));      
+            .orElseThrow(() -> new NoSuchElementException("Producto no encontrado con ID: " + id));
 
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
@@ -93,6 +93,11 @@ public class ProductoService
     @Transactional
     public void borrar(int id)
     {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el producto con ID: " + id);
+
         productoRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Producto borrado - ID: "+id, TIPO_AVISO);
     }
 }

@@ -18,5 +18,11 @@ public class Alerta
     private String mensaje;
     private String tipoAlerta;
     private String fecha;
+
+    public Alerta(String mensaje, String tipoAlerta)
+    {
+        this.mensaje = mensaje;
+        this.tipoAlerta = tipoAlerta;
+    }
 }
 

@@ -76,77 +76,95 @@ public class VentaService
     }
 
     @Transactional
-    public void elimiarPorId(int id)
+    public void borrar(int id)
     {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró la venta con ID: " + id);
+
         ventaRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Venta borrada - ID: "+id, TIPO_AVISO);
     }
 
     @Transactional
-    public Venta generarVenta(Venta venta)
+    public Venta generarVenta(Venta venta) 
     {
+        validarVenta(venta);
+
         Carrito carritoVenta = carritoServiceClient.getCarritoById(venta.getCarritoId());
-        List<CarritoProducto> listaCarrito = carritoVenta.getListaProductos();
-        Usuario usuario = accountServiceClient.getUsuario(carritoVenta.getUsuarioId());
+        validarCarrito(carritoVenta);
+
+        Usuario comprador = accountServiceClient.getUsuario(carritoVenta.getUsuarioId());
         Usuario vendedor = accountServiceClient.getUsuario(venta.getVendedorId());
+
         Sucursal sucursal = sucursalServiceClient.getSucursal(carritoVenta.getSucursalId());
         Inventario inventario = inventoryServiceClient.getInventario(sucursal.getInventarioId());
 
-        if (carritoVenta.getListaProductos().isEmpty())
-            throw new NoSuchElementException("Carrito vacío!");
+        List<VentaProducto> productosVenta = new ArrayList<>();
+        List<ProductoInventario> productosActualizados = procesarCarrito(carritoVenta.getListaProductos(), inventario, productosVenta);
 
-        // Creamos una Lista para guardar los producto inventario
-        List<ProductoInventario> listaInventarioActualizar = new ArrayList<>();
-        List<VentaProducto> listaProductosVenta = new ArrayList<>();
+        inventoryServiceClient.descontarProductoEnInventario(sucursal.getInventarioId(), productosActualizados);
 
-        // Descuento de productos del inventario
-        for (CarritoProducto producto : listaCarrito) 
-        {
-            Producto productoInventario = productoServiceClient.getProducto(producto.getProductoId());
-            VentaProducto productoVenta = new VentaProducto(producto.getProductoId(), producto.getProductoId());
-
-            // Buscar producto en el inventario
-            ProductoInventario productoEnInventario = null;
-            for (ProductoInventario p : inventario.getListaProductos()) 
-            {
-                if (p.getProductoId() == producto.getProductoId()) 
-                {
-                    productoEnInventario = p;
-                    break;
-                }
-            }
-
-            if (productoEnInventario == null)
-                throw new NoSuchElementException("El producto " + productoInventario.getNombre() + " no se encuentra en el inventario de la sucursal.");
-
-            if (producto.getCantidad() > productoEnInventario.getCantidad())
-                throw new NoSuchElementException("No hay suficientes existencias de " + productoInventario.getNombre());
-            else
-                productoEnInventario.setCantidad(productoEnInventario.getCantidad() - producto.getCantidad());
-
-            listaInventarioActualizar.add(productoEnInventario);
-            listaProductosVenta.add(productoVenta);
-        }
-
-        inventoryServiceClient.descontarProductoEnInventario(sucursal.getInventarioId(), listaInventarioActualizar);
-
-
-        venta.setListaProductos(listaProductosVenta);
+        venta.setListaProductos(productosVenta);
         venta.setTotal(carritoVenta.getTotal());
-        venta.setUsuarioId(usuario.getId());
+        venta.setUsuarioId(comprador.getId());
         venta.setSucursalId(sucursal.getId());
 
-        // Borrar carrito
         carritoServiceClient.borrarCarritoPorId(carritoVenta.getId());
 
         Venta nuevaVenta = ventaRepository.save(venta);
 
-        alertaServiceClient.crearAlerta(
-            "Venta Carrito - id: " + venta.getCarritoId() +
-            " - comprador: " + usuario.getNombreUsuario() +
-            " - vendedor: " + vendedor.getNombreUsuario() +
-            " - Sucursal: "+ sucursal.getNombreSucursal(),
-            TIPO_AVISO);
+        crearAlertaVenta(venta, comprador, vendedor, sucursal);
 
         return nuevaVenta;
+    }
+
+    private void validarVenta(Venta venta) 
+    {
+        if (venta == null)
+            throw new IllegalArgumentException("La venta no puede ser null");
+    }
+
+    private void validarCarrito(Carrito carrito) 
+    {
+        if (carrito.getListaProductos().isEmpty())
+            throw new NoSuchElementException("Carrito ID: " + carrito.getId() + " está vacío!");
+    }
+
+    private List<ProductoInventario> procesarCarrito(List<CarritoProducto> listaCarrito, Inventario inventario, List<VentaProducto> productosVenta) 
+    {
+        List<ProductoInventario> productosActualizados = new ArrayList<>();
+
+        for (CarritoProducto item : listaCarrito) 
+        {
+            Producto producto = productoServiceClient.getProducto(item.getProductoId());
+            ProductoInventario inventarioProducto = buscarEnInventario(inventario, item.getProductoId());
+
+            if (item.getCantidad() > inventarioProducto.getCantidad())
+                throw new NoSuchElementException("No hay suficientes existencias de " + producto.getNombre());
+
+            inventarioProducto.setCantidad(inventarioProducto.getCantidad() - item.getCantidad());
+
+            productosVenta.add(new VentaProducto(item.getProductoId(), item.getCantidad()));
+            productosActualizados.add(inventarioProducto);
+        }
+
+        return productosActualizados;
+    }
+
+    private ProductoInventario buscarEnInventario(Inventario inventario, int productoId) 
+    {
+        return inventario.getListaProductos().stream().filter(p -> p.getProductoId() == productoId).findFirst()
+            .orElseThrow(() -> new NoSuchElementException("Producto ID " + productoId + " no se encuentra en el inventario"));
+    }
+
+    private void crearAlertaVenta(Venta venta, Usuario comprador, Usuario vendedor, Sucursal sucursal) 
+    {
+        String mensaje = "Venta Carrito - id: " + venta.getCarritoId()
+                    + " - comprador: " + comprador.getNombreUsuario()
+                    + " - vendedor: " + vendedor.getNombreUsuario()
+                    + " - Sucursal: " + sucursal.getNombreSucursal();
+
+        alertaServiceClient.crearAlerta(mensaje, TIPO_AVISO);
     }
 }

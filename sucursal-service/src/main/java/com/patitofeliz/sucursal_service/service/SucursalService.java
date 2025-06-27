@@ -61,6 +61,11 @@ public class SucursalService
         return carritoServiceClient.getCarritosPorSucursal(sucursalId);
     }
 
+    public boolean existePorId(int id) 
+    {
+        return sucursalRepository.existsById(id);
+    }
+
     public SucursalInventarioDTO obtenerSucursalConInventario(int sucursalId) 
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
@@ -69,11 +74,6 @@ public class SucursalService
         Inventario inventario = inventoryServiceClient.getInventario(sucursal.getInventarioId());
 
         return new SucursalInventarioDTO(sucursal.getId(), inventario);
-    }
-
-    public boolean existePorId(int id) 
-    {
-        return sucursalRepository.existsById(id);
     }
 
     public List<Integer> listarEmpleadosSucursal(int sucursalId)
@@ -115,33 +115,45 @@ public class SucursalService
     @Transactional
     public List<Integer> añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
     {
-        List<Integer> listaEmpleados = getSucursal(sucursalId).getListaEmpleados();
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+            
+        List<Integer> listaEmpleados = sucursal.getListaEmpleados();
 
-        if (!listaEmpleados.contains(idEmpleado))
-            listaEmpleados.add(idEmpleado);
-        else
+        if (listaEmpleados.contains(idEmpleado))
             throw new IllegalArgumentException("El empleado ya está asignado a la sucursal.");
-        
-        alertaServiceClient.crearAlerta("Empeado añadido a la sucursal ID: "+getSucursal(idEmpleado).getId()+" - Id Empleado Asociado: "+idEmpleado, TIPO_AVISO);
+
+        listaEmpleados.add(idEmpleado);
+
+        alertaServiceClient.crearAlerta("Empleado añadido a la sucursal ID: " + sucursal.getId() + " - ID Empleado Asociado: " + idEmpleado, TIPO_AVISO);
+
+        sucursalRepository.save(sucursal);
 
         return listaEmpleados;
-}
+    }
 
     @Transactional
     public List<Integer> añadirEmpleadosSucursal(int sucursalId, List<Integer> listaIds)
     {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+
+        List<Integer> listaEmpleados = sucursal.getListaEmpleados();
+
         for (Integer idEmpleado : listaIds) 
         {
-            try
+            if (!listaEmpleados.contains(idEmpleado)) 
             {
-                añadirEmpleadoSucursal(sucursalId, idEmpleado);
-            }
-            catch (IllegalArgumentException e)
-            {
-                System.out.println("El empleado: "+idEmpleado+" ya esta en la sucursal");
-            }
+                listaEmpleados.add(idEmpleado);
+                alertaServiceClient.crearAlerta("Empleado añadido a la sucursal ID: " + sucursal.getId() + " - ID Empleado Asociado: " + idEmpleado, TIPO_AVISO);
+            } 
+            else
+                System.out.println("El empleado: " + idEmpleado + " ya está en la sucursal");
         }
-        return getSucursal(sucursalId).getListaEmpleados();
+
+        sucursalRepository.save(sucursal);
+
+        return listaEmpleados;
     }
 
     @Transactional
@@ -163,6 +175,11 @@ public class SucursalService
     @Transactional
     public void borrar(int id)
     {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró la sucursal con ID: " + id);
+    
         sucursalRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Sucursal borrada - ID: "+id, TIPO_AVISO);
     }
 }

@@ -18,6 +18,7 @@ public class AlertaService
 {
     @Autowired
     private AlertaRepository alertaRepository;
+    @Autowired
 
     public List<Alerta> getAlertas()
     {
@@ -32,6 +33,11 @@ public class AlertaService
     public List<Alerta> getAlertaByTipoAlerta(String tipoAlerta)
     {
         return alertaRepository.findByTipoAlertaContainingIgnoreCase(tipoAlerta);
+    }
+
+    public boolean existePorId(int id) 
+    {
+        return alertaRepository.existsById(id);
     }
 
     @Transactional
@@ -55,12 +61,21 @@ public class AlertaService
         alertaActual.setTipoAlerta(alertaActualizada.getTipoAlerta());
         alertaActual.setFecha(alertaActualizada.getFecha());
 
+        Alerta alertaEliminacion = new Alerta("Se actualizó la alerta con ID: " + id, "Alerta");
+        alertaRepository.save(alertaEliminacion);
+
         return alertaRepository.save(alertaActual);
     }
 
     @Transactional
     public void borrar(int id)
-    {
+    {   
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró la alerta con ID: " + id);
+
         alertaRepository.deleteById(id);
+
+        Alerta alertaEliminacion = new Alerta("Se eliminó la alerta con ID: " + id, "Alerta");
+        alertaRepository.save(alertaEliminacion);
     }
 }

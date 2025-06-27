@@ -53,6 +53,7 @@ public class InventarioService
     }
 
     // Agrega un solo producto al inventario
+    @Transactional
     public Inventario agregarProductoInventario (int inventarioId, ProductoInventario productoInventario)
     {
         Inventario inventarioActual = getInventarioPorId(inventarioId);
@@ -60,19 +61,12 @@ public class InventarioService
 
         Producto productoExistente = productoServiceClient.getProducto(productoInventario.getProductoId());
 
-        if (productoExistente != null) 
-        {
-            inventarioProductos.add(productoInventario);
-            inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
+        inventarioProductos.add(productoInventario);
+        inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
 
-            alertaServiceClient.crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), TIPO_AVISO);
+        alertaServiceClient.crearAlerta("Producto ID: "+productoExistente.getId()+" - agregado al inventario ID: " + inventarioActual.getId(), TIPO_AVISO);
 
-            return inventarioRepository.save(inventarioActual);
-        } 
-        else 
-            alertaServiceClient.crearAlerta("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), TIPO_AVISO);
-
-        return inventarioActual;
+        return inventarioRepository.save(inventarioActual);
     }
 
     @Transactional
@@ -85,11 +79,16 @@ public class InventarioService
 
         for (ProductoInventario producto : productos) 
         {
-            // existe el producto¿?
-            Producto productoExistente = productoServiceClient.getProducto(producto.getProductoId());
-
-            if (productoExistente != null)
+            try 
+            {
+                Producto productoExistente = productoServiceClient.getProducto(producto.getProductoId());
+                
                 productosValidos.add(producto);
+            } 
+            catch (NoSuchElementException e) 
+            {
+                // Ignoramos
+            }
         }
 
         inventarioProductos.addAll(productosValidos);
@@ -140,7 +139,12 @@ public class InventarioService
     @Transactional
     public void borrarInventario(int id)
     {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el inventario con ID: " + id);
+
         inventarioRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Inventario borrado - ID: "+id, TIPO_AVISO);
     }
 
     @Transactional
