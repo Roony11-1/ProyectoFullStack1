@@ -14,5 +14,6 @@ public class Proveedor
 {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
+    private int id;
+    private String nombre;
 }

@@ -83,6 +83,7 @@ public class ProductoService
 
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
+        productoActual.setIdProveedor(productoActualizado.getIdProveedor());
         productoActual.setPrecio(productoActualizado.getPrecio());
 
         alertaServiceClient.crearAlerta("Producto Actualizado: "+productoActual.getId(), TIPO_AVISO);

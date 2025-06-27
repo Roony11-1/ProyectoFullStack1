@@ -25,6 +25,7 @@ public class Producto
     // Campos privados de la clase Producto
     private String nombre;
     private String marca;
+    private int idProveedor;
     private int precio;
 }
 // nashe //
