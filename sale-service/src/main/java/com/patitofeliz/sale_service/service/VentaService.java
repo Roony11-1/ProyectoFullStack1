@@ -89,8 +89,6 @@ public class VentaService
     @Transactional
     public Venta generarVenta(Venta venta) 
     {
-        validarVenta(venta);
-
         Carrito carritoVenta = carritoServiceClient.getCarritoById(venta.getCarritoId());
         validarCarrito(carritoVenta);
 
@@ -117,12 +115,6 @@ public class VentaService
         crearAlertaVenta(venta, comprador, vendedor, sucursal);
 
         return nuevaVenta;
-    }
-
-    private void validarVenta(Venta venta) 
-    {
-        if (venta == null)
-            throw new IllegalArgumentException("La venta no puede ser null");
     }
 
     private void validarCarrito(Carrito carrito) 

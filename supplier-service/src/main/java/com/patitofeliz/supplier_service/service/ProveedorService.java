@@ -1,6 +1,7 @@
 package com.patitofeliz.supplier_service.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,24 @@ public class ProveedorService
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlerta("Usuario Eliminado ID: "+getProveedor(id).getId(), TIPO_AVISO);
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el Proveedor con ID: " + id);
+
         proveedorRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Proveedor borrado - ID: "+id, TIPO_AVISO);
+    }
+
+    @Transactional
+    public Proveedor actualizaProveedor(int id, Proveedor proveedorActualizado)
+    {
+        Proveedor proveedorActual = proveedorRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Proveedor no encontrado"));
+
+        // lo que sea qque tenga de atributos
+        
+        alertaServiceClient.crearAlerta("Usuario Actualizado ID: "+proveedorActual.getId(), TIPO_AVISO);
+
+        return proveedorRepository.save(proveedorActual);
     }
 }
