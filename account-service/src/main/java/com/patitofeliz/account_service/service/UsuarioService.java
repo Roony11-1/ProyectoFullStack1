@@ -34,6 +34,8 @@ public class UsuarioService
     @Autowired
     private VentaServiceClient ventaServiceClient;
 
+    private static final String TIPO_AVISO = "Usuario";
+
     public List<Usuario> getUsuarios()
     {
         return usuarioRepository.findAll();
@@ -63,7 +65,7 @@ public class UsuarioService
 
         Usuario nuevo = usuarioRepository.save(usuario);
 
-        alertaServiceClient.crearAlerta("Usuario registrado: " + nuevo.getNombreUsuario(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario registrado: " + nuevo.getNombreUsuario(), TIPO_AVISO);
 
         return nuevo;
     }
@@ -101,14 +103,15 @@ public class UsuarioService
         usuarioActual.setPassword(usuarioActualizado.getPassword());
         usuarioActual.setTipoUsuario(usuarioActualizado.getTipoUsuario());
 
-        alertaServiceClient.crearAlerta("Usuario Actualizado ID: "+usuarioActual.getId(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario Actualizado ID: "+usuarioActual.getId(), TIPO_AVISO);
 
         return usuarioRepository.save(usuarioActual);
     }
+
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlerta("Usuario Eliminado ID: "+getUsuario(id).getId(), "Aviso: Usuario");
+        alertaServiceClient.crearAlerta("Usuario Eliminado ID: "+getUsuario(id).getId(), TIPO_AVISO);
         usuarioRepository.deleteById(id);
     }
 

@@ -63,7 +63,7 @@ public class SucursalServiceTest {
         // Mockear repositorios
         when(sucursalRepository.findAll()).thenReturn(Arrays.asList(sucursal1,sucursal2));
 
-        List<Sucursal> resultado = sucursalService.listarSucursales();
+        List<Sucursal> resultado = sucursalService.getSucursales();
 
         assertEquals(2, resultado.size());
 

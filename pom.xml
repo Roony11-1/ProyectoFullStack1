@@ -42,6 +42,7 @@
         <module>review-service</module>
         <module>sale-service</module>
         <module>sucursal-service</module>
+		<module>supplier-service</module>
     </modules>
 
 </project>

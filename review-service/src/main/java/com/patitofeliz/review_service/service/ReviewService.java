@@ -28,6 +28,8 @@ public class ReviewService
    @Autowired
    private ProductoServiceClient productoServiceClient;
 
+   private static final String TIPO_AVISO = "Review";
+
    public List<Review> getReviews()
    {
       return reviewRepository.findAll();
@@ -75,7 +77,7 @@ public class ReviewService
 
       review.setAutor(usuario.getNombreUsuario());
 
-      alertaServiceClient.crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), "Aviso: Review");
+      alertaServiceClient.crearAlerta("Review registrada- Autor: "+review.getAutor()+" - Producto: "+producto.getNombre(), TIPO_AVISO);
 
       return reviewRepository.save(review);
    }
@@ -84,6 +86,7 @@ public class ReviewService
    public void borrar(int id)
    {
       reviewRepository.deleteById(id);
+      alertaServiceClient.crearAlerta("Review Borrada - ID: "+id, TIPO_AVISO);
    }
 
    @Transactional
@@ -94,7 +97,7 @@ public class ReviewService
 
       reviewActual.setComentario(reviewActualizada.getComentario());
 
-      alertaServiceClient.crearAlerta("Review actualizada- Autor: "+reviewActual.getAutor()+" - Producto: "+reviewActual.getProductoId(), "Aviso: Review");
+      alertaServiceClient.crearAlerta("Review actualizada- Autor: "+reviewActual.getAutor()+" - Producto: "+reviewActual.getProductoId(), TIPO_AVISO);
 
       return reviewRepository.save(reviewActual);
    }

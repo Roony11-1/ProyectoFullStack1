@@ -34,7 +34,7 @@ public class SucursalController
     @GetMapping
     public ResponseEntity<List<EntityModel<Sucursal>>> listarSucursales() 
     {
-        List<Sucursal> sucursales = sucursalService.listarSucursales();
+        List<Sucursal> sucursales = sucursalService.getSucursales();
 
         if (sucursales.isEmpty())
             return ResponseEntity.noContent().build();
@@ -45,7 +45,7 @@ public class SucursalController
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Sucursal>> obtenerSucursal(@PathVariable("id") int  id)
     {
-        Sucursal sucursal = sucursalService.listarSucursal(id);
+        Sucursal sucursal = sucursalService.getSucursal(id);
 
         if (sucursal == null)
             return ResponseEntity.notFound().build();
@@ -125,7 +125,7 @@ public class SucursalController
     @DeleteMapping("/{id}")
     public ResponseEntity<Sucursal> borrarSucursal(@PathVariable int id)
     {
-        Sucursal sucursal = sucursalService.listarSucursal(99);
+        Sucursal sucursal = sucursalService.getSucursal(id);
 
         if (sucursal == null)
             return ResponseEntity.notFound().build();

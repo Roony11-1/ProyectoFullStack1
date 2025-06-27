@@ -43,6 +43,8 @@ public class VentaService
     @Autowired
     private InventoryServiceClient inventoryServiceClient;
 
+    private static final String TIPO_AVISO = "Venta";
+
     public List<Venta> getVentasPorUsuarioId(int id)
     {
         return ventaRepository.findByUsuarioId(id);
@@ -143,8 +145,7 @@ public class VentaService
             " - comprador: " + usuario.getNombreUsuario() +
             " - vendedor: " + vendedor.getNombreUsuario() +
             " - Sucursal: "+ sucursal.getNombreSucursal(),
-            "Aviso: Venta"
-        );
+            TIPO_AVISO);
 
         return nuevaVenta;
     }

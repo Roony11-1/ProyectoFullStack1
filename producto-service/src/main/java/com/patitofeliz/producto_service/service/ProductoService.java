@@ -26,6 +26,7 @@ public class ProductoService
     @Autowired
     private ReviewServiceClient reviewServiceClient;
 
+    private static final String TIPO_AVISO = "Producto";
 
     public List<Producto> getProductos()
     {
@@ -54,7 +55,7 @@ public class ProductoService
     {
         Producto nuevo = productoRepository.save(producto);
 
-        alertaServiceClient.crearAlerta("Producto registrado: "+producto.getNombre(), "Aviso: Producto");
+        alertaServiceClient.crearAlerta("Producto registrado: "+producto.getNombre(), TIPO_AVISO);
 
         return nuevo;
     }
@@ -83,6 +84,8 @@ public class ProductoService
         productoActual.setNombre(productoActualizado.getNombre());
         productoActual.setMarca(productoActualizado.getMarca());
         productoActual.setPrecio(productoActualizado.getPrecio());
+
+        alertaServiceClient.crearAlerta("Producto Actualizado: "+productoActual.getId(), TIPO_AVISO);
 
         return productoRepository.save(productoActual);
     }

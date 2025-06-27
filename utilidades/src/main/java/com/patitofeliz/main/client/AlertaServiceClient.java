@@ -21,7 +21,7 @@ public class AlertaServiceClient
     {
         try 
         {
-            restTemplate.postForObject(ALERTA_API, new Alerta(mensaje, tipoAlerta), Alerta.class);
+            restTemplate.postForObject(ALERTA_API, new Alerta(mensaje, "Aviso: "+tipoAlerta), Alerta.class);
         } 
         catch (Exception e) 
         {

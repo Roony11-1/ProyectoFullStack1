@@ -8,9 +8,6 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.inventory_service.model.Inventario;
 import com.patitofeliz.inventory_service.model.ProductoInventario;
@@ -31,6 +28,7 @@ public class InventarioService
     @Autowired
     private AlertaServiceClient alertaServiceClient;
 
+    private static final String TIPO_AVISO = "Inventario";
 
     // Inventarios
     public List<Inventario> getInventarios()
@@ -67,12 +65,12 @@ public class InventarioService
             inventarioProductos.add(productoInventario);
             inventarioActual.setListaProductos(normalizarInventario(inventarioProductos));
 
-            alertaServiceClient.crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), "Aviso: Inventario");
+            alertaServiceClient.crearAlerta("Producto agregado al inventario, ID: " + inventarioActual.getId(), TIPO_AVISO);
 
             return inventarioRepository.save(inventarioActual);
         } 
         else 
-            alertaServiceClient.crearAlerta("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), "Aviso: Inventario");
+            alertaServiceClient.crearAlerta("Producto no encontrado, no fue agregado. ID Inventario: " + inventarioActual.getId(), TIPO_AVISO);
 
         return inventarioActual;
     }
@@ -101,7 +99,7 @@ public class InventarioService
         // Reseteamos el inventario
         inventarioActual.setListaProductos(inventarioProductos);
 
-        alertaServiceClient.crearAlerta("Productos agregados al inventario, ID: "+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Productos agregados al inventario, ID: "+inventarioActual.getId(), TIPO_AVISO);
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -121,7 +119,7 @@ public class InventarioService
 
         inventarioActual.setListaProductos(inventarioProductos);
 
-        alertaServiceClient.crearAlerta("Productos eliminados del inventario, ID:"+inventarioActual.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Productos eliminados del inventario, ID:"+inventarioActual.getId(), TIPO_AVISO);
 
         return inventarioRepository.save(inventarioActual);
     }
@@ -134,7 +132,7 @@ public class InventarioService
 
         Inventario inventarioGuardado = inventarioRepository.save(inventario);
 
-        alertaServiceClient.crearAlerta("Inventario creado ID: "+inventarioGuardado.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Inventario creado ID: "+inventarioGuardado.getId(), TIPO_AVISO);
 
         return inventarioGuardado;
     }
@@ -151,7 +149,7 @@ public class InventarioService
         Inventario inventario = getInventarioPorId(id);
         inventario.setListaProductos(new ArrayList<>());
 
-        alertaServiceClient.crearAlerta("Inventario vaciado, ID:"+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Inventario vaciado, ID:"+inventario.getId(), TIPO_AVISO);
 
         return inventarioRepository.save(inventario);
     }
@@ -184,7 +182,7 @@ public class InventarioService
             }
         }
         inventario.setListaProductos(normalizarInventario(productos));
-        alertaServiceClient.crearAlerta("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), "Aviso: Inventario");
+        alertaServiceClient.crearAlerta("Cantidad de articulos del inventario modificados ID: "+inventario.getId(), TIPO_AVISO);
         return inventarioRepository.save(inventario);
     }
 

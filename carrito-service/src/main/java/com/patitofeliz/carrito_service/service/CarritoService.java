@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.patitofeliz.carrito_service.model.Carrito;
 import com.patitofeliz.carrito_service.model.CarritoProducto;
@@ -36,6 +35,8 @@ public class CarritoService
     private ProductoServiceClient productoServiceClient;
     @Autowired
     private SucursalServiceClient sucursalServiceClient;
+
+    private static final String TIPO_AVISO = "Carrito";
 
     public List<Carrito> getCarritos()
     {
@@ -76,7 +77,7 @@ public class CarritoService
 
         Carrito nuevo = carritoRepository.save(carrito);
 
-        alertaServiceClient.crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito registrado - Dueño: " + usuario.getNombreUsuario() + " - Sucursal: " + sucursal.getNombreSucursal(), TIPO_AVISO);
 
         return nuevo;
     }
@@ -89,7 +90,7 @@ public class CarritoService
 
         carritoActual.setListaProductos(normalizarCarrito(carritoActualizado.getListaProductos()));
 
-        alertaServiceClient.crearAlerta("Carrito actualizado - Dueño ID: " + carritoActual.getUsuarioId() + " - Sucursal ID: " + carritoActual.getSucursalId(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito actualizado - Dueño ID: " + carritoActual.getUsuarioId() + " - Sucursal ID: " + carritoActual.getSucursalId(), TIPO_AVISO);
 
         return carritoRepository.save(carritoActual);
     }
@@ -97,7 +98,7 @@ public class CarritoService
     @Transactional
     public void borrar(int id)
     {
-        alertaServiceClient.crearAlerta("Carrito borrado - Dueño ID: " + getCarrito(id).getUsuarioId(), "Aviso: Carrito");
+        alertaServiceClient.crearAlerta("Carrito borrado - Dueño ID: " + getCarrito(id).getUsuarioId(), TIPO_AVISO);
         carritoRepository.deleteById(id);
     }
 

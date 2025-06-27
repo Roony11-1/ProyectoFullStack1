@@ -39,12 +39,14 @@ public class SucursalService
     @Autowired
     private CarritoServiceClient carritoServiceClient;
 
-    public List<Sucursal> listarSucursales()
+    private static final String TIPO_AVISO = "Sucursal";
+
+    public List<Sucursal> getSucursales()
     {
         return sucursalRepository.findAll();
     }
 
-    public Sucursal listarSucursal(int id)
+    public Sucursal getSucursal(int id)
     {
         return sucursalRepository.findById(id).orElse(null);
     }
@@ -105,7 +107,7 @@ public class SucursalService
             sucursalGuardar = sucursalRepository.save(sucursalGuardar);
         }
 
-        alertaServiceClient.crearAlerta("Sucursal creada: "+sucursalGuardar.getNombreSucursal()+" - Inventario Asociado: "+nuevoInventario.getId(), "Aviso: Sucursal");
+        alertaServiceClient.crearAlerta("Sucursal creada: "+sucursalGuardar.getNombreSucursal()+" - Inventario Asociado: "+nuevoInventario.getId(), TIPO_AVISO);
 
         return sucursalGuardar;
     }
@@ -113,21 +115,33 @@ public class SucursalService
     @Transactional
     public List<Integer> añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
     {
-        List<Integer> listaEmpleados = listarSucursal(sucursalId).getListaEmpleados();
+        List<Integer> listaEmpleados = getSucursal(sucursalId).getListaEmpleados();
 
-        listaEmpleados.add(idEmpleado);
+        if (!listaEmpleados.contains(idEmpleado))
+            listaEmpleados.add(idEmpleado);
+        else
+            throw new IllegalArgumentException("El empleado ya está asignado a la sucursal.");
+        
+        alertaServiceClient.crearAlerta("Empeado añadido a la sucursal ID: "+getSucursal(idEmpleado).getId()+" - Id Empleado Asociado: "+idEmpleado, TIPO_AVISO);
 
         return listaEmpleados;
-    }
+}
 
     @Transactional
     public List<Integer> añadirEmpleadosSucursal(int sucursalId, List<Integer> listaIds)
     {
-        List<Integer> listaEmpleados = listarSucursal(sucursalId).getListaEmpleados();
-
-        listaEmpleados.addAll(listaIds);
-
-        return listaEmpleados;
+        for (Integer idEmpleado : listaIds) 
+        {
+            try
+            {
+                añadirEmpleadoSucursal(sucursalId, idEmpleado);
+            }
+            catch (IllegalArgumentException e)
+            {
+                System.out.println("El empleado: "+idEmpleado+" ya esta en la sucursal");
+            }
+        }
+        return getSucursal(sucursalId).getListaEmpleados();
     }
 
     @Transactional
@@ -141,7 +155,7 @@ public class SucursalService
             
         inventoryServiceClient.agregarProductosInventario(sucursal.getInventarioId(), listaProductos);
 
-        alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),"Aviso: Sucursal");
+        alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),TIPO_AVISO);
 
         return inventoryServiceClient.getInventario(sucursal.getInventarioId());
     }
