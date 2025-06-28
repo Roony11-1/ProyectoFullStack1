@@ -110,10 +110,13 @@ public class SucursalService
             throw new IllegalArgumentException("El usuario asignado no tiene rol de gerente.");
 
         Inventario nuevoInventario = inventoryServiceClient.postInventario();
+        
 
         sucursal.setInventarioId(nuevoInventario.getId());
 
         sucursal.setListaEmpleados(new ArrayList<>());
+        sucursal.setListaProveedores(new ArrayList<>());
+        sucursal.setListaPedidos(new ArrayList<>());
 
         Sucursal sucursalGuardar = sucursalRepository.save(sucursal);
 
