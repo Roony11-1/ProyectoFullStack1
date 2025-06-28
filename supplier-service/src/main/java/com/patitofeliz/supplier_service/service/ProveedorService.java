@@ -43,7 +43,7 @@ public class ProveedorService
     {
         Proveedor nuevo = proveedorRepository.save(proveedor);
 
-        alertaServiceClient.crearAlerta("Proveedor registrado: ", TIPO_AVISO);
+        alertaServiceClient.crearAlerta("Proveedor registrado ID: "+proveedor.getId(), TIPO_AVISO);
 
         return nuevo;
     }

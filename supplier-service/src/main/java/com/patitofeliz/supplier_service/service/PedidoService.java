@@ -1,0 +1,87 @@
+package com.patitofeliz.supplier_service.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.supplier_service.model.Pedido;
+import com.patitofeliz.supplier_service.repository.PedidoRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class PedidoService 
+{
+    @Autowired
+    private PedidoRepository pedidoRepository;
+    @Autowired
+    private AlertaServiceClient alertaServiceClient;
+
+    private static final String TIPO_AVISO = "Pedido";
+
+    public List<Pedido> getPedidos()
+    {
+        return pedidoRepository.findAll();
+    }
+
+    public Pedido getPedido(int id)
+    {
+        return pedidoRepository.findById(id).orElse(null);
+    }
+
+    public boolean existePorId(int id) 
+    {
+        return pedidoRepository.existsById(id);
+    }
+
+    @Transactional
+    public Pedido guardar(Pedido pedido)
+    {
+        Pedido nuevo = pedidoRepository.save(pedido);
+
+        alertaServiceClient.crearAlerta("Pedido registrado ID sucursal: "+pedido.getIdSucursal()+"- ID Proveedor: "+pedido.getIdProveedor(), TIPO_AVISO);
+
+        return nuevo;
+    }
+
+    @Transactional
+    public List<Pedido> guardarLote(List<Pedido> pedidos)
+    {
+        List<Pedido> listaRegistrados = new ArrayList<>();
+
+        for (Pedido iteradorProveedores : listaRegistrados) 
+        {
+            Pedido pedidosRegistrados = pedidoRepository.save(iteradorProveedores);
+            listaRegistrados.add(pedidosRegistrados);
+        }
+        return listaRegistrados;
+    }
+
+    @Transactional
+    public void borrar(int id)
+    {
+        if (!existePorId(id))
+            throw new NoSuchElementException("No se encontró el Pedido con ID: " + id);
+
+        pedidoRepository.deleteById(id);
+
+        alertaServiceClient.crearAlerta("Pedido borrado - ID: "+id, TIPO_AVISO);
+    }
+
+    @Transactional
+    public Pedido actualizaPedido(int id, Pedido pedidoActualizado)
+    {
+        Pedido pedidoActual = pedidoRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado"));
+
+        // lo que sea qque tenga de atributos
+        
+        alertaServiceClient.crearAlerta("Pedido Actualizado ID: "+pedidoActual.getId(), TIPO_AVISO);
+
+        return pedidoRepository.save(pedidoActual);
+    }
+}
