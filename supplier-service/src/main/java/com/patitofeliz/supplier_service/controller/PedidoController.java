@@ -17,7 +17,7 @@ public class PedidoController
     private PedidoService pedidoService;
 
     @GetMapping
-    public ResponseEntity<List<Pedido>> getTodos() 
+    public ResponseEntity<List<Pedido>> getPedidos() 
     {
         List<Pedido> pedidos = pedidoService.getPedidos();
 
@@ -28,7 +28,7 @@ public class PedidoController
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> getPorId(@PathVariable int id) 
+    public ResponseEntity<Pedido> getPedido(@PathVariable int id) 
     {
         Pedido pedido = pedidoService.getPedido(id);
 
