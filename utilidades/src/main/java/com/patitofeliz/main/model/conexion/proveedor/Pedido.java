@@ -11,4 +11,6 @@ public class Pedido
     private int idProveedor;
     private int idSucursal;
     private String fechaPeticion;
+
+    private int estadoPedido;
 }
