@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.client.SucursalServiceClient;
+import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
 import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.supplier_service.model.Pedido;
 import com.patitofeliz.supplier_service.model.ProductoPedido;
@@ -32,6 +34,8 @@ public class PedidoService
     private ProveedorService proveedorService;
     @Autowired
     private ProductoServiceClient productoServiceClient;
+    @Autowired
+    private SucursalServiceClient sucursalServiceClient;
 
     private static final String TIPO_AVISO = "Pedido";
 
@@ -105,13 +109,41 @@ public class PedidoService
             throw new IllegalArgumentException("No se puede volver a un estado anterior del pedido.");
 
         if (estadoActual == 1)
+        {
+            pedidoActual.setIdProveedor(pedidoActualizado.getIdProveedor());
             pedidoActual.setListaProductos(validarLista(pedidoActualizado));
+        }
+            
 
+        pedidoActual.setIdSucursal(pedidoActualizado.getIdSucursal());
         pedidoActual.setEstadoPedido(nuevoEstado);
+
+        if (estadoActual==3)
+        {
+            agregarProductosPedido(pedidoActual.getIdSucursal(), pedidoActual);
+            alertaServiceClient.crearAlerta("Pedido agregado a la sucursal ID:"+pedidoActual.getIdSucursal(), TIPO_AVISO);
+        }
+            
 
         alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
         
         return pedidoRepository.save(pedidoActual);
+    }
+
+    @Transactional
+    private void agregarProductosPedido(int sucursalId, Pedido pedido)
+    {
+        List<ProductoPedido> listaPedido = pedido.getListaProductos();
+        List<ProductoInventario> listaInventario = new ArrayList<>();
+
+        // Convertimos a lo que guard el inventario
+        for (ProductoPedido productoPedido : listaPedido) 
+        {
+            listaInventario.add(new ProductoInventario(productoPedido.getProductoId(), productoPedido.getCantidad()));
+        }
+
+        // con la lista cargada
+        sucursalServiceClient.agregarProductosInventario(sucursalId, listaInventario);
     }
 
     private List<ProductoPedido> validarLista(Pedido pedido) 
