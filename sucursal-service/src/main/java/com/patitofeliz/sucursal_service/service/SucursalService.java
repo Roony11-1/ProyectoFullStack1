@@ -25,7 +25,6 @@ import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.main.model.conexion.venta.Venta;
 import com.patitofeliz.main.model.dto.sucursal.SucursalInventarioDTO;
 import com.patitofeliz.main.model.dto.sucursal.SucursalListaEnterosDTO;
-import com.patitofeliz.main.model.dto.sucursal.SucursalPedidoDTO;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
@@ -233,7 +232,7 @@ public class SucursalService
     }
 
     @Transactional
-    public SucursalPedidoDTO añadirPedidoSucursal(int sucursalId, Pedido pedido)
+    public Pedido añadirPedidoSucursal(int sucursalId, Pedido pedido)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -245,7 +244,7 @@ public class SucursalService
 
         sucursalRepository.save(sucursal);
 
-        return new SucursalPedidoDTO(sucursalId, pedidoCreado);
+        return pedidoCreado;
     }
 
     @Transactional
