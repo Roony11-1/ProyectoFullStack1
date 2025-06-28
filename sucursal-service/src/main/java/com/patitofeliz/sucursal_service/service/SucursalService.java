@@ -87,6 +87,14 @@ public class SucursalService
 
         return sucursal.getListaEmpleados();
     }
+
+    public List<Integer> getProveedoresSucursal(int sucursalId)
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
+
+        return sucursal.getListaProveedores();
+    }
     
     @Transactional
     public Sucursal guardar(Sucursal sucursal)
