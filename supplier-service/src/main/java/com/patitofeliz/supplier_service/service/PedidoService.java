@@ -1,5 +1,7 @@
 package com.patitofeliz.supplier_service.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +54,8 @@ public class PedidoService
     public Pedido guardar(Pedido pedido)
     {
         pedido.setListaProductos(validarLista(pedido));
+        String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        pedido.setFechaPeticion(fechaActual);
 
         Pedido nuevo = pedidoRepository.save(pedido);
 
@@ -90,10 +94,11 @@ public class PedidoService
         Pedido pedidoActual = pedidoRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado"));
 
-        // lo que sea qque tenga de atributos
-        
-        alertaServiceClient.crearAlerta("Pedido Actualizado ID: "+pedidoActual.getId(), TIPO_AVISO);
-
+        if (pedidoActual.getEstadoPedido() == 1)
+        {
+            pedidoActual.setListaProductos(validarLista(pedidoActualizado));
+            alertaServiceClient.crearAlerta("Pedido Actualizado ID: "+pedidoActual.getId(), TIPO_AVISO);
+        }
         return pedidoRepository.save(pedidoActual);
     }
 
