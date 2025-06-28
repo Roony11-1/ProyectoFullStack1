@@ -97,15 +97,19 @@ public class PedidoService
         int estadoActual = pedidoActual.getEstadoPedido();
         int nuevoEstado = pedidoActualizado.getEstadoPedido();
 
-        if (estadoActual == 1 || estadoActual == 2)
-        {
-            pedidoActual.setEstadoPedido(nuevoEstado);
+        if (estadoActual == 3)
+            throw new IllegalStateException("El pedido ya fue entregado y no puede modificarse ID: "+pedidoActual.getId());
 
-            if (estadoActual == 1)
-                pedidoActual.setListaProductos(validarLista(pedidoActualizado));
+        if (nuevoEstado < estadoActual)
+            throw new IllegalArgumentException("No se puede volver a un estado anterior del pedido.");
 
-            alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
-        }
+        if (estadoActual == 1)
+            pedidoActual.setListaProductos(validarLista(pedidoActualizado));
+
+        pedidoActual.setEstadoPedido(nuevoEstado);
+
+        alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
+        
         return pedidoRepository.save(pedidoActual);
     }
 
