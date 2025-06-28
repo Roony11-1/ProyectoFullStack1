@@ -1,5 +1,6 @@
 package com.patitofeliz.supplier_service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -45,6 +46,20 @@ public class ProveedorService
         alertaServiceClient.crearAlerta("Proveedor registrado: ", TIPO_AVISO);
 
         return nuevo;
+    }
+
+    @Transactional
+    public List<Proveedor> guardarLote(List<Proveedor> proveedores)
+    {
+        List<Proveedor> listaRegistrados = new ArrayList<>();
+
+        for (Proveedor iteradorProveedores : listaRegistrados) 
+        {
+            Proveedor proveedorRegistrado = proveedorRepository.save(iteradorProveedores);
+            listaRegistrados.add(proveedorRegistrado);
+        }
+
+        return listaRegistrados;
     }
 
     @Transactional

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.patitofeliz.supplier_service.model.Proveedor;
 import com.patitofeliz.supplier_service.service.ProveedorService;
 
@@ -39,6 +38,14 @@ public class ProveedorController
     {
         Proveedor nuevo = proveedorService.guardar(proveedor);
         return ResponseEntity.ok(nuevo);
+    }
+
+    @PostMapping("/lote")
+    public ResponseEntity<List<Proveedor>> registrarProveedores(@RequestBody List<Proveedor> listaProveedores)
+    {
+        List<Proveedor> listaRegistros =  proveedorService.guardarLote(listaProveedores);
+
+        return ResponseEntity.ok(listaRegistros);
     }
 
     @PutMapping("/{id}")
