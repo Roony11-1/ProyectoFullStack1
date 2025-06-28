@@ -238,7 +238,7 @@ public class SucursalService
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
 
         Pedido pedidoCreado = pedidosServiceClient.crearPedido(pedido);
-        sucursal.getListaPedidos().add(pedidoCreado);
+        sucursal.getListaPedidos().add(pedidoCreado.getId());
 
         alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agrego el pedido ID: " + pedidoCreado.getId(),TIPO_AVISO);
 

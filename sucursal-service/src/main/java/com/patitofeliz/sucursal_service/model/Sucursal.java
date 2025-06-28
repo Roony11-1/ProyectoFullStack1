@@ -30,5 +30,5 @@ public class Sucursal
     @ElementCollection
     private List<Integer> listaProveedores;
     @ElementCollection
-    private List<Pedido> listaPedidos;
+    private List<Integer> listaPedidos;
 }
