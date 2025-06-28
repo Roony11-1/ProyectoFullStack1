@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.patitofeliz.main.client.AlertaServiceClient;
+import com.patitofeliz.main.client.ProveedorServiceClient;
 import com.patitofeliz.main.client.ReviewServiceClient;
+import com.patitofeliz.main.model.conexion.proveedor.Proveedor;
 import com.patitofeliz.main.model.conexion.review.Review;
 import com.patitofeliz.producto_service.model.Producto;
 import com.patitofeliz.producto_service.repository.ProductoRepository;
@@ -25,6 +27,8 @@ public class ProductoService
     private AlertaServiceClient alertaServiceClient;
     @Autowired
     private ReviewServiceClient reviewServiceClient;
+    @Autowired
+    private ProveedorServiceClient proveedorServiceClient;
 
     private static final String TIPO_AVISO = "Producto";
 
@@ -55,7 +59,9 @@ public class ProductoService
     {
         Producto nuevo = productoRepository.save(producto);
 
-        alertaServiceClient.crearAlerta("Producto registrado: "+producto.getNombre(), TIPO_AVISO);
+        Proveedor proveedor = proveedorServiceClient.getProveedor(nuevo.getIdProveedor());
+
+        alertaServiceClient.crearAlerta("Producto registrado: "+producto.getNombre()+" - Proveedor ID: "+proveedor.getId(), TIPO_AVISO);
 
         return nuevo;
     }
@@ -67,9 +73,16 @@ public class ProductoService
 
         for (Producto producto : productos) 
         {
-            Producto productoRegistrado = registrar(producto);
+            try
+            {
+                Producto productoRegistrado = registrar(producto);
 
-            productosRegistrados.add(productoRegistrado);
+                productosRegistrados.add(productoRegistrado);
+            }
+            catch (Exception e)
+            {
+                // nada
+            }
         }
 
         return productosRegistrados;

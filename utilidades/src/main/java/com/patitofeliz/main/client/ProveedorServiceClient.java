@@ -16,7 +16,7 @@ public class ProveedorServiceClient
 
     private static final String PROVEEDOR_API = "http://localhost:8009/proveedor";
 
-    public Proveedor getUsuario(int proveedorId) 
+    public Proveedor getProveedor(int proveedorId) 
     {
         Proveedor proveedor = restTemplate.getForObject(PROVEEDOR_API + "/" + proveedorId, Proveedor.class);
 

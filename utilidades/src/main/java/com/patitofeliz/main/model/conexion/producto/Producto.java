@@ -10,6 +10,6 @@ public class Producto
     private int id;
     private String nombre;
     private String marca;
+    private int idProveedor;
     private int precio;
-    private int cantidadInventario;
 }

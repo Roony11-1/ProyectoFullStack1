@@ -11,10 +11,12 @@ import com.patitofeliz.main.client.AccountServiceClient;
 import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.CarritoServiceClient;
 import com.patitofeliz.main.client.InventoryServiceClient;
+import com.patitofeliz.main.client.ProductoServiceClient;
 import com.patitofeliz.main.client.VentaServiceClient;
 import com.patitofeliz.main.model.conexion.carrito.Carrito;
 import com.patitofeliz.main.model.conexion.inventario.Inventario;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.main.model.conexion.venta.Venta;
 import com.patitofeliz.main.model.dto.SucursalInventarioDTO;
@@ -38,6 +40,8 @@ public class SucursalService
     private VentaServiceClient ventaServiceClient;
     @Autowired
     private CarritoServiceClient carritoServiceClient;
+    @Autowired
+    private ProductoServiceClient productoServiceClient;
 
     private static final String TIPO_AVISO = "Sucursal";
 
@@ -113,6 +117,26 @@ public class SucursalService
     }
 
     @Transactional
+    public List<Integer> añadirProveedorSucursal(int sucursalId, int idProveedor)
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+            
+        List<Integer> listaProveedores = sucursal.getListaProveedores();
+
+        if (listaProveedores.contains(idProveedor))
+            throw new IllegalArgumentException("El empleado ya está asignado a la sucursal.");
+
+        listaProveedores.add(idProveedor);
+
+        alertaServiceClient.crearAlerta("Proveedor asignado a la sucursal ID: " + sucursal.getId() + " - ID proveedor Asociado: " + idProveedor, TIPO_AVISO);
+
+        sucursalRepository.save(sucursal);
+
+        return listaProveedores;
+    }
+
+    @Transactional
     public List<Integer> añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
@@ -164,7 +188,19 @@ public class SucursalService
 
         if (listaProductos == null || listaProductos.isEmpty()) 
             throw new IllegalArgumentException("La lista de productos no puede estar vacía.");
-            
+        
+        for (ProductoInventario productoInventario : listaProductos) 
+        {
+            Producto producto = productoServiceClient.getProducto(productoInventario.getProductoId());
+            try
+            {
+                añadirProveedorSucursal(sucursalId, producto.getIdProveedor());
+            }
+            catch (Exception e)
+            {
+                // No hace nada wuajaaj
+            }
+        }
         inventoryServiceClient.agregarProductosInventario(sucursal.getInventarioId(), listaProductos);
 
         alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),TIPO_AVISO);

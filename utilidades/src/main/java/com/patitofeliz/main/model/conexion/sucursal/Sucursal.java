@@ -16,4 +16,5 @@ public class Sucursal
     private int inventarioId;
 
     private List<Integer> listaEmpleados;
+    private List<Integer> listaProveedores;
 }

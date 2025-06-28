@@ -25,4 +25,6 @@ public class Sucursal
 
     @ElementCollection
     private List<Integer> listaEmpleados;
+    @ElementCollection
+    private List<Integer> listaProveedores;
 }
