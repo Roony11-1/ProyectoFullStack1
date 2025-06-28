@@ -113,7 +113,6 @@ public class PedidoService
             pedidoActual.setIdProveedor(pedidoActualizado.getIdProveedor());
             pedidoActual.setListaProductos(validarLista(pedidoActualizado));
         }
-            
 
         pedidoActual.setIdSucursal(pedidoActualizado.getIdSucursal());
         pedidoActual.setEstadoPedido(nuevoEstado);
