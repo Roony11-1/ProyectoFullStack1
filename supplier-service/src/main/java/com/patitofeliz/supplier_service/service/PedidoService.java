@@ -94,14 +94,17 @@ public class PedidoService
         Pedido pedidoActual = pedidoRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado"));
 
-        if ((pedidoActual.getEstadoPedido() == 1) || (pedidoActual.getEstadoPedido() == 2))
+        int estadoActual = pedidoActual.getEstadoPedido();
+        int nuevoEstado = pedidoActualizado.getEstadoPedido();
+
+        if (estadoActual == 1 || estadoActual == 2)
         {
-            pedidoActual.setEstadoPedido(pedidoActualizado.getEstadoPedido());
-            
-            if (pedidoActual.getEstadoPedido() == 1)
+            pedidoActual.setEstadoPedido(nuevoEstado);
+
+            if (estadoActual == 1)
                 pedidoActual.setListaProductos(validarLista(pedidoActualizado));
-                
-            alertaServiceClient.crearAlerta("Pedido Actualizado ID: "+pedidoActual.getId(), TIPO_AVISO);
+
+            alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
         }
         return pedidoRepository.save(pedidoActual);
     }
