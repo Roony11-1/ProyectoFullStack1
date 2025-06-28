@@ -10,7 +10,7 @@ import lombok.Data;
 public class SucursalListaEnterosDTO 
 {
     private int idSucursal;
-    private List<Integer> listaEnteros;
+    private List<Integer> listaId;
 }
 
 
