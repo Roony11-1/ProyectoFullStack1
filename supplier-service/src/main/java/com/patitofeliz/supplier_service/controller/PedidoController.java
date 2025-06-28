@@ -1,6 +1,5 @@
 package com.patitofeliz.supplier_service.controller;
 
-import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.supplier_service.model.Pedido;
 import com.patitofeliz.supplier_service.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
