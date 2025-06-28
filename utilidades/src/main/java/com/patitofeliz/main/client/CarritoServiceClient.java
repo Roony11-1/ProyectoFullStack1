@@ -50,13 +50,6 @@ public class CarritoServiceClient
 
     public void borrarCarritoPorId(int id)
     {
-        try 
-        {
-            restTemplate.delete(CARRITO_API + "/" + id);
-        } 
-        catch (Exception e) 
-        {
-            throw new RuntimeException("No se pudo eliminar el carrito con ID: " + id + ". Detalle: " + e.getMessage());
-        }
+        restTemplate.delete(CARRITO_API + "/" + id);
     }
 }
