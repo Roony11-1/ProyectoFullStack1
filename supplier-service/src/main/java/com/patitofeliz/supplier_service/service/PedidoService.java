@@ -102,6 +102,9 @@ public class PedidoService
         int estadoActual = pedidoActual.getEstadoPedido();
         int nuevoEstado = pedidoActualizado.getEstadoPedido();
 
+        if (nuevoEstado < 1 || 3 < nuevoEstado)
+            throw new IllegalArgumentException("Los valores deben ser 1, 2 o 3");
+
         if (estadoActual == 3)
             throw new IllegalStateException("El pedido ya fue entregado y no puede modificarse ID: "+pedidoActual.getId());
 
