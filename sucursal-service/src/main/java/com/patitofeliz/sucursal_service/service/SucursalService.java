@@ -11,6 +11,7 @@ import com.patitofeliz.main.client.AccountServiceClient;
 import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.CarritoServiceClient;
 import com.patitofeliz.main.client.InventoryServiceClient;
+import com.patitofeliz.main.client.PedidosServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
 import com.patitofeliz.main.client.ProveedorServiceClient;
 import com.patitofeliz.main.client.VentaServiceClient;
@@ -18,10 +19,13 @@ import com.patitofeliz.main.model.conexion.carrito.Carrito;
 import com.patitofeliz.main.model.conexion.inventario.Inventario;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
 import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.proveedor.Pedido;
 import com.patitofeliz.main.model.conexion.proveedor.Proveedor;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.main.model.conexion.venta.Venta;
-import com.patitofeliz.main.model.dto.SucursalInventarioDTO;
+import com.patitofeliz.main.model.dto.sucursal.SucursalInventarioDTO;
+import com.patitofeliz.main.model.dto.sucursal.SucursalListaEnterosDTO;
+import com.patitofeliz.main.model.dto.sucursal.SucursalPedidoDTO;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 
@@ -46,6 +50,8 @@ public class SucursalService
     private ProveedorServiceClient proveedorServiceClient;
     @Autowired
     private ProductoServiceClient productoServiceClient;
+    @Autowired
+    private PedidosServiceClient pedidosServiceClient;
 
 
     private static final String TIPO_AVISO = "Sucursal";
@@ -133,7 +139,7 @@ public class SucursalService
     }
 
     @Transactional
-    public List<Integer> añadirProveedorSucursal(int sucursalId, int idProveedor)
+    public SucursalListaEnterosDTO añadirProveedorSucursal(int sucursalId, int idProveedor)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -151,11 +157,11 @@ public class SucursalService
 
         sucursalRepository.save(sucursal);
 
-        return listaProveedores;
+        return new SucursalListaEnterosDTO(sucursalId, listaProveedores);
     }
 
     @Transactional
-    public List<Integer> añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
+    public SucursalListaEnterosDTO añadirEmpleadoSucursal(int sucursalId, int idEmpleado)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -171,11 +177,11 @@ public class SucursalService
 
         sucursalRepository.save(sucursal);
 
-        return listaEmpleados;
+        return new SucursalListaEnterosDTO(sucursalId, listaEmpleados);
     }
 
     @Transactional
-    public List<Integer> añadirEmpleadosSucursal(int sucursalId, List<Integer> listaIds)
+    public SucursalListaEnterosDTO añadirEmpleadosSucursal(int sucursalId, List<Integer> listaIds)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -195,11 +201,11 @@ public class SucursalService
 
         sucursalRepository.save(sucursal);
 
-        return listaEmpleados;
+        return new SucursalListaEnterosDTO(sucursalId, listaEmpleados);
     }
 
     @Transactional
-    public Inventario añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
+    public SucursalInventarioDTO añadirProductosSucursal(int sucursalId, List<ProductoInventario> listaProductos) 
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
@@ -223,7 +229,23 @@ public class SucursalService
 
         alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agregaron productos al inventario ID: " + sucursal.getInventarioId(),TIPO_AVISO);
 
-        return inventoryServiceClient.getInventario(sucursal.getInventarioId());
+        return new SucursalInventarioDTO(sucursalId, inventoryServiceClient.getInventario(sucursal.getInventarioId()));
+    }
+
+    @Transactional
+    public SucursalPedidoDTO añadirPedidoSucursal(int sucursalId, Pedido pedido)
+    {
+        Sucursal sucursal = sucursalRepository.findById(sucursalId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+
+        Pedido pedidoCreado = pedidosServiceClient.crearPedido(pedido);
+        sucursal.getListaPedidos().add(pedidoCreado);
+
+        alertaServiceClient.crearAlerta("Sucursal ID: " + sucursal.getId() +" - Se agrego el pedido ID: " + pedidoCreado.getId(),TIPO_AVISO);
+
+        sucursalRepository.save(sucursal);
+
+        return new SucursalPedidoDTO(sucursalId, pedidoCreado);
     }
 
     @Transactional

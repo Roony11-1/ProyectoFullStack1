@@ -1,4 +1,4 @@
-package com.patitofeliz.main.model.dto;
+package com.patitofeliz.main.model.dto.sucursal;
 
 import com.patitofeliz.main.model.conexion.inventario.Inventario;
 

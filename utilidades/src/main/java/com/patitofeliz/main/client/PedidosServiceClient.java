@@ -25,4 +25,11 @@ public class PedidosServiceClient
 
         return pedido;
     }
+
+    public Pedido crearPedido(Pedido pedido) 
+    {
+        Pedido pedidoCreado = restTemplate.postForObject(PEDIDOS_API, pedido, Pedido.class);
+
+        return pedidoCreado;
+    }
 }

@@ -22,6 +22,7 @@ import com.patitofeliz.main.model.conexion.inventario.Inventario;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
 import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
+import com.patitofeliz.main.model.dto.sucursal.SucursalInventarioDTO;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.repository.SucursalRepository;
 import com.patitofeliz.sucursal_service.service.SucursalService;
@@ -184,13 +185,13 @@ public class SucursalServiceTest {
         when(sucursalRepository.findById(1)).thenReturn(Optional.of(sucursal));
 
         // Ejecutar
-        Inventario resultado = sucursalService.añadirProductosSucursal(1, List.of(new ProductoInventario(1, 10)));
+        SucursalInventarioDTO resultado = sucursalService.añadirProductosSucursal(1, List.of(new ProductoInventario(1, 10)));
 
         // Verificaciones
         assertNotNull(resultado);
-        assertEquals(1, resultado.getListaProductos().size());
-        assertEquals(1, resultado.getListaProductos().get(0).getProductoId());
-        assertEquals(10, resultado.getListaProductos().get(0).getCantidad());
+        assertEquals(1, resultado.getInventario().getListaProductos().size());
+        assertEquals(1, resultado.getInventario().getListaProductos().get(0).getProductoId());
+        assertEquals(10, resultado.getInventario().getListaProductos().get(0).getCantidad());
     }
 
 

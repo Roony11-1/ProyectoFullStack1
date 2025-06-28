@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.main.model.conexion.carrito.Carrito;
-import com.patitofeliz.main.model.conexion.inventario.Inventario;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
 import com.patitofeliz.main.model.conexion.venta.Venta;
-import com.patitofeliz.main.model.dto.SucursalInventarioDTO;
+import com.patitofeliz.main.model.dto.sucursal.SucursalInventarioDTO;
+import com.patitofeliz.main.model.dto.sucursal.SucursalListaEnterosDTO;
 import com.patitofeliz.sucursal_service.model.Sucursal;
 import com.patitofeliz.sucursal_service.service.SucursalService;
 
@@ -99,17 +99,17 @@ public class SucursalController
     }
 
     @PostMapping("/empleado/{id}")
-    public ResponseEntity<List<Integer>> agregarEmpleadoSucursal(@PathVariable("id") int id, @RequestBody Integer empleadoId)
+    public ResponseEntity<SucursalListaEnterosDTO> agregarEmpleadoSucursal(@PathVariable("id") int id, @RequestBody Integer empleadoId)
     {
-        List<Integer> empleados = sucursalService.añadirEmpleadoSucursal(id, empleadoId);
+        SucursalListaEnterosDTO empleados = sucursalService.añadirEmpleadoSucursal(id, empleadoId);
 
         return ResponseEntity.ok(empleados);
     }
 
     @PostMapping("/empleados/{id}")
-    public ResponseEntity<List<Integer>> agregarEmpleadosSucursal(@PathVariable("id") int id, @RequestBody List<Integer> empleadoIds)
+    public ResponseEntity<SucursalListaEnterosDTO> agregarEmpleadosSucursal(@PathVariable("id") int id, @RequestBody List<Integer> empleadoIds)
     {
-        List<Integer> empleados = sucursalService.añadirEmpleadosSucursal(id, empleadoIds);
+        SucursalListaEnterosDTO empleados = sucursalService.añadirEmpleadosSucursal(id, empleadoIds);
 
         return ResponseEntity.ok(empleados);
     }
@@ -123,9 +123,9 @@ public class SucursalController
     }
 
     @PostMapping("/productos/{id}")
-    public ResponseEntity<Inventario> agregarProductosSucursal(@PathVariable("id") int id, @RequestBody List<ProductoInventario> productos)
+    public ResponseEntity<SucursalInventarioDTO> agregarProductosSucursal(@PathVariable("id") int id, @RequestBody List<ProductoInventario> productos)
     {
-        Inventario inventario = sucursalService.añadirProductosSucursal(id, productos);
+        SucursalInventarioDTO inventario = sucursalService.añadirProductosSucursal(id, productos);
 
         return ResponseEntity.ok(inventario);
     }
