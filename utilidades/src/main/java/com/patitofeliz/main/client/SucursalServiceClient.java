@@ -31,7 +31,7 @@ public class SucursalServiceClient
 
     public SucursalInventarioDTO agregarProductosInventario(int sucursalId, List<ProductoInventario> listaProductos)
     {
-        SucursalInventarioDTO resultado = restTemplate.postForObject(SUCURSAL_API+"/producto/"+sucursalId, listaProductos, SucursalInventarioDTO.class);
+        SucursalInventarioDTO resultado = restTemplate.postForObject(SUCURSAL_API+"/productos/"+sucursalId, listaProductos, SucursalInventarioDTO.class);
 
         return resultado;
     }

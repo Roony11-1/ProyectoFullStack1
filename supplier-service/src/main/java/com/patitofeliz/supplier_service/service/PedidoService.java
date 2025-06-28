@@ -111,19 +111,11 @@ public class PedidoService
         if (nuevoEstado < estadoActual)
             throw new IllegalArgumentException("No se puede volver a un estado anterior del pedido.");
 
-        if (estadoActual == 1)
-        {
-            pedidoActual.setIdProveedor(pedidoActualizado.getIdProveedor());
-            pedidoActual.setListaProductos(validarLista(pedidoActualizado));
-        }
-
-        pedidoActual.setIdSucursal(pedidoActualizado.getIdSucursal());
         pedidoActual.setEstadoPedido(nuevoEstado);
 
-        if (estadoActual==3)
+        if (nuevoEstado==3)
         {
             agregarProductosPedido(pedidoActual.getIdSucursal(), pedidoActual);
-            alertaServiceClient.crearAlerta("Pedido agregado a la sucursal ID:"+pedidoActual.getIdSucursal(), TIPO_AVISO);
         }
 
         alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
@@ -145,6 +137,7 @@ public class PedidoService
 
         // con la lista cargada
         sucursalServiceClient.agregarProductosInventario(sucursalId, listaInventario);
+        alertaServiceClient.crearAlerta("Pedido agregado a la sucursal ID:"+pedido.getIdSucursal(), TIPO_AVISO);
     }
 
     private List<ProductoPedido> validarLista(Pedido pedido) 
