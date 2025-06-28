@@ -13,6 +13,7 @@ import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
 import com.patitofeliz.supplier_service.model.Pedido;
 import com.patitofeliz.supplier_service.model.ProductoPedido;
+import com.patitofeliz.supplier_service.model.Proveedor;
 import com.patitofeliz.supplier_service.repository.PedidoRepository;
 
 import jakarta.transaction.Transactional;
@@ -99,7 +100,10 @@ public class PedidoService
     {
         List<ProductoPedido> listaValidada = new ArrayList<>();
 
-        proveedorService.getProveedor(pedido.getIdProveedor());
+        Proveedor proveedor = proveedorService.getProveedor(pedido.getIdProveedor());
+
+        if (proveedor == null)
+            throw new NoSuchElementException("Proveedor no encontrado con ID: " + pedido.getIdProveedor());
 
         // Validar productos
         for (ProductoPedido productoPedido : pedido.getListaProductos()) {
