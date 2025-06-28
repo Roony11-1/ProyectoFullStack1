@@ -98,6 +98,14 @@ public class SucursalService
         return sucursal.getListaEmpleados();
     }
 
+    public List<Integer> listarPedidosSucursal(int pedidoId)
+    {
+        Sucursal sucursal = sucursalRepository.findById(pedidoId)
+            .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada"));
+
+        return sucursal.getListaPedidos();
+    }
+
     public List<Integer> getProveedoresSucursal(int sucursalId)
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)

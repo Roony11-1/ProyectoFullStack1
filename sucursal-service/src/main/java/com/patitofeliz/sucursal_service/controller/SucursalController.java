@@ -76,6 +76,14 @@ public class SucursalController
         return ResponseEntity.ok(proveedores);
     }
 
+    @GetMapping("/proveedores/{id}")
+    public ResponseEntity<List<Integer>> obtenerPedidosSucursal(@PathVariable("id") int id)
+    {
+        List<Integer> pedidos = sucursalService.listarPedidosSucursal(id);
+
+        return ResponseEntity.ok(pedidos);
+    }
+
     @GetMapping("/ventas/{id}")
     public ResponseEntity<List<Venta>> obtenerVentasSucursal(@PathVariable("id") int id)
     {
@@ -166,7 +174,7 @@ public class SucursalController
             linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/aobtener carritos sucursal"),
             linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar producto inv. sucursal"),
             linkTo(methodOn(SucursalController.class).agregarEmpleadosSucursal(id, null)).withRel("POST/agregar Empleado sucursal"),
-            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar Empleados sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar Producto sucursal"),
             linkTo(methodOn(SucursalController.class).agregarPedidoSucursal(id, null)).withRel("POST/agregar Pedido sucursal")
         );
     }
