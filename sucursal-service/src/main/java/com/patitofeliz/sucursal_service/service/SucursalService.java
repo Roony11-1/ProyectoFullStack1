@@ -12,11 +12,13 @@ import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.CarritoServiceClient;
 import com.patitofeliz.main.client.InventoryServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.client.ProveedorServiceClient;
 import com.patitofeliz.main.client.VentaServiceClient;
 import com.patitofeliz.main.model.conexion.carrito.Carrito;
 import com.patitofeliz.main.model.conexion.inventario.Inventario;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
 import com.patitofeliz.main.model.conexion.producto.Producto;
+import com.patitofeliz.main.model.conexion.proveedor.Proveedor;
 import com.patitofeliz.main.model.conexion.usuario.Usuario;
 import com.patitofeliz.main.model.conexion.venta.Venta;
 import com.patitofeliz.main.model.dto.SucursalInventarioDTO;
@@ -41,7 +43,10 @@ public class SucursalService
     @Autowired
     private CarritoServiceClient carritoServiceClient;
     @Autowired
+    private ProveedorServiceClient proveedorServiceClient;
+    @Autowired
     private ProductoServiceClient productoServiceClient;
+
 
     private static final String TIPO_AVISO = "Sucursal";
 
@@ -129,6 +134,8 @@ public class SucursalService
     {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
             .orElseThrow(() -> new NoSuchElementException("Sucursal no encontrada con ID: " + sucursalId));
+
+        Proveedor proveedor = proveedorServiceClient.getProveedor(idProveedor);
             
         List<Integer> listaProveedores = sucursal.getListaProveedores();
 
@@ -137,7 +144,7 @@ public class SucursalService
 
         listaProveedores.add(idProveedor);
 
-        alertaServiceClient.crearAlerta("Proveedor asignado a la sucursal ID: " + sucursal.getId() + " - ID proveedor Asociado: " + idProveedor, TIPO_AVISO);
+        alertaServiceClient.crearAlerta("Proveedor asignado a la sucursal ID: " + sucursal.getId() + " - ID proveedor Asociado: " + proveedor.getId(), TIPO_AVISO);
 
         sucursalRepository.save(sucursal);
 
