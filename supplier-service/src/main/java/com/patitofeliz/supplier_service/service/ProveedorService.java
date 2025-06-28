@@ -48,12 +48,11 @@ public class ProveedorService
         return nuevo;
     }
 
-    @Transactional
     public List<Proveedor> guardarLote(List<Proveedor> proveedores)
     {
         List<Proveedor> listaRegistrados = new ArrayList<>();
 
-        for (Proveedor iteradorProveedores : listaRegistrados) 
+        for (Proveedor iteradorProveedores : proveedores) 
         {
             Proveedor proveedorRegistrado = proveedorRepository.save(iteradorProveedores);
             listaRegistrados.add(proveedorRegistrado);
