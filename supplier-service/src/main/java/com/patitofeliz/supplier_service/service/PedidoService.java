@@ -56,6 +56,7 @@ public class PedidoService
         pedido.setListaProductos(validarLista(pedido));
         String fechaActual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         pedido.setFechaPeticion(fechaActual);
+        pedido.setEstadoPedido(1);
 
         Pedido nuevo = pedidoRepository.save(pedido);
 

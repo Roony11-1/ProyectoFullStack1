@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.patitofeliz.main.model.conexion.carrito.Carrito;
 import com.patitofeliz.main.model.conexion.inventario.ProductoInventario;
+import com.patitofeliz.main.model.conexion.proveedor.Pedido;
 import com.patitofeliz.main.model.conexion.venta.Venta;
 import com.patitofeliz.main.model.dto.sucursal.SucursalInventarioDTO;
 import com.patitofeliz.main.model.dto.sucursal.SucursalListaEnterosDTO;
@@ -114,6 +115,14 @@ public class SucursalController
         return ResponseEntity.ok(empleados);
     }
 
+    @PostMapping("/pedido/{id}")
+    public ResponseEntity<Pedido> agregarPedidoSucursal(@PathVariable("id") int id, @RequestBody Pedido pedido)
+    {
+        Pedido pedidoCreado = sucursalService.añadirPedidoSucursal(id, pedido);
+
+        return ResponseEntity.ok(pedidoCreado);
+    }
+
     @PostMapping
     public ResponseEntity<EntityModel<Sucursal>> crearSucursal(@RequestBody Sucursal sucursal) 
     {
@@ -157,7 +166,8 @@ public class SucursalController
             linkTo(methodOn(SucursalController.class).obtenerCarritosSucursal(id)).withRel("GET/aobtener carritos sucursal"),
             linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar producto inv. sucursal"),
             linkTo(methodOn(SucursalController.class).agregarEmpleadosSucursal(id, null)).withRel("POST/agregar Empleado sucursal"),
-            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar Empleados sucursal")
+            linkTo(methodOn(SucursalController.class).agregarProductosSucursal(id, null)).withRel("POST/agregar Empleados sucursal"),
+            linkTo(methodOn(SucursalController.class).agregarPedidoSucursal(id, null)).withRel("POST/agregar Pedido sucursal")
         );
     }
 
