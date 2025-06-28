@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.patitofeliz.main.client.AlertaServiceClient;
 import com.patitofeliz.main.client.ProductoServiceClient;
+import com.patitofeliz.main.model.conexion.producto.Producto;
 import com.patitofeliz.supplier_service.model.Pedido;
 import com.patitofeliz.supplier_service.model.ProductoPedido;
 import com.patitofeliz.supplier_service.model.Proveedor;
@@ -109,8 +110,9 @@ public class PedidoService
         for (ProductoPedido productoPedido : pedido.getListaProductos()) {
             try 
             {
-                productoServiceClient.getProducto(productoPedido.getProductoId());
-                listaValidada.add(productoPedido);
+                Producto producto = productoServiceClient.getProducto(productoPedido.getProductoId());
+                if (producto.getIdProveedor() == proveedor.getId())
+                    listaValidada.add(productoPedido);
             } 
             catch (Exception e) 
             {
