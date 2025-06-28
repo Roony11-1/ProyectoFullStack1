@@ -123,7 +123,6 @@ public class PedidoService
             agregarProductosPedido(pedidoActual.getIdSucursal(), pedidoActual);
             alertaServiceClient.crearAlerta("Pedido agregado a la sucursal ID:"+pedidoActual.getIdSucursal(), TIPO_AVISO);
         }
-            
 
         alertaServiceClient.crearAlerta("Pedido Actualizado ID: " + pedidoActual.getId(), TIPO_AVISO);
         
