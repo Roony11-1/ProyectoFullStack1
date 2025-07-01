@@ -74,7 +74,7 @@ public class PedidoService
     {
         List<Pedido> listaRegistrados = new ArrayList<>();
 
-        for (Pedido iteradorProveedores : listaRegistrados) 
+        for (Pedido iteradorProveedores : pedidos) 
         {
             Pedido pedidosRegistrados = pedidoRepository.save(iteradorProveedores);
             listaRegistrados.add(pedidosRegistrados);
